@@ -5,20 +5,28 @@ import Navbar from "../components/Navbar/Navbar";
 
 const Landing = () => {
   return (
-    <div className="grid lg:grid-cols-3 gap-6 h-full bg-slate-100 sm:grid-cols-1 md:grid-cols-3 ">
-      <div className="col-span-2 bg-slate-100 ">
-        <Navbar />
-        <div className="lg:ml-7 py-20 bg-gradient-to-r from-indigo-500 to-indigo-300"
+    <div className="h-full bg-slate-100 sm:grid-cols-1 md:grid-cols-3">
+      <Navbar />
+      <div className="custom-co min-h-screen h-full grid lg:grid-cols-custom lg:space-y-6 bg-slate-100 ">
+
+        <div className=" py-20 bg-gradient-to-r bg-[radial-gradient(ellipse_at_bottom_left,_var(--tw-gradient-stops))] from-indigo-900 via-indigo-400 to-indigo-900"
         >
-          <div className="container mx-auto px-6">
+
+          <div className="lg:mt-12 container mx-auto px-6">
             <h2 className="text-4xl font-bold mb-2 text-white">
-              Discover a world full of knowledge
+              Discover a world full of
             </h2>
+            <h2 className="text-4xl font-bold mb-2 text-white">
+              knowledge
+            </h2>
+            <h3 className="text-2xl text-gray-200">
+              Empower your mind, ignite your passion
+            </h3>
             <h3 className="text-2xl mb-8 text-gray-200">
-              Empower your mind, ignite your passion through discussion
+              through discussion
             </h3>
 
-            <div className="mt-6 ">
+            <div className="mt-6 lg:mr-6 md:mr-20">
               <label className="relative block">
                 <span className="absolute inset-y-0 left-0 flex items-center pl-6">
                   <svg className="h-5 w-5 fill-black" xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" width="30"
@@ -29,7 +37,7 @@ const Landing = () => {
                   </svg>
                 </span>
                 <input
-                  className="py-4 px-14 shadow-lg tracking-wider lg:w-1/2 bg-white placeholder:font-italitc border border-slate-300 rounded-full  focus:outline-none"
+                  className="w-full py-4 px-14 shadow-lg tracking-wider lg:w-full bg-white placeholder:font-italitc border border-slate-300 rounded-full  focus:outline-none"
                   placeholder="Enter your keyword to search" type="text" />
               </label>
             </div>
@@ -37,9 +45,6 @@ const Landing = () => {
         </div>
         <PostCard />
       </div>
-       {/* Categories and Footer*/}
-      <section className=" bg-gradient-to-b from-indigo-500 hidden md:block">
-      </section>
     </div>
   );
 };
