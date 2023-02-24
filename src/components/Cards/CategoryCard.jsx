@@ -2,11 +2,14 @@ import { useState } from 'react';
 import { CheckCircleIcon, PlusCircleIcon } from '@heroicons/react/24/solid';
 
 const categories = [
-    { id: 1, name: 'Category 1' },
-    { id: 2, name: 'Category 2' },
-    { id: 3, name: 'Category 3' },
-    { id: 4, name: 'Category 4' },
-    { id: 5, name: 'Category 5' },
+    { id: 1, name: 'Technology' },
+    { id: 2, name: 'Health' },
+    { id: 3, name: 'Entertainment' },
+    { id: 4, name: 'Food' },
+    { id: 5, name: 'Music' },
+    { id: 6, name: 'Art & Craft' },
+    { id: 7, name: 'Games' },
+
 ];
 
 function CategoryCard() {
@@ -32,6 +35,10 @@ function CategoryCard() {
                 return 'bg-orange-500';
             case 5:
                 return 'bg-green-500';
+            case 6:
+                return 'bg-yellow-500';
+            case 7:
+                return 'bg-violet-500';
             default:
                 return 'bg-gray-100';
         }
