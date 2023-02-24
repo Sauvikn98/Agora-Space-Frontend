@@ -29,12 +29,12 @@ const Landing = () => {
         </div>
       )}
 
-      <div className="custom-co min-h-screen h-full grid lg:grid-cols-custom bg-slate-100 ">
+      <div className="custom-co min-h-screen h-full grid lg:grid-cols-custom bg-gray-200 ">
         <div className="bg-gradient-to-r bg-[radial-gradient(ellipse_at_bottom_left,_var(--tw-gradient-stops))] from-indigo-900 via-indigo-400 to-indigo-900">
           <div className="mt-20 container">
             <img
               src={landingImage}
-              className="lg:ml-2 md:ml-6 md:mr-6 object-contain h-48 w-98"
+              className="lg:ml-1 ml-1 md:ml-6 md:mr-6 object-contain h-48 w-98"
               alt="landing"
             />
             <div className="lg:ml-6 ml-7 md:ml-10 mb-24">

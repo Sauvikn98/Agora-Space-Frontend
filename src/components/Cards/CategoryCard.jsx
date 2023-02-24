@@ -23,22 +23,22 @@ function CategoryCard() {
     function getGradientClass(categoryId) {
         switch (categoryId) {
             case 1:
-                return 'bg-gradient-to-r from-purple-500 via-purple-700 to-purple-900';
+                return 'bg-purple-500';
             case 2:
-                return 'bg-gradient-to-r from-blue-500 via-blue-700 to-blue-900';
+                return 'bg-blue-500';
             case 3:
-                return 'bg-gradient-to-r from-teal-500 via-teal-700 to-teal-900';
+                return 'bg-teal-500';
             case 4:
-                return 'bg-gradient-to-r from-orange-500 via-orange-700 to-orange-900';
+                return 'bg-orange-500';
             case 5:
-                return 'bg-gradient-to-r from-green-500 via-green-700 to-green-900';
+                return 'bg-green-500';
             default:
                 return 'bg-gray-100';
         }
     }
 
     return (
-        <div className="ml-7 mb-7 mt-7 lg:mt-0 flex flex-wrap gap-4">
+        <div className="ml-7 mb-7 mt-7 lg:mt-6 flex flex-wrap gap-4">
             {categories.map(category => (
                 <div
                     key={category.id}

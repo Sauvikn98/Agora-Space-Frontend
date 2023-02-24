@@ -42,7 +42,7 @@ function PostCard() {
     return (
         <div className="">
             <div className="relative w-700">
-                <CategoryCard/>
+                <CategoryCard />
                 {isLoading ? (
                     <div className="m-8 relative space-y-6">
                         <div className="p-5 bg-white rounded-lg flex items-center justify-between space-x-8">
@@ -106,9 +106,9 @@ function PostCard() {
                             </div>
                         ))}
                     </div>)}
-               </div>
-         </div>
-       )
-   }
+            </div>
+        </div>
+    )
+}
 
 export default PostCard
