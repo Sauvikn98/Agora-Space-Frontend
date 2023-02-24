@@ -1,17 +1,36 @@
-import React from "react";
+import React, { useState } from "react";
 import PostCard from "../components/Cards/PostCard";
 import Navbar from "../components/Navbar/Navbar";
+import SignUpModal from "../components/Modals/SignUpModal";
+import SignInModal from "../components/Modals/SignInModal";
 
 
 const Landing = () => {
+
+  const [activeModal, setActiveModal] = useState(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
+  const handleOpenModal = (modal) => {
+    setActiveModal(modal);
+    setIsModalOpen(true);
+  };
+  const handleCloseModal = () => {
+    setActiveModal(null);
+    setIsModalOpen(false);
+  };
+
   return (
     <div className="h-full bg-slate-100 sm:grid-cols-1 md:grid-cols-3">
-      <Navbar />
+      <Navbar handleOpenModal={handleOpenModal} />
+      {isModalOpen && (
+        <div className="backdrop-blur-lg fixed top-0 left-0 w-full h-full z-50 flex justify-center items-center">
+          {activeModal === 'signin' && <SignInModal onRequestClose={handleCloseModal} />}
+          {activeModal === 'signup' && <SignUpModal onRequestClose={handleCloseModal} />}
+        </div>
+      )}
+
       <div className="custom-co min-h-screen h-full grid lg:grid-cols-custom lg:space-y-6 bg-slate-100 ">
-
-        <div className=" py-20 bg-gradient-to-r bg-[radial-gradient(ellipse_at_bottom_left,_var(--tw-gradient-stops))] from-indigo-900 via-indigo-400 to-indigo-900"
-        >
-
+        <div className=" py-20 bg-gradient-to-r bg-[radial-gradient(ellipse_at_bottom_left,_var(--tw-gradient-stops))] from-indigo-900 via-indigo-400 to-indigo-900">
           <div className="lg:mt-12 container mx-auto px-6">
             <h2 className="text-4xl font-bold mb-2 text-white">
               Discover a world full of
@@ -25,7 +44,6 @@ const Landing = () => {
             <h3 className="text-2xl mb-8 text-gray-200">
               through discussion
             </h3>
-
             <div className="mt-6 lg:mr-6 md:mr-20">
               <label className="relative block">
                 <span className="absolute inset-y-0 left-0 flex items-center pl-6">
@@ -46,6 +64,7 @@ const Landing = () => {
         <PostCard />
       </div>
     </div>
+
   );
 };
 
