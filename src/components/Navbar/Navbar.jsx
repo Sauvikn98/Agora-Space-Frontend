@@ -25,7 +25,7 @@ function Navbar({ handleOpenModal }) {
       ? 'bg-slate-900 bg-opacity-80 shadow-lg'
       : 'bg-slate-100'
       } transition-all duration-500 ease-in-out fixed sticky top-0 z-50 shadow-lg backdrop-filter backdrop-blur-lg backdrop-saturate-150`}>
-      <div className="container mx-auto px-4 py-4 flex justify-between items-center">
+      <div className="container mx-auto px-4 py-3 flex justify-between items-center">
         <a className={`${isScrolled
           ? 'font-bold text-white lg:text-2xl'
           : 'font-bold lg:text-2xl'

@@ -6,7 +6,7 @@ import { fadeInDownShorter, fadeInLeft } from '../../keyframes';
 function Sidebar({ handleOpenModal }) {
     return (
         <div className='hidden lg:block'>
-            <aside className='h-screen sticky flex top-[5.0rem] bottom-2'>
+            <aside className='h-screen sticky flex top-[4.5rem] bottom-2'>
                 <div class="bg-white flex flex-col items-center w-32 py-10">
                     <nav class="flex flex-col items-center flex-1 space-y-8 ">
                         <a href="#" class="p-1.5 inline-block text-gray-500 focus:outline-nones transition-colors duration-200 rounded-lg dark:text-gray-400 dark:hover:bg-gray-800 hover:bg-gray-100">
