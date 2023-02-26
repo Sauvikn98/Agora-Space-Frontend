@@ -45,7 +45,7 @@ function CategoryCard() {
     }
 
     return (
-        <div className="ml-7 mb-7 mt-7 lg:mt-6 flex flex-wrap gap-4">
+        <div className="lg:ml-7 ml-4 mb-7 mt-7 lg:mt-6 flex flex-wrap gap-4">
             {categories.map(category => (
                 <div
                     key={category.id}
