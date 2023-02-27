@@ -2,11 +2,14 @@ import { useState } from 'react';
 import { CheckCircleIcon, PlusCircleIcon } from '@heroicons/react/24/solid';
 
 const categories = [
-    { id: 1, name: 'Category 1' },
-    { id: 2, name: 'Category 2' },
-    { id: 3, name: 'Category 3' },
-    { id: 4, name: 'Category 4' },
-    { id: 5, name: 'Category 5' },
+    { id: 1, name: 'Technology' },
+    { id: 2, name: 'Health' },
+    { id: 3, name: 'Entertainment' },
+    { id: 4, name: 'Food' },
+    { id: 5, name: 'Music' },
+    { id: 6, name: 'Art & Craft' },
+    { id: 7, name: 'Games' },
+
 ];
 
 function CategoryCard() {
@@ -23,22 +26,26 @@ function CategoryCard() {
     function getGradientClass(categoryId) {
         switch (categoryId) {
             case 1:
-                return 'bg-gradient-to-r from-purple-500 via-purple-700 to-purple-900';
+                return 'bg-purple-500';
             case 2:
-                return 'bg-gradient-to-r from-blue-500 via-blue-700 to-blue-900';
+                return 'bg-blue-500';
             case 3:
-                return 'bg-gradient-to-r from-teal-500 via-teal-700 to-teal-900';
+                return 'bg-teal-500';
             case 4:
-                return 'bg-gradient-to-r from-orange-500 via-orange-700 to-orange-900';
+                return 'bg-orange-500';
             case 5:
-                return 'bg-gradient-to-r from-green-500 via-green-700 to-green-900';
+                return 'bg-green-500';
+            case 6:
+                return 'bg-yellow-500';
+            case 7:
+                return 'bg-violet-500';
             default:
                 return 'bg-gray-100';
         }
     }
 
     return (
-        <div className="ml-7 mb-7 mt-7 lg:mt-0 flex flex-wrap gap-4">
+        <div className="lg:ml-7 ml-4 mb-7 mt-7 lg:mt-6 flex flex-wrap gap-4">
             {categories.map(category => (
                 <div
                     key={category.id}
