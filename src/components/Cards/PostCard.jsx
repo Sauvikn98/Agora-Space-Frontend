@@ -1,10 +1,16 @@
 import React, { useState, useEffect } from 'react'
 import CategoryCard from './CategoryCard';
+import { useNavigate } from "react-router-dom"
 
 function PostCard() {
     const [isLoading, setIsLoading] = useState(true);
     const [posts, setPosts] = useState([]);
     const [counts, setCounts] = useState({});
+    const navigate = useNavigate();
+
+    const handleNavigate = (postId) => {
+        navigate(`/post/${postId}`, { state: posts.find(post => post.id === postId) });
+    };
 
     function handleUpvote(postId) {
         setCounts(prevCounts => ({
@@ -74,7 +80,7 @@ function PostCard() {
                     <div>
                         {posts.map(post => (
                             <div key={post.id} className="transition duration-500 ease-in-out transform hover:-translate-y-1 relative">
-                                <div className=" p-5 bg-white rounded-lg lg:ml-7 mr-10 mb-6 mt-6 lg:mt-0 ml-4 space-y-10">
+                                <div onClick={() => handleNavigate(post.id)} className=" p-5 bg-white rounded-lg lg:ml-7 mr-10 mb-6 mt-6 lg:mt-0 ml-4 space-y-10">
                                     <h3 className="text-sm font-bold text-gray-700">@user{post.id}</h3>
                                     <h3 className="text-lg font-bold text-gray-700">{post.title}</h3>
                                     <div className="flex items-center justify-between mt-4">
