@@ -7,7 +7,6 @@ import SignInModal from "../components/Modals/SignInModal";
 
 
 function PostDetail() {
-
   const [activeModal, setActiveModal] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
 

@@ -1,7 +1,7 @@
 import React from 'react'
 import landingImage from "../../assets/vector-image.png"
 import { Reveal } from 'react-awesome-reveal';
-import { fadeInDownShorter, fadeInLeft } from '../../keyframes';
+import { fadeInDownShorter, fadeInLeft } from '../../utils/keyframes';
 
 function Sidebar({ handleOpenModal }) {
     return (

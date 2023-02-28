@@ -46,13 +46,13 @@ function CommentItem({ comment, userName }) {
                     Reply
                 </button>
             )}
-            {
-                isReplying && <CommentInput onComment={onComment} />}
             <div className='border-l-2 border-gray-200'>
+                {isReplying && <CommentInput onComment={onComment} />}
                 {comments.map((comment) => (
                     <CommentItem comment={comment} userName={userName} />
                 ))}
             </div>
+
         </div>
     )
 }

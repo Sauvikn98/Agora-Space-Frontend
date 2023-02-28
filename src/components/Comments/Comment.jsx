@@ -182,7 +182,7 @@ function Comment() {
         <h2 class="text-lg lg:text-2xl font-bold text-gray-900 dark:text-white">Comments (20)</h2>
       </div>
       <CommentInput onComment={(newComment) => onComment(newComment)} />
-      <div className='w-1/2 bg-white rounded-lg flex flex-col gap-4 mt-10 ml-40 mr-20'>
+      <div className='bg-white rounded-lg flex flex-col gap-4 mt-10 ml-40 mr-20'>
         {currentComments.map((comment) => (
           <CommentItem key={comment.id} comment={comment} userName={comment.userName} />
         ))}
