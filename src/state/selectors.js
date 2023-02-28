@@ -5,6 +5,7 @@ export const isLoggedInSelector = selector({
     key: "isLoggedInSelector",
     get: ({ get }) => {
         const user = get(userState);
+        return user.token !== null;
     },
 });
 

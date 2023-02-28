@@ -1,16 +1,14 @@
 import { atom } from 'recoil';
 
 export const userState = atom({
-    key: 'userState',
+    key: "userState",
     default: {
-        userName: null,
-        token: null,
-        error: null,
-    },
-});
-
-
-
+      userName: "",
+      token: null,
+      error: null
+    }
+  });
+  
 export const createUser = atom({
     key: 'createUser',
     default: null,

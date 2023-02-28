@@ -1,9 +1,20 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import landingImage from "../../assets/vector-image.png"
 import { Reveal } from 'react-awesome-reveal';
 import { fadeInDownShorter, fadeInLeft } from '../../utils/keyframes';
+import { useRecoilValue } from 'recoil';
+import { userState } from '../../state/atoms';
+import { isLoggedInSelector } from '../../state/selectors';
+
 
 function Sidebar({ handleOpenModal }) {
+    const isLoggedIn = useRecoilValue(isLoggedInSelector);
+    const user = useRecoilValue(userState);
+
+    useEffect(() => {
+        console.log("User state changed: ", user);
+    }, [user]);
+
     return (
         <div className='hidden lg:block'>
             <aside className='h-screen sticky flex top-[4.5rem] bottom-2'>
@@ -39,18 +50,18 @@ function Sidebar({ handleOpenModal }) {
                         </a>
                     </nav>
                     <div class="flex flex-col items-center space-y-8 mb-20">
-                        <a href="#">
-                            <img class="object-cover w-8 h-8 rounded-lg" src="https://images.unsplash.com/photo-1531427186611-ecfd6d936c79?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=634&h=634&q=80" alt="avatar" />
-                        </a>
-
-                        <a href="#" class="text-gray-500 transition-colors duration-200 rotate-180 dark:text-gray-400 rtl:rotate-0 hover:text-blue-500 dark:hover:text-blue-400">
-                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
-                                <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 9V5.25A2.25 2.25 0 0013.5 3h-6a2.25 2.25 0 00-2.25 2.25v13.5A2.25 2.25 0 007.5 21h6a2.25 2.25 0 002.25-2.25V15M12 9l-3 3m0 0l3 3m-3-3h12.75" />
-                            </svg>
-                        </a>
+                        {isLoggedIn ? (<>
+                            <a href="#">
+                                <img class="object-cover w-8 h-8 rounded-lg" src="https://images.unsplash.com/photo-1531427186611-ecfd6d936c79?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=634&h=634&q=80" alt="avatar" />
+                            </a><a href="#" class="text-gray-500 transition-colors duration-200 rotate-180 dark:text-gray-400 rtl:rotate-0 hover:text-blue-500 dark:hover:text-blue-400">
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 9V5.25A2.25 2.25 0 0013.5 3h-6a2.25 2.25 0 00-2.25 2.25v13.5A2.25 2.25 0 007.5 21h6a2.25 2.25 0 002.25-2.25V15M12 9l-3 3m0 0l3 3m-3-3h12.75" />
+                                </svg>
+                            </a>
+                        </>
+                        ) : (<></>)}
                     </div>
                 </div>
-
                 <div class="bg-gradient-to-r bg-[radial-gradient(ellipse_at_bottom_left,_var(--tw-gradient-stops))] from-indigo-900 via-indigo-400 to-indigo-900 dark:bg-gray-900 dark:border-gray-700">
                     <img
                         src={landingImage}

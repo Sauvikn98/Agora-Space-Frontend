@@ -1,12 +1,13 @@
 import React, { useEffect, useState } from 'react'
-import { useRecoilState } from 'recoil';
-import { createUser } from '../../state/atoms';
+import { useRecoilState, useSetRecoilState } from 'recoil';
+import { createUser, userState } from '../../state/atoms';
 import { API_USERS_REGISTER } from '../../api/api';
 
 function SignUpModal({ onRequestClose }) {
     const [user, setUser] = useState({ userName: '', email: '', password: '' });
     const [createUserRequest, setCreateUserRequest] = useRecoilState(createUser);
     const [isLoading, setIsLoading] = useState(false);
+    const setUserState = useSetRecoilState(userState);
 
     const handleCreateUser = () => {
         setIsLoading(true);
@@ -40,17 +41,33 @@ function SignUpModal({ onRequestClose }) {
     useEffect(() => {
         if (createUserRequest) {
             fetch(API_USERS_REGISTER, {
-                method: 'POST',
+                method: "POST",
                 headers: {
-                    'Content-Type': 'application/json',
+                    "Content-Type": "application/json"
                 },
-                body: JSON.stringify(createUserRequest),
+                body: JSON.stringify(createUserRequest)
             })
                 .then((response) => response.json())
-                .catch((error) => console.log(error))
-                .finally(() => { setIsLoading(false) });
+                .then((data) => {
+                    const token = data.token || "";
+                    setUserState({
+                        userName: user.userName, // Use the entered username as the default value
+                        token: token,
+                        error: null
+                    });
+                })
+                .catch((error) => {
+                    setUserState((prevUserState) => ({
+                        ...prevUserState,
+                        error: error.message
+                    }));
+                })
+                .finally(() => {
+                    setIsLoading(false);
+                    onRequestClose();
+                });
         }
-    }, [createUserRequest]);
+    }, [createUserRequest, setUserState, onRequestClose]);
 
     return (
         <div className="min-h-full h-full w-full flex justify-center items-center" onClick={handleOutsideClick}>
