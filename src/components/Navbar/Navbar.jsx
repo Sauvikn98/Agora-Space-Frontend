@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from 'react'
 import logo from "../../assets/logo.png"
 import { useRecoilValue } from 'recoil';
-import { isLoggedInSelector } from '../../state/selectors';
+import { authState } from '../../recoil/atoms/userAtoms';
 
 function Navbar({ handleOpenModal }) {
   const [isScrolled, setIsScrolled] = useState(false);
-  const isSignedUp = useRecoilValue(isLoggedInSelector);
+  const { isAuthenticated } = useRecoilValue(authState);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -67,7 +67,7 @@ function Navbar({ handleOpenModal }) {
             </svg>
           </button>
         </div>
-        {isSignedUp ? (
+        {isAuthenticated ? (
           <></>
         ) : (
           <div className="hidden lg:block">

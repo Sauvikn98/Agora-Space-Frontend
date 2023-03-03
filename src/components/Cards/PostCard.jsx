@@ -1,15 +1,18 @@
 import React, { useState, useEffect } from 'react'
 import CategoryCard from './CategoryCard';
 import { useNavigate } from "react-router-dom"
+import { useRecoilState } from 'recoil';
+import { postsState } from '../../recoil/atoms/postAtoms';
+import { API_POSTS_GET_ALL } from '../../api/api';
 
 function PostCard() {
     const [isLoading, setIsLoading] = useState(true);
-    const [posts, setPosts] = useState([]);
+    const [posts, setPosts] = useRecoilState(postsState);
     const [counts, setCounts] = useState({});
     const navigate = useNavigate();
 
     const handleNavigate = (postId) => {
-        navigate(`/post/${postId}`, { state: posts.find(post => post.id === postId) });
+        navigate(`/post/${postId}`, { state: posts.find(post => post._id === postId) });
     };
 
     function handleUpvote(postId) {
@@ -32,18 +35,21 @@ function PostCard() {
         }));
     }
 
-    useEffect(() => {
-        fetch('https://jsonplaceholder.typicode.com/posts')
-            .then(response => response.json())
-            .then(data => {
-                setPosts(data);
-                setIsLoading(false);
-            })
-            .catch(error => {
-                console.error(error);
-                setIsLoading(false);
-            });
-    }, []);
+   
+  useEffect(() => {
+    setIsLoading(true)
+    fetch(API_POSTS_GET_ALL)
+      .then(response => response.json())
+      .then(data => {
+        setPosts(data);
+        setIsLoading(false);
+        console.log(data)
+      })
+      .catch(error => {
+        console.error(error);
+      });
+  }, []);
+
 
     return (
         <div>
@@ -79,9 +85,9 @@ function PostCard() {
                 ) : (
                     <div>
                         {posts.map(post => (
-                            <div key={post.id} className="transition duration-500 ease-in-out transform hover:-translate-y-1 relative">
-                                <div onClick={() => handleNavigate(post.id)} className=" p-5 bg-white rounded-lg lg:ml-7 mr-10 mb-6 mt-6 lg:mt-0 ml-4 space-y-10">
-                                    <h3 className="text-sm font-bold text-gray-700">@user{post.id}</h3>
+                            <div key={post._id} className="transition duration-500 ease-in-out transform hover:-translate-y-1 relative">
+                                <div onClick={() => handleNavigate(post._id)} className=" p-5 bg-white rounded-lg lg:ml-7 mr-10 mb-6 mt-6 lg:mt-0 ml-4 space-y-10">
+                                    <h3 className="text-sm font-bold text-gray-700">@user{post._id}</h3>
                                     <h3 className="text-lg font-bold text-gray-700">{post.title}</h3>
                                     <div className="flex items-center justify-between mt-4">
                                         <div className="flex items-center space-x-4">
@@ -108,12 +114,12 @@ function PostCard() {
                                     </div>
                                 </div>
                                 <div className="rounded-r-lg absolute top-0 right-0 flex flex-col items-center bg-blue-500 h-full w-10 md:mr-0 lg:mr-0 mr-5">
-                                    <button className="text-gray-100 mt-2" onClick={() => handleUpvote(post.id)}>
+                                    <button className="text-gray-100 mt-2" onClick={() => handleUpvote(post._id)}>
                                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-6 h-6">
                                             <path fill-rule="evenodd" d="M11.47 7.72a.75.75 0 011.06 0l7.5 7.5a.75.75 0 11-1.06 1.06L12 9.31l-6.97 6.97a.75.75 0 01-1.06-1.06l7.5-7.5z" />
                                         </svg>
                                     </button>
-                                    <p className="text-center text-gray-100">{(counts[post.id]?.upvotes || 0) - (counts[post.id]?.downvotes || 0)}</p>
+                                    <p className="text-center text-gray-100">{(counts[post._id]?.upvotes || 0) - (counts[post._id]?.downvotes || 0)}</p>
                                     <button className="text-gray-100" onClick={() => handleDownvote(post.id)}>
                                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-6 h-6">
                                             <path fill-rule="evenodd" d="M12.53 16.28a.75.75 0 01-1.06 0l-7.5-7.5a.75.75 0 011.06-1.06L12 14.69l6.97-6.97a.75.75 0 111.06 1.06l-7.5 7.5z" clip-rule="evenodd" />

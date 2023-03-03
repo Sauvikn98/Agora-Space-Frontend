@@ -1,72 +1,73 @@
-import React, { useEffect, useState } from 'react'
-import { useRecoilState, useSetRecoilState } from 'recoil';
-import { loginUser, userState } from '../../state/atoms';
+import React, {useState} from 'react'
+import { useRecoilState } from 'recoil';
+import { authState } from '../../recoil/atoms/userAtoms';
 import { API_USERS_LOGIN } from '../../api/api';
+import classnames from "classnames";
+import axios from 'axios'; 
 
 function SignInModal({ onRequestClose }) {
-    const [user, setUser] = useState({ userName: '', password: '' });
-    const [loginUserRequest, setLoginUserRequest] = useRecoilState(loginUser);
+    const [user, setUser] = useState({ userName: "", password: "" });
+    const [auth, setAuth] = useRecoilState(authState);
     const [isLoading, setIsLoading] = useState(false);
-    const setUserState = useSetRecoilState(userState);
-    
-    const handleSignIn = () => {
-        setIsLoading(true);
-        setLoginUserRequest(user);
-      };
-      
-    const handleInputChange = (event) => {
-        const { name, value } = event.target;
-        setUser((prevUser) => ({ ...prevUser, [name]: value }));
+    const [errors, setErrors] = useState({})
+
+    const handleSignIn = async (event) => {
+        event.preventDefault();
+        const newErrors = {};
+        if (!user.userName) {
+            newErrors.userName = "Username is required";
+        }
+        if (!user.password) {
+            newErrors.password = "Password is required";
+        } else if (user.password.length < 8) {
+            newErrors.password = "Password must be at least 8 characters long";
+        }
+        setErrors(newErrors);
+        if (Object.keys(newErrors).length === 0) {
+            event.preventDefault();
+            setIsLoading(true);
+            try {
+                const response = await axios.post(API_USERS_LOGIN, user, {
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                });
+                const { token } = response.data;
+                if (token) {
+                    setUser({
+                        userName: user.userName,
+                        token: token,
+                    });
+                    setAuth({
+                        isAuthenticated: true,
+                        user: {
+                            userName: user.userName,
+                            token: token,
+                        },
+                    });
+                } else {
+                    setAuth({
+                        isAuthenticated: false,
+                        user: null
+                    });
+                }
+            } catch (error) {
+                console.error(error);
+                setAuth({
+                    isAuthenticated: false,
+                    user: null
+                });
+            }
+            setIsLoading(false);
+            onRequestClose()
+        }
     };
-    
+
     const handleOutsideClick = (event) => {
         if (event.target === event.currentTarget) {
             onRequestClose();
         }
     };
-
-    const handleEscapeKey = (event) => {
-        if (event.keyCode === 27) {
-            onRequestClose();
-        }
-    };
-
-    useEffect(() => {
-        document.addEventListener("keydown", handleEscapeKey, false);
-        return () => {
-            document.removeEventListener("keydown", handleEscapeKey, false);
-        };
-    }, []);
-
-    useEffect(() => {
-        if (loginUserRequest) {
-          fetch(API_USERS_LOGIN, {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json"
-            },
-            body: JSON.stringify(loginUserRequest)
-          })
-            .then((response) => response.json())
-            .then((data) => {
-              const token = data.token || "";
-              setUserState(prevUserState => ({ ...prevUserState, userName: user.userName, token: token, error: null }));
-              console.log(data)
-            })
-            .catch((error) => {
-              console.log(error);
-              setUserState((prevUserState) => ({
-                ...prevUserState,
-                error: error.message
-              }));
-            })
-            .finally(() => {
-              setIsLoading(false);
-              onRequestClose();
-            });
-        }
-      }, [loginUserRequest, setUserState, onRequestClose]);
-      
 
     return (
         <div className="min-h-full h-full w-full flex justify-center items-center" onClick={handleOutsideClick}>
@@ -83,9 +84,54 @@ function SignInModal({ onRequestClose }) {
                         <h1 className="text-3xl font-bold mb-4 cursor-pointer text-gray-900">Sign In</h1>
                         <p className="w-80 text-sm mb-8 font-semibold text-gray-900 tracking-wide cursor-pointer">By continuing, you agree are setting up a Agora Space and agree to our <span className='text-blue-500'>User Agreement</span> and <span className='text-blue-500'>Privacy Policy.</span></p>
                     </div>
-                    <div className="space-y-4">
-                        <input type="text" name="userName" value={user.userName} onChange={handleInputChange} placeholder="Username" className="block text-sm py-3 px-3 rounded-lg w-full border outline-none" />
-                        <input type="password" name="password" value={user.password} onChange={handleInputChange} placeholder="Password" className="block text-sm py-3 px-3 rounded-lg w-full border outline-none" />
+                    <div className={` ${errors.userName ? 'space-y-8' : 'space-y-6'} ${errors.password ? 'space-y-8' : 'space-y-6'}`} >
+                        <div className="relative">
+                            <input
+                                type="text" value={user.userName} onChange={(event) => setUser({ ...user, userName: event.target.value })}
+                                placeholder="Username"
+                                className={classnames(
+                                    "block text-sm py-3 px-3 rounded-lg w-full border placeholder-gray-500 border-gray-300 outline-none",
+                                    {
+                                        "border-red-500": errors.userName,
+                                    }
+                                )}
+                            />
+                            {errors.userName && (
+                                <>
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" fill="currentColor" class="absolute text-red-500 right-2 bottom-4" viewBox="0 0 1792 1792">
+                                        <path d="M1024 1375v-190q0-14-9.5-23.5t-22.5-9.5h-192q-13 0-22.5 9.5t-9.5 23.5v190q0 14 9.5 23.5t22.5 9.5h192q13 0 22.5-9.5t9.5-23.5zm-2-374l18-459q0-12-10-19-13-11-24-11h-220q-11 0-24 11-10 7-10 21l17 457q0 10 10 16.5t24 6.5h185q14 0 23.5-6.5t10.5-16.5zm-14-934l768 1408q35 63-2 126-17 29-46.5 46t-63.5 17h-1536q-34 0-63.5-17t-46.5-46q-37-63-2-126l768-1408q17-31 47-49t65-18 65 18 47 49z">
+                                        </path>
+                                    </svg>
+                                    <span className="absolute text-sm text-red-500 -top-6">
+                                        {errors.userName}
+                                    </span>
+                                </>
+
+                            )}
+                        </div>
+                        <div className="relative">
+                            <input
+                                type="password" value={user.password} onChange={(event) => setUser({ ...user, password: event.target.value })}
+                                placeholder="Password"
+                                className={classnames(
+                                    "block text-sm py-3 px-3 rounded-lg w-full border placeholder-gray-500 border-gray-300 outline-none",
+                                    {
+                                        "border-red-500": errors.password,
+                                    }
+                                )}
+                            />
+                            {errors.password && (
+                                <>
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" fill="currentColor" class="absolute text-red-500 right-2 bottom-4" viewBox="0 0 1792 1792">
+                                        <path d="M1024 1375v-190q0-14-9.5-23.5t-22.5-9.5h-192q-13 0-22.5 9.5t-9.5 23.5v190q0 14 9.5 23.5t22.5 9.5h192q13 0 22.5-9.5t9.5-23.5zm-2-374l18-459q0-12-10-19-13-11-24-11h-220q-11 0-24 11-10 7-10 21l17 457q0 10 10 16.5t24 6.5h185q14 0 23.5-6.5t10.5-16.5zm-14-934l768 1408q35 63-2 126-17 29-46.5 46t-63.5 17h-1536q-34 0-63.5-17t-46.5-46q-37-63-2-126l768-1408q17-31 47-49t65-18 65 18 47 49z">
+                                        </path>
+                                    </svg>
+                                    <span className="absolute text-sm text-red-500 -top-6">
+                                        {errors.password}
+                                    </span>
+                                </>
+                            )}
+                        </div>
                     </div>
                     <div className="text-center mt-6">
                         <button

@@ -3,22 +3,20 @@ import landingImage from "../../assets/vector-image.png"
 import { Reveal } from 'react-awesome-reveal';
 import { fadeInDownShorter, fadeInLeft } from '../../utils/keyframes';
 import { useRecoilValue } from 'recoil';
-import { userState } from '../../state/atoms';
-import { isLoggedInSelector } from '../../state/selectors';
+import { authState } from '../../recoil/atoms/userAtoms';
 
 
 function Sidebar({ handleOpenModal }) {
-    const isLoggedIn = useRecoilValue(isLoggedInSelector);
-    const user = useRecoilValue(userState);
+   const { isAuthenticated, user } = useRecoilValue(authState);
 
     useEffect(() => {
         console.log("User state changed: ", user);
     }, [user]);
 
     return (
-        <div className='hidden lg:block'>
+        <div className='sticky hidden lg:block'>
             <aside className='h-screen sticky flex top-[4.5rem] bottom-2'>
-                <div class="bg-white flex flex-col items-center w-32 py-10">
+                <div class={`bg-white flex flex-col items-center py-10 ${isAuthenticated ? 'w-24' : 'w-32'}`}>
                     <nav class="flex flex-col items-center flex-1 space-y-8 ">
                         <a href="#" class="p-1.5 inline-block text-gray-500 focus:outline-nones transition-colors duration-200 rounded-lg dark:text-gray-400 dark:hover:bg-gray-800 hover:bg-gray-100">
                             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
@@ -50,7 +48,7 @@ function Sidebar({ handleOpenModal }) {
                         </a>
                     </nav>
                     <div class="flex flex-col items-center space-y-8 mb-20">
-                        {isLoggedIn ? (<>
+                        {isAuthenticated ? (<>
                             <div class="relative">
                                 <img id="avatarButton" type="button" data-dropdown-toggle="userDropdown" data-dropdown-placement="bottom-start" class="w-10 h-10 rounded-full" src="https://images.unsplash.com/photo-1531427186611-ecfd6d936c79?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=634&h=634&q=80" alt="" />
                                 <span class="bottom-0 left-7 absolute  w-3.5 h-3.5 bg-green-400 border-2 border-white dark:border-gray-800 rounded-full"></span>
@@ -69,29 +67,55 @@ function Sidebar({ handleOpenModal }) {
                         ) : (<></>)}
                     </div>
                 </div>
-                <div class="bg-gradient-to-r bg-[radial-gradient(ellipse_at_bottom_left,_var(--tw-gradient-stops))] from-indigo-900 via-indigo-400 to-indigo-900 dark:bg-gray-900 dark:border-gray-700">
-                    <img
-                        src={landingImage}
-                        className="mt-10 lg:ml-2 ml-1 md:ml-6 md:mr-6 object-contain h-48 w-80"
-                        alt="landing"
-                    />
-                    <div className="lg:ml-6 ml-7 md:ml-10">
-                        <Reveal keyframes={fadeInLeft} duration={800} delay={200}>
-                            <h2 className="text-4xl font-bold text-white text-left">
-                                Discover, Learn & Discuss
-                            </h2>
-                        </Reveal>
-                        <Reveal keyframes={fadeInLeft} duration={800} delay={200}>
-                            <h3 className="mt-4 text-2xl text-gray-200 text-left">
-                                Empower your mind, ignite your passion through discussion
-                            </h3>
-                        </Reveal>
+                {isAuthenticated ? (
+                    <div class="w-full px-5 bg-gradient-to-r bg-[radial-gradient(ellipse_at_bottom_left,_var(--tw-gradient-stops))] from-indigo-900 via-indigo-400 to-indigo-900 dark:bg-gray-900 dark:border-gray-700">
+                       
+                        <div className='mt-20'>
+                            <Reveal keyframes={fadeInLeft} duration={800} delay={200}>
+                                <h2 className="mb-5 text-4xl font-bold text-white text-left">
+                                    Create a Post
+                                </h2>
+                            </Reveal>
+                            <Reveal keyframes={fadeInDownShorter} duration={1000} delay={400}>
+                                <textarea className="outline-none bg-white rounded-lg text-gray-800 w-full h-32 px-4 py-2 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:border-transparent" placeholder="Write something..."></textarea>
+                            </Reveal>
+                            <Reveal keyframes={fadeInDownShorter} duration={1000} delay={400}>
+                                <button className="font-bold bg-gray-800 text-white mt-4 flex items-center px-8 py-3 transition ease-in duration-200 uppercase rounded-full hover:bg-gray-700 hover:text-white shadow-lg focus:outline-none">
+                                    Post
+                                </button>
+                            </Reveal>
 
-                        <Reveal keyframes={fadeInDownShorter} duration={1000} delay={400}>
-                            <button onClick={() => handleOpenModal('signup')} className="font-bold bg-white mt-8 text-gray-900 flex items-center px-8 py-3  transition ease-in duration-200 uppercase rounded-full hover:bg-gray-800 hover:text-white shadow-lg focus:outline-none">Get Started</button>
-                        </Reveal>
+                        </div>
+
+
                     </div>
-                </div>
+                ) : (
+                    <div class="bg-gradient-to-r bg-[radial-gradient(ellipse_at_bottom_left,_var(--tw-gradient-stops))] from-indigo-900 via-indigo-400 to-indigo-900 dark:bg-gray-900 dark:border-gray-700">
+                        <img
+                            src={landingImage}
+                            className="mt-10 lg:ml-2 ml-1 md:ml-6 md:mr-6 object-contain h-48 w-80"
+                            alt="landing"
+                        />
+                        <div className="lg:ml-6 ml-7 md:ml-10">
+                            <Reveal keyframes={fadeInLeft} duration={800} delay={200}>
+                                <h2 className="text-4xl font-bold text-white text-left">
+                                    Discover, Learn & Discuss
+                                </h2>
+                            </Reveal>
+                            <Reveal keyframes={fadeInLeft} duration={800} delay={200}>
+                                <h3 className="mt-4 text-2xl text-gray-200 text-left">
+                                    Empower your mind, ignite your passion through discussion
+                                </h3>
+                            </Reveal>
+
+                            <Reveal keyframes={fadeInDownShorter} duration={1000} delay={400}>
+                                <button onClick={() => handleOpenModal('signup')} className="font-bold bg-white mt-8 text-gray-900 flex items-center px-8 py-3  transition ease-in duration-200 uppercase rounded-full hover:bg-gray-800 hover:text-white shadow-lg focus:outline-none">Get Started</button>
+                            </Reveal>
+                        </div>
+                    </div>
+
+                )}
+
             </aside>
         </div>
     )
