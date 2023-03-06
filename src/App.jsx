@@ -1,15 +1,16 @@
+import React, { useState } from 'react';
 import Landing from './pages/Landing'
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import SignIn from './pages/SignIn';
+import PostDetail from './pages/PostDetail';
 
 function App() {
   return (
     <BrowserRouter>
-    <Routes>
-      <Route path="/" element={<Landing />}></Route>
-      <Route exact path="/create-profile" element={<SignIn/>}></Route>
-    </Routes>
-  </BrowserRouter>
+      <Routes>
+        <Route path="/" element={<Landing />}></Route>
+        <Route path="/post/:id" element={<PostDetail />}></Route>
+      </Routes>
+    </BrowserRouter>
   )
 }
 
