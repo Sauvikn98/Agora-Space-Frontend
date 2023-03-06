@@ -1,9 +1,10 @@
 import React, { useState } from "react";
-import PostCard from "../components/Cards/PostCard";
+
 import Navbar from "../components/Navbar/Navbar";
 import SignUpModal from "../components/Modals/SignUpModal";
 import SignInModal from "../components/Modals/SignInModal";
 import Sidebar from "../components/Sidebar/Sidebar";
+import SpaceCard from "../components/Cards/SpaceCard";
 
 const Landing = () => {
 
@@ -30,7 +31,7 @@ const Landing = () => {
       )}
       <div className="min-h-screen h-full grid lg:grid-cols-custom bg-gray-200 ">
         <Sidebar handleOpenModal={handleOpenModal} />
-        <PostCard />
+        <SpaceCard/>
       </div>
     </>
   );

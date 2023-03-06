@@ -10,7 +10,7 @@ function App() {
       <BrowserRouter>
         <Routes>
           <Route path="/" element={<Landing />}></Route>
-          <Route path="/post/:id" element={<PostDetail />}></Route>
+          <Route path="/space/:id" element={<PostDetail />}></Route>
         </Routes>
       </BrowserRouter>
     </RecoilRoot>

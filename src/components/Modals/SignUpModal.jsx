@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import { useRecoilState } from 'recoil';
 import { authState } from '../../recoil/atoms/userAtoms';
 import { API_USERS_REGISTER } from '../../api/api';
-import classnames from "classnames";
+import classNames from "classNames";
 import axios from 'axios';
 
 function SignUpModal({ onRequestClose }) {
@@ -102,7 +102,7 @@ function SignUpModal({ onRequestClose }) {
                             <input
                                 type="text" value={newUser.userName} onChange={(event) => setNewUser({ ...newUser, userName: event.target.value })}
                                 placeholder="Username"
-                                className={classnames(
+                                className={classNames(
                                     "block text-sm py-3 px-3 rounded-lg w-full border placeholder-gray-500 border-gray-300 outline-none",
                                     {
                                         "border-red-500": errors.userName,
@@ -111,7 +111,7 @@ function SignUpModal({ onRequestClose }) {
                             />
                             {errors.userName && (
                                 <>
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" fill="currentColor" class="absolute text-red-500 right-2 bottom-4" viewBox="0 0 1792 1792">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" fill="currentColor" className="absolute text-red-500 right-2 bottom-4" viewBox="0 0 1792 1792">
                                         <path d="M1024 1375v-190q0-14-9.5-23.5t-22.5-9.5h-192q-13 0-22.5 9.5t-9.5 23.5v190q0 14 9.5 23.5t22.5 9.5h192q13 0 22.5-9.5t9.5-23.5zm-2-374l18-459q0-12-10-19-13-11-24-11h-220q-11 0-24 11-10 7-10 21l17 457q0 10 10 16.5t24 6.5h185q14 0 23.5-6.5t10.5-16.5zm-14-934l768 1408q35 63-2 126-17 29-46.5 46t-63.5 17h-1536q-34 0-63.5-17t-46.5-46q-37-63-2-126l768-1408q17-31 47-49t65-18 65 18 47 49z">
                                         </path>
                                     </svg>
@@ -126,7 +126,7 @@ function SignUpModal({ onRequestClose }) {
                             <input
                                 type="email" value={newUser.email} onChange={(event) => setNewUser({ ...newUser, email: event.target.value })}
                                 placeholder="Email"
-                                className={classnames(
+                                className={classNames(
                                     "block text-sm py-3 px-3 rounded-lg w-full border placeholder-gray-500 border-gray-300 outline-none",
                                     {
                                         "border-red-500": errors.email,
@@ -135,7 +135,7 @@ function SignUpModal({ onRequestClose }) {
                             />
                             {errors.email && (
                                 <>
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" fill="currentColor" class="absolute text-red-500 right-2 bottom-4" viewBox="0 0 1792 1792">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" fill="currentColor" className="absolute text-red-500 right-2 bottom-4" viewBox="0 0 1792 1792">
                                         <path d="M1024 1375v-190q0-14-9.5-23.5t-22.5-9.5h-192q-13 0-22.5 9.5t-9.5 23.5v190q0 14 9.5 23.5t22.5 9.5h192q13 0 22.5-9.5t9.5-23.5zm-2-374l18-459q0-12-10-19-13-11-24-11h-220q-11 0-24 11-10 7-10 21l17 457q0 10 10 16.5t24 6.5h185q14 0 23.5-6.5t10.5-16.5zm-14-934l768 1408q35 63-2 126-17 29-46.5 46t-63.5 17h-1536q-34 0-63.5-17t-46.5-46q-37-63-2-126l768-1408q17-31 47-49t65-18 65 18 47 49z">
                                         </path>
                                     </svg>
@@ -150,7 +150,7 @@ function SignUpModal({ onRequestClose }) {
                             <input
                                 type="password" value={newUser.password} onChange={(event) => setNewUser({ ...newUser, password: event.target.value })}
                                 placeholder="Password"
-                                className={classnames(
+                                className={classNames(
                                     "block text-sm py-3 px-3 rounded-lg w-full border placeholder-gray-500 border-gray-300 outline-none",
                                     {
                                         "border-red-500": errors.password,
@@ -159,7 +159,7 @@ function SignUpModal({ onRequestClose }) {
                             />
                             {errors.password && (
                                 <>
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" fill="currentColor" class="absolute text-red-500 right-2 bottom-4" viewBox="0 0 1792 1792">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" fill="currentColor" className="absolute text-red-500 right-2 bottom-4" viewBox="0 0 1792 1792">
                                         <path d="M1024 1375v-190q0-14-9.5-23.5t-22.5-9.5h-192q-13 0-22.5 9.5t-9.5 23.5v190q0 14 9.5 23.5t22.5 9.5h192q13 0 22.5-9.5t9.5-23.5zm-2-374l18-459q0-12-10-19-13-11-24-11h-220q-11 0-24 11-10 7-10 21l17 457q0 10 10 16.5t24 6.5h185q14 0 23.5-6.5t10.5-16.5zm-14-934l768 1408q35 63-2 126-17 29-46.5 46t-63.5 17h-1536q-34 0-63.5-17t-46.5-46q-37-63-2-126l768-1408q17-31 47-49t65-18 65 18 47 49z">
                                         </path>
                                     </svg>
@@ -178,7 +178,7 @@ function SignUpModal({ onRequestClose }) {
                         >
                             {isLoading ? (
                                 <>
-                                    <svg aria-hidden="true" role="status" class="inline w-4 h-4 mr-3 text-white animate-spin" viewBox="0 0 100 101" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <svg aria-hidden="true" role="status" className="inline w-4 h-4 mr-3 text-white animate-spin" viewBox="0 0 100 101" fill="none" xmlns="http://www.w3.org/2000/svg">
                                         <path d="M100 50.5908C100 78.2051 77.6142 100.591 50 100.591C22.3858 100.591 0 78.2051 0 50.5908C0 22.9766 22.3858 0.59082 50 0.59082C77.6142 0.59082 100 22.9766 100 50.5908ZM9.08144 50.5908C9.08144 73.1895 27.4013 91.5094 50 91.5094C72.5987 91.5094 90.9186 73.1895 90.9186 50.5908C90.9186 27.9921 72.5987 9.67226 50 9.67226C27.4013 9.67226 9.08144 27.9921 9.08144 50.5908Z" fill="#E5E7EB" />
                                         <path d="M93.9676 39.0409C96.393 38.4038 97.8624 35.9116 97.0079 33.5539C95.2932 28.8227 92.871 24.3692 89.8167 20.348C85.8452 15.1192 80.8826 10.7238 75.2124 7.41289C69.5422 4.10194 63.2754 1.94025 56.7698 1.05124C51.7666 0.367541 46.6976 0.446843 41.7345 1.27873C39.2613 1.69328 37.813 4.19778 38.4501 6.62326C39.0873 9.04874 41.5694 10.4717 44.0505 10.1071C47.8511 9.54855 51.7191 9.52689 55.5402 10.0491C60.8642 10.7766 65.9928 12.5457 70.6331 15.2552C75.2735 17.9648 79.3347 21.5619 82.5849 25.841C84.9175 28.9121 86.7997 32.2913 88.1811 35.8758C89.083 38.2158 91.5421 39.6781 93.9676 39.0409Z" fill="currentColor" />
                                     </svg>

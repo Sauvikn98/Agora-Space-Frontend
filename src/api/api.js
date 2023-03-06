@@ -15,3 +15,12 @@ export const API_POSTS_SEARCH = `${API_BASE_URL}/posts/search`;
 export const API_POSTS_BY_ID = `${API_BASE_URL}/posts/:postId`;
 export const API_POSTS_UPDATE = `${API_BASE_URL}/posts/:postId`;
 export const API_POSTS_DELETE = `${API_BASE_URL}/posts/:postId`;
+
+
+// space api
+export const API_SPACES_CREATE = `${API_BASE_URL}/spaces`;
+export const API_SPACES_GET_ALL = `${API_BASE_URL}/spaces`;
+export const API_SPACES_BY_ID = `${API_BASE_URL}/spaces/:spaceId`;
+export const API_SPACES_UPDATE = `${API_BASE_URL}/spaces/:spaceId`;
+export const API_SPACES_DELETE = `${API_BASE_URL}/spaces/:spaceId`;
+export const API_SPACES_GET_POSTS = `${API_BASE_URL}/spaces`
