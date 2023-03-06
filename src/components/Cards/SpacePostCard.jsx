@@ -1,20 +1,17 @@
 import React, { useState, useEffect } from 'react'
 import axios from 'axios';
 import { useRecoilState, useRecoilValue } from 'recoil';
-import { spacePostsState } from '../../recoil/atoms/postAtoms';
 import { API_SPACES_GET_POSTS } from '../../api/api';
-import { spacesState } from '../../recoil/atoms/spaceAtoms';
+import { spacesState, latestSpacePost } from '../../recoil/atoms/spaceAtoms';
 
 function SpacePostCard({ space }) {
     const [isLoading, setIsLoading] = useState(true);
-    const [posts, setPosts] = useRecoilState(spacePostsState);
+    const [latestPosts, setLatestPosts] = useRecoilState(latestSpacePost);
     const [counts, setCounts] = useState({});
     const spaces = useRecoilValue(spacesState)
 
-
     useEffect(() => {
         setIsLoading(true);
-
         const getPostsForSpaces = async () => {
             try {
                 const promises = spaces.map(space =>
@@ -30,7 +27,7 @@ function SpacePostCard({ space }) {
                     }
                     return acc;
                 }, {});
-                setPosts(LatestPostsBySpace);
+                setLatestPosts(LatestPostsBySpace);
                 setIsLoading(false);
             } catch (error) {
                 console.error(error);
@@ -75,10 +72,10 @@ function SpacePostCard({ space }) {
                         <div className=" relative">
                             <div>
                                 <div key={space._id}>
-                                    {posts && (
-                                        <div key={posts[space._id]._id} className="mt-10 mb-4 space-y-10">
-                                            <h3 className="text-lg font-bold text-gray-700">{posts[space._id].title}</h3>
-                                            <p className="text-lg font-bold text-gray-700">{posts[space._id].content}</p>
+                                    {latestPosts && (
+                                        <div key={latestPosts[space._id]._id} className="mt-10 mb-4 space-y-10">
+                                            <h3 className="text-lg font-bold text-gray-700">{latestPosts[space._id].title}</h3>
+                                            <p className="text-lg font-bold text-gray-700">{latestPosts[space._id].content}</p>
                                             <div className="flex items-center justify-between mt-4">
                                                 <div className="flex items-center space-x-4">
                                                     <div className="flex items-center ">
