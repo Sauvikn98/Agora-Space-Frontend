@@ -29,27 +29,17 @@ All associated entities and features will be:
     - Users can join and leave a space.
 
 ## Project Architecture:
-The website is being developed using **MERN** (MongoDB, Express.js, React.js, Node.js) stack. For state management, Redux is used. For Notifications and other updates Socket.io is used and for UI styling, TailWindCSS is used.
+The website is being developed using **MERN** (MongoDB, Express.js, React.js, Node.js) stack. For state management, Recoil is used. For Notifications and other updates Socket.io is used and for UI styling, TailWindCSS is used.
 
 ## Installation
 
 1. Clone the repo 
 ```bash
-  git clone https://github.com:Sauvikn98/Agora-Space.git
-```
-2. Create a `.env` file and put the following
-```bash
-MONGODB_ATLAS_URI="<your_mongoDB_uri>"
-JWT_TOKEN="<your_jwt_token>"
+  git clone https://github.com:Sauvikn98/Agora-Space-Frontend.git
 ```
 3. install dependencies for server and client
 ```bash 
     npm install
-    cd client && npm install
-```
-4. start the server 
-```bash
-    nodemon server
 ```
 5. start the client app
 ```bash
