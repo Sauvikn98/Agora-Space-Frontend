@@ -37,11 +37,11 @@ The website is being developed using **MERN** (MongoDB, Express.js, React.js, No
 ```bash
   git clone https://github.com:Sauvikn98/Agora-Space-Frontend.git
 ```
-3. install dependencies for server and client
+3. install dependencies
 ```bash 
     npm install
 ```
-5. start the client app
+5. start the frontend application
 ```bash
     npm run dev
 ```
