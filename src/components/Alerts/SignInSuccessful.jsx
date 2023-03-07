@@ -1,12 +1,24 @@
-import React, { useState } from "react"
+import React, { useState, useEffect } from "react"
 import { useRecoilValue } from 'recoil';
-import { userState } from '../../state/atoms';
-import { isLoggedInSelector } from '../../state/selectors';
+import { authState } from "../../recoil/atoms/userAtoms";
 
 const SignedInSuccessful = () => {
-    const isLoggedIn = useRecoilValue(isLoggedInSelector);
-    const user = useRecoilValue(userState);
+    const {isAuthenticated, user} = useRecoilValue(authState);
     const [dismissed, setDismissed] = useState(false);
+
+    useEffect(() => {
+        let dismissTimer;
+
+        if (isAuthenticated) {
+            dismissTimer = setTimeout(() => {
+                dismissAlert();
+            }, 3000);
+        }
+
+        return () => {
+            clearTimeout(dismissTimer);
+        };
+    }, [isAuthenticated, dismissed]);
 
     const dismissAlert = () => {
         setDismissed(true);
@@ -15,10 +27,11 @@ const SignedInSuccessful = () => {
     if (dismissed) {
         return null;
     }
+
     return (
         <>
-            {isLoggedIn && (
-                <div id="alert-3" className="sticky flex p-4 bg-green-600 text-white " role="alert">
+            {isAuthenticated && (
+                <div id="alert-3" className="flex p-4 bg-green-600 text-white " role="alert">
                     <svg aria-hidden="true" className="flex-shrink-0 w-5 h-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd"></path></svg>
                     <span className="sr-only">Info</span>
                     <div className="ml-3 text-sm font-medium">

@@ -41,7 +41,7 @@ function SpacePostCard({ space }) {
         <div>
             <div className="">
                 {isLoading ? (
-                    <div className="m-8 relative space-y-6">
+                    <div className="m-8 relative">
                         <div className="p-5 bg-white rounded-lg flex items-center justify-between space-x-8">
                             <div className="flex-1">
                                 <div className="h-4 w-1/2 bg-gray-300 rounded"></div>
@@ -73,10 +73,10 @@ function SpacePostCard({ space }) {
                             <div>
                                 <div key={space._id}>
                                     {latestPosts && (
-                                        <div key={latestPosts[space._id]._id} className="mt-10 mb-4 space-y-10">
+                                        <div key={latestPosts[space._id]._id}>
                                             <h3 className="text-lg font-bold text-gray-700">{latestPosts[space._id].title}</h3>
-                                            <p className="text-lg font-bold text-gray-700">{latestPosts[space._id].content}</p>
-                                            <div className="flex items-center justify-between mt-4">
+                                            <p className="text-md text-gray-700 pt-1">{latestPosts[space._id].content}</p>
+                                            <div className="flex items-center justify-between mt-6">
                                                 <div className="flex items-center space-x-4">
                                                     <div className="flex items-center ">
                                                         <button className="text-gray-500">

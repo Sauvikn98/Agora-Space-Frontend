@@ -6,23 +6,16 @@ import { useRecoilValue, useSetRecoilState } from 'recoil';
 import { authState } from '../../recoil/atoms/userAtoms';
 import { useNavigate } from 'react-router-dom';
 import TopTabs from '../Tabs/TopTabs';
+import ProfileTooltip from '../Tooltip/ProfileTooltip';
 
 
 function Sidebar({ handleOpenModal }) {
     const { isAuthenticated, user } = useRecoilValue(authState);
-    const setAuthState = useSetRecoilState(authState);
-    const navigate = useNavigate();
     const [currentTab, setCurrentTab] = useState('Create a Post');
+    const [tooltipStatus, setTooltipStatus] = useState(false);
 
     const handleTabClick = (tab) => {
         setCurrentTab(tab);
-    };
-
-    const handleLogout = () => {
-        // Perform the logout logic here
-        // You can clear the authentication state using the setAuthState method
-        setAuthState({ isAuthenticated: false, user: null, token: null });
-        navigate('/')
     };
 
     useEffect(() => {
@@ -65,18 +58,29 @@ function Sidebar({ handleOpenModal }) {
                     </nav>
                     <div className="flex flex-col items-center space-y-8 mb-20">
                         {isAuthenticated ? (<>
-                            <div className="relative">
-                                <img id="avatarButton" type="button" data-dropdown-toggle="userDropdown" data-dropdown-placement="bottom-start" className="w-10 h-10 rounded-full" src="https://images.unsplash.com/photo-1531427186611-ecfd6d936c79?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=634&h=634&q=80" alt="" />
-                                <span className="bottom-0 left-7 absolute  w-3.5 h-3.5 bg-green-400 border-2 border-white dark:border-gray-800 rounded-full"></span>
-                            </div>
-                            {/*
-                             <div className="avatar offline">
-                                <div className="object-cover w-8 h-8 rounded-lg">
-                                    <img src="https://images.unsplash.com/photo-1531427186611-ecfd6d936c79?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=634&h=634&q=80" />
+                            <div className="relative" onMouseEnter={() => setTooltipStatus(1)} onMouseLeave={() => setTooltipStatus(0)}>
+                                <div className="object-cover w-10 h-10 rounded-full cursor-pointer">
+                                    <img id="avatarButton" type="button" data-dropdown-toggle="userDropdown" data-dropdown-placement="bottom-start" className="w-10 h-10 rounded-full" src="https://avatars.githubusercontent.com/u/46704901?v=4" alt="" />
+                                    <span className="bottom-0 left-7 absolute  w-3.5 h-3.5 bg-green-400 border-2 border-white dark:border-gray-800 rounded-full"></span>
                                 </div>
+                                {tooltipStatus == 1 && (
+                                    <div role="tooltip" className="z-50 -bottom-[140px] w-64 absolute transition duration-150 ease-in-out left-0 ml-8 p-4 rounded">
+                                        <svg className="absolute left-2 bottom-0 top-0 h-full" width="9px" height="16px" viewBox="0 0 9 16" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlnsXlink="http://www.w3.org/1999/xlink">
+                                            <g id="Page-1" stroke="none" strokeWidth={1} fill="none" fillRule="evenodd">
+                                                <g id="Tooltips-" transform="translate(-874.000000, -1029.000000)" fill="#4c51bf">
+                                                    <g id="Group-3-Copy-16" transform="translate(850.000000, 975.000000)">
+                                                        <g id="Group-2" transform="translate(24.000000, 0.000000)">
+                                                            <polygon id="Triangle" transform="translate(4.500000, 62.000000) rotate(-90.000000) translate(-4.500000, -62.000000) " points="4.5 57.5 12.5 66.5 -3.5 66.5" />
+                                                        </g>
+                                                    </g>
+                                                </g>
+                                            </g>
+                                        </svg>
+                                        <ProfileTooltip />
+                                    </div>
+                                )}
                             </div>
-                            */}
-                            <button onClick={handleLogout} className='text-gray-500 transition-colors duration-200 rotate-180 dark:text-gray-400 rtl:rotate-0 hover:text-blue-500 dark:hover:text-blue-400'> <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" className="w-6 h-6">
+                            <button onClick={() => handleOpenModal('signout')} className='text-gray-500 transition-colors duration-200 rotate-180 dark:text-gray-400 rtl:rotate-0 hover:text-blue-500 dark:hover:text-blue-400'> <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" className="w-6 h-6">
                                 <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 9V5.25A2.25 2.25 0 0013.5 3h-6a2.25 2.25 0 00-2.25 2.25v13.5A2.25 2.25 0 007.5 21h6a2.25 2.25 0 002.25-2.25V15M12 9l-3 3m0 0l3 3m-3-3h12.75" />
                             </svg></button>
                         </>
@@ -100,17 +104,13 @@ function Sidebar({ handleOpenModal }) {
                                     </h2>
                                 </Reveal>
                                 <Reveal keyframes={fadeInDownShorter} duration={1000} delay={400}>
-                                    <textarea
-                                        className="outline-none bg-white rounded-lg text-gray-800 w-full h-32 px-4 py-2 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:border-transparent"
-                                        placeholder="Write something..."
-                                    ></textarea>
+                                    <input
+                                        className="outline-none bg-white rounded-lg text-gray-800 w-full h-12 px-4 py-2 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:border-transparent"
+                                        placeholder="What's on your mind.."
+                                    ></input>
                                 </Reveal>
-                                <Reveal keyframes={fadeInDownShorter} duration={1000} delay={400}>
-                                    <button className="font-bold bg-gray-800 text-white mt-4 flex items-center px-8 py-3 transition ease-in duration-200 uppercase rounded-full hover:bg-gray-700 hover:text-white shadow-lg focus:outline-none">
-                                        Post
-                                    </button>
-                                </Reveal>
-                            </div>  
+
+                            </div>
                         )}
                         {currentTab === 'Create a Space' && (
                             <div className="mt-20 px-5">
