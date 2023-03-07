@@ -1,9 +1,9 @@
-import React, {useState} from 'react'
+import React, { useState } from 'react'
 import { useRecoilState } from 'recoil';
 import { authState } from '../../recoil/atoms/userAtoms';
 import { API_USERS_LOGIN } from '../../api/api';
-import classNames from "classNames";
-import axios from 'axios'; 
+import classNames from 'classnames';
+import axios from 'axios';
 
 function SignInModal({ onRequestClose }) {
     const [user, setUser] = useState({ userName: "", password: "" });

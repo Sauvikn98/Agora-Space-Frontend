@@ -2,11 +2,11 @@ import React, { useState } from 'react'
 import { useRecoilState } from 'recoil';
 import { authState } from '../../recoil/atoms/userAtoms';
 import { API_USERS_REGISTER } from '../../api/api';
-import classNames from "classNames";
+import classNames from "classnames";
 import axios from 'axios';
 
 function SignUpModal({ onRequestClose }) {
-    const [newUser, setNewUser] = useState({userName: "", email: "", password: ""});
+    const [newUser, setNewUser] = useState({ userName: "", email: "", password: "" });
     const [auth, setAuth] = useRecoilState(authState);
     const [isLoading, setIsLoading] = useState(false);
     const [errors, setErrors] = useState({});
