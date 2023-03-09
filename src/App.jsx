@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 import Landing from './pages/Landing'
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import PostDetail from './pages/PostDetail';
 import { RecoilRoot } from 'recoil';
+import Space from './pages/Space';
 
 function App() {
   return (
@@ -10,7 +10,7 @@ function App() {
       <BrowserRouter>
         <Routes>
           <Route path="/" element={<Landing />}></Route>
-          <Route path="/space/:id" element={<PostDetail />}></Route>
+          <Route path="/space/:id" element={<Space/>}></Route>
         </Routes>
       </BrowserRouter>
     </RecoilRoot>

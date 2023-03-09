@@ -6,7 +6,7 @@ import classNames from 'classnames';
 import axios from 'axios';
 
 function SignInModal({ onRequestClose }) {
-    const [user, setUser] = useState({ userName: "", password: "" });
+    const [userCredentials, setUserCredentials] = useState({ userName: "", password: "" });
     const [auth, setAuth] = useRecoilState(authState);
     const [isLoading, setIsLoading] = useState(false);
     const [errors, setErrors] = useState({})
@@ -14,12 +14,12 @@ function SignInModal({ onRequestClose }) {
     const handleSignIn = async (event) => {
         event.preventDefault();
         const newErrors = {};
-        if (!user.userName) {
+        if (!userCredentials.userName) {
             newErrors.userName = "Username is required";
         }
-        if (!user.password) {
+        if (!userCredentials.password) {
             newErrors.password = "Password is required";
-        } else if (user.password.length < 8) {
+        } else if (userCredentials.password.length < 8) {
             newErrors.password = "Password must be at least 8 characters long";
         }
         setErrors(newErrors);
@@ -27,22 +27,25 @@ function SignInModal({ onRequestClose }) {
             event.preventDefault();
             setIsLoading(true);
             try {
-                const response = await axios.post(API_USERS_LOGIN, user, {
+                const response = await axios.post(API_USERS_LOGIN, userCredentials, {
                     headers: {
                         'Content-Type': 'application/json'
                     }
                 });
-                const { token } = response.data;
+                const { token, user} = response.data;
+                console.log(response.data)
                 if (token) {
-                    setUser({
+                    setUserCredentials({
                         userName: user.userName,
                         token: token,
+                        userId: user._id
                     });
                     setAuth({
                         isAuthenticated: true,
                         user: {
                             userName: user.userName,
                             token: token,
+                            userId: user._id
                         },
                     });
                 } else {
@@ -87,7 +90,7 @@ function SignInModal({ onRequestClose }) {
                     <div className={` ${errors.userName ? 'space-y-8' : 'space-y-6'} ${errors.password ? 'space-y-8' : 'space-y-6'}`} >
                         <div className="relative">
                             <input
-                                type="text" value={user.userName} onChange={(event) => setUser({ ...user, userName: event.target.value })}
+                                type="text" value={userCredentials.userName} onChange={(event) => setUserCredentials({ ...userCredentials, userName: event.target.value })}
                                 placeholder="Username"
                                 className={classNames(
                                     "block text-sm py-3 px-3 rounded-lg w-full border placeholder-gray-500 border-gray-300 outline-none",
@@ -111,7 +114,7 @@ function SignInModal({ onRequestClose }) {
                         </div>
                         <div className="relative">
                             <input
-                                type="password" value={user.password} onChange={(event) => setUser({ ...user, password: event.target.value })}
+                                type="password" value={userCredentials.password} onChange={(event) => setUserCredentials({ ...userCredentials, password: event.target.value })}
                                 placeholder="Password"
                                 className={classNames(
                                     "block text-sm py-3 px-3 rounded-lg w-full border placeholder-gray-500 border-gray-300 outline-none",

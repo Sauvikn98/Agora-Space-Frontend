@@ -39,25 +39,23 @@ function SignUpModal({ onRequestClose }) {
                         "Content-Type": "application/json",
                     },
                 });
-                const { token } = response.data;
+                console.log(response.data)
+                const { token, user } = response.data;
+                console.log(response.data)
                 if (token) {
                     setNewUser({
                         userName: newUser.userName,
                         token: token,
+                        userId: user._id
                     });
                     setAuth({
                         isAuthenticated: true,
                         user: {
                             userName: newUser.userName,
                             token: token,
+                            userId: user._id
                         },
                     });
-                    setNewUser({
-                        userName: newUser.userName,
-                        token: token,
-                    });
-                    // Change other state data based on the new user details
-                    // ...
                 } else {
                     setAuth({
                         isAuthenticated: false,

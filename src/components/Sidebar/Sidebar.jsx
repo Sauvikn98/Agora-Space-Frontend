@@ -4,10 +4,8 @@ import { Reveal } from 'react-awesome-reveal';
 import { fadeInDownShorter, fadeInLeft } from '../../utils/keyframes';
 import { useRecoilValue, useSetRecoilState } from 'recoil';
 import { authState } from '../../recoil/atoms/userAtoms';
-import { useNavigate } from 'react-router-dom';
 import TopTabs from '../Tabs/TopTabs';
 import ProfileTooltip from '../Tooltip/ProfileTooltip';
-
 
 function Sidebar({ handleOpenModal }) {
     const { isAuthenticated, user } = useRecoilValue(authState);
@@ -67,7 +65,7 @@ function Sidebar({ handleOpenModal }) {
                                     <div role="tooltip" className="z-50 -bottom-[140px] w-64 absolute transition duration-150 ease-in-out left-0 ml-8 p-4 rounded">
                                         <svg className="absolute left-2 bottom-0 top-0 h-full" width="9px" height="16px" viewBox="0 0 9 16" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlnsXlink="http://www.w3.org/1999/xlink">
                                             <g id="Page-1" stroke="none" strokeWidth={1} fill="none" fillRule="evenodd">
-                                                <g id="Tooltips-" transform="translate(-874.000000, -1029.000000)" fill="#4c51bf">
+                                                <g id="Tooltips-" transform="translate(-874.000000, -1029.000000)" fill="gray">
                                                     <g id="Group-3-Copy-16" transform="translate(850.000000, 975.000000)">
                                                         <g id="Group-2" transform="translate(24.000000, 0.000000)">
                                                             <polygon id="Triangle" transform="translate(4.500000, 62.000000) rotate(-90.000000) translate(-4.500000, -62.000000) " points="4.5 57.5 12.5 66.5 -3.5 66.5" />
@@ -105,6 +103,7 @@ function Sidebar({ handleOpenModal }) {
                                 </Reveal>
                                 <Reveal keyframes={fadeInDownShorter} duration={1000} delay={400}>
                                     <input
+                                        onClick={() => handleOpenModal('post')}
                                         className="outline-none bg-white rounded-lg text-gray-800 w-full h-12 px-4 py-2 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:border-transparent"
                                         placeholder="What's on your mind.."
                                     ></input>

@@ -4,8 +4,9 @@ import Navbar from "../components/Navbar/Navbar";
 import SignUpModal from "../components/Modals/SignUpModal";
 import SignInModal from "../components/Modals/SignInModal";
 import Sidebar from "../components/Sidebar/Sidebar";
-import SpaceCard from "../components/Cards/SpaceCard";
 import SignOutModal from "../components/Modals/SignOutModal";
+import PostModal from "../components/Modals/PostModal";
+import SpaceList from "../components/Cards/SpaceList";
 const Landing = () => {
 
   const [activeModal, setActiveModal] = useState(null);
@@ -28,11 +29,12 @@ const Landing = () => {
           {activeModal === 'signin' && <SignInModal onRequestClose={handleCloseModal} />}
           {activeModal === 'signup' && <SignUpModal onRequestClose={handleCloseModal} />}
           {activeModal === 'signout' && <SignOutModal onRequestClose={handleCloseModal} />}
+          {activeModal === 'post' && <PostModal onRequestClose={handleCloseModal} />}
         </div>
       )}
       <div className="min-h-screen h-full grid lg:grid-cols-custom bg-gray-200 ">
         <Sidebar handleOpenModal={handleOpenModal} />
-        <SpaceCard />
+        <SpaceList />
       </div>
     </>
     </div>
