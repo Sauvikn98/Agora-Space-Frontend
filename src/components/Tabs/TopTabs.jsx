@@ -2,7 +2,7 @@ import React from 'react'
 
 function TopTabs({ tabs, currentTab, onTabClick }) {
     return (
-        <div className='w-full flex justify-center items-center divide-x-[2px] divide-gray-400  hover:text-gray-600 hover:border-gray-300 dark:hover:text-gray-300'>
+        <div className='w-full flex justify-center items-center   hover:text-gray-600 hover:border-gray-300 dark:hover:text-gray-300'>
             {tabs.map(tab => (
                 <button
                     key={tab}
