@@ -35,6 +35,7 @@ const Landing = () => {
         <SpaceCard />
       </div>
     </>
+    </div>
   );
 };
 
