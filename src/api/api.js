@@ -24,3 +24,10 @@ export const API_SPACES_BY_ID = `${API_BASE_URL}/spaces/:spaceId`;
 export const API_SPACES_UPDATE = `${API_BASE_URL}/spaces`;
 export const API_SPACES_DELETE = `${API_BASE_URL}/spaces/:spaceId`;
 export const API_SPACES_GET_POSTS = `${API_BASE_URL}/spaces`
+
+
+// comment api
+export const API_COMMENTS_CREATE = `${API_BASE_URL}/comments`;
+export const API_COMMENTS_GET_BY_POST = (postId) => `${API_BASE_URL}/comments/${postId}`;
+export const API_COMMENTS_UPDATE = (commentId) => `${API_BASE_URL}/comments/${commentId}`;
+export const API_COMMENTS_DELETE = (commentId) => `${API_BASE_URL}/comments/${commentId}`;

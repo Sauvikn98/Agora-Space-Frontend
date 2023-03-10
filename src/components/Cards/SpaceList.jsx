@@ -7,7 +7,7 @@ import { spacesState } from '../../recoil/atoms/spaceAtoms';
 import axios from "axios";
 import LatestSpacePost from './LatestSpacePost';
 
-function SpaceList() {
+function SpaceList({ handleOpenModal }) {
     const [isLoading, setIsLoading] = useState(true);
     const [spaces, setSpaces] = useRecoilState(spacesState);
     const [counts, setCounts] = useState({});
@@ -70,8 +70,9 @@ function SpaceList() {
         }
     }
 
-    const handleNavigate = (spaceId) => {
-        navigate(`/space/${spaceId}`, { state: spaces.find(space => space._id === spaceId) });
+    const handleNavigate = (spaceName) => {
+        const modifiedSpaceName = spaceName.replace(/\s/g, '');
+        navigate(`/agora/${modifiedSpaceName}`, { state: spaces.find(space => space.name === spaceName) });
     };
 
     useEffect(() => {
@@ -105,7 +106,7 @@ function SpaceList() {
                                             <a href="#" class="relative block">
                                                 <img alt="profile" src="https://avatars.githubusercontent.com/u/46704901?v=4" class="mx-auto object-cover rounded-full h-6 w-6 " />
                                             </a>
-                                            <h3 className="text-sm font-bold text-gray-700 ml-2"><span className='text-indigo-700'>agora/</span>{space.name}</h3>
+                                            <h3 onClick={() => handleNavigate(space.name)} className="hover:underline text-sm font-bold text-gray-700 ml-2"><span className='text-indigo-700'>agora/</span>{space.name}</h3>
                                         </div>
                                         <button className='inline-flex text-sm bg-indigo-700 text-white items-center px-3 py-1 transition ease-in duration-200 rounded-md hover:bg-gray-700 hover:text-white shadow-lg focus:outline-none mr-4 lg:mr-10'>
                                             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" className="w-5 h-5 mr-2">
@@ -113,9 +114,7 @@ function SpaceList() {
                                             </svg>
                                             Join Space</button>
                                     </div>
-                                    <div onClick={() => handleNavigate(space._id)}>
-                                        <LatestSpacePost spaceId={space._id} />
-                                    </div>
+                                    <LatestSpacePost spaceId={space._id} spaceName={space.name} handleOpenModal={handleOpenModal} handleNavigate={handleNavigate} />
                                     <div className='flex'>
                                         <div className="absolute inset-y-0 w-10 right-5 flex flex-col justify-start items-center bg-blue-500 rounded-r-lg">
                                             <button className="text-gray-100 mt-2" onClick={() => handleUpvote(space._id)}>

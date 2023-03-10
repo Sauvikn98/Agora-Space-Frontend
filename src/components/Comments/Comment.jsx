@@ -153,7 +153,7 @@ const dummyComments = [
   }
 ]
 
-function Comment() {
+function Comment({ onRequestClose }) {
   const [comments, setComments] = useState(dummyComments);
   const [currentPage, setCurrentPage] = useState(1);
   const commentsPerPage = 10;
@@ -177,8 +177,8 @@ function Comment() {
   };
 
   return (
-    <div className='py-8 lg:py-16'>
-      <div class="flex justify-between items-center mb-6 ml-20">
+    <div className=''>
+      <div class="mt-10  flex justify-between items-center mb-6 ml-20">
         <h2 class="text-lg lg:text-2xl font-bold text-gray-900 dark:text-white">Comments (20)</h2>
       </div>
       <CommentInput onComment={(newComment) => onComment(newComment)} />

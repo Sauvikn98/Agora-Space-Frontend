@@ -7,10 +7,13 @@ import Sidebar from "../components/Sidebar/Sidebar";
 import SignOutModal from "../components/Modals/SignOutModal";
 import PostModal from "../components/Modals/PostModal";
 import SpaceList from "../components/Cards/SpaceList";
+import Comment from "../components/Comments/Comment";
+import { useNavigate } from "react-router-dom";
 const Landing = () => {
 
   const [activeModal, setActiveModal] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const navigate = useNavigate();
 
   const handleOpenModal = (modal) => {
     setActiveModal(modal);
@@ -19,6 +22,7 @@ const Landing = () => {
   const handleCloseModal = () => {
     setActiveModal(null);
     setIsModalOpen(false);
+    navigate('/')
   };
 
   return (
@@ -30,11 +34,12 @@ const Landing = () => {
           {activeModal === 'signup' && <SignUpModal onRequestClose={handleCloseModal} />}
           {activeModal === 'signout' && <SignOutModal onRequestClose={handleCloseModal} />}
           {activeModal === 'post' && <PostModal onRequestClose={handleCloseModal} />}
+          {activeModal === 'comment' && <Comment onRequestClose={handleCloseModal}/>}
         </div>
       )}
       <div className="min-h-screen h-full grid lg:grid-cols-custom bg-gray-200 ">
         <Sidebar handleOpenModal={handleOpenModal} />
-        <SpaceList />
+        <SpaceList handleOpenModal={handleOpenModal}/>
       </div>
     </>
   );

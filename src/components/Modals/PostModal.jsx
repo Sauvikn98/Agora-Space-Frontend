@@ -9,13 +9,13 @@ import { authState } from '../../recoil/atoms/userAtoms';
 function PostModal({ onRequestClose }) {
     const [title, setTitle] = useState('');
     const [content, setContent] = useState('');
-    const [multimedia, setMultiMedia] = useState(null);    
+    const [multimedia, setMultiMedia] = useState(null);
     const [isOpen, setIsOpen] = useState(false);
     const dropdownRef = useRef(null);
     const [selectedSpace, setSelectedSpace] = useState(null);
     const spaces = useRecoilValue(spacesState);
     const [posts, setPosts] = useRecoilState(createNewpost);
-    const {user} = useRecoilValue(authState)
+    const { user } = useRecoilValue(authState)
     const setPostsState = useSetRecoilState(createNewpost);
 
     const handleTitleChange = (event) => {
@@ -32,32 +32,30 @@ function PostModal({ onRequestClose }) {
 
     const handleSubmit = async () => {
         const newPost = {
-          space: selectedSpace,
-          title,
-          content,
-          author: user.userId
-          //multimedia,
+            space: selectedSpace,
+            title,
+            content,
+            author: user.userId
+            //multimedia,
         };
-      
-        try {
-          const response = await axios.post(API_POSTS_CREATE, newPost);
-          setPosts([...posts, response.data]);
-          setPostsState([...posts, response.data]);
-          await axios.put(API_SPACES_UPDATE + `/${selectedSpace._id}`, {postId: response.data._id});
-      
-          // Reset the form
-          setTitle('');
-          setContent('');
-          setMultiMedia(null);
-          setSelectedSpace(null);
-      
-          onRequestClose();
-        } catch (error) {
-          console.error(error);
-        }
-      };
 
-      
+        try {
+            const response = await axios.post(API_POSTS_CREATE, newPost);
+            setPosts([...posts, response.data]);
+            setPostsState([...posts, response.data]);
+            await axios.put(API_SPACES_UPDATE + `/${selectedSpace._id}`, { postId: response.data._id });
+
+            // Reset the form
+            setTitle('');
+            setContent('');
+            setMultiMedia(null);
+            setSelectedSpace(null);
+
+            onRequestClose();
+        } catch (error) {
+            console.error(error);
+        }
+    };
 
     const handleButtonClick = () => {
         setIsOpen(!isOpen);
@@ -69,7 +67,6 @@ function PostModal({ onRequestClose }) {
         }
     };
 
-    
     useEffect(() => {
         document.addEventListener("mousedown", handleOutsideClick);
 
@@ -77,7 +74,6 @@ function PostModal({ onRequestClose }) {
             document.removeEventListener("mousedown", handleOutsideClick);
         };
     }, []);
-
 
     return (
         <div className="fixed z-10 inset-0 overflow-y-auto" aria-labelledby="modal-title" role="dialog" aria-modal="true">
@@ -90,40 +86,40 @@ function PostModal({ onRequestClose }) {
                             <div className="">
                                 <div class="w-64">
                                     <div class="relative mt-5 mb-5 px-4" ref={dropdownRef}>
-                                        <button type="button" onClick={handleButtonClick} class="relative w-full py-3 pl-3 pr-10 text-left bg-white rounded-md shadow-lg cursor-default focus:outline-none focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">                                         
-                                                <>
-                                                    {selectedSpace ? (
-                                                        <>
-                                                            <span class="flex items-center">
-                                                                <img src="https://avatars.githubusercontent.com/u/46704901?v=4" alt="person" class="flex-shrink-0 w-6 h-6 rounded-full" />
-                                                                <span class="block ml-3 truncate">
-                                                                    {selectedSpace.name}
-                                                                </span>
+                                        <button type="button" onClick={handleButtonClick} class="relative w-full py-3 pl-3 pr-10 text-left bg-white rounded-md shadow-lg cursor-default focus:outline-none focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+                                            <>
+                                                {selectedSpace ? (
+                                                    <>
+                                                        <span class="flex items-center">
+                                                            <img src="https://avatars.githubusercontent.com/u/46704901?v=4" alt="person" class="flex-shrink-0 w-6 h-6 rounded-full" />
+                                                            <span class="block ml-3 truncate">
+                                                                {selectedSpace.name}
                                                             </span>
-                                                            <span class="absolute inset-y-0 right-0 flex items-center pr-2 ml-3 pointer-events-none">
-                                                                <svg class="w-5 h-5 text-gray-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
-                                                                    <path fill-rule="evenodd" d="M10 3a1 1 0 01.707.293l3 3a1 1 0 01-1.414 1.414L10 5.414 7.707 7.707a1 1 0 01-1.414-1.414l3-3A1 1 0 0110 3zm-3.707 9.293a1 1 0 011.414 0L10 14.586l2.293-2.293a1 1 0 011.414 1.414l-3 3a1 1 0 01-1.414 0l-3-3a1 1 0 010-1.414z" clip-rule="evenodd">
-                                                                    </path>
-                                                                </svg>
+                                                        </span>
+                                                        <span class="absolute inset-y-0 right-0 flex items-center pr-2 ml-3 pointer-events-none">
+                                                            <svg class="w-5 h-5 text-gray-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                                                                <path fill-rule="evenodd" d="M10 3a1 1 0 01.707.293l3 3a1 1 0 01-1.414 1.414L10 5.414 7.707 7.707a1 1 0 01-1.414-1.414l3-3A1 1 0 0110 3zm-3.707 9.293a1 1 0 011.414 0L10 14.586l2.293-2.293a1 1 0 011.414 1.414l-3 3a1 1 0 01-1.414 0l-3-3a1 1 0 010-1.414z" clip-rule="evenodd">
+                                                                </path>
+                                                            </svg>
+                                                        </span>
+                                                    </>
+                                                ) : (
+                                                    <>
+                                                        <span class="flex items-center">
+                                                            <img src="https://avatars.githubusercontent.com/u/46704901?v=4" alt="person" class="flex-shrink-0 w-6 h-6 rounded-full" />
+                                                            <span class="block ml-3 truncate">
+                                                                Select a space
                                                             </span>
-                                                        </>
-                                                    ) : (
-                                                      <>
-                                                            <span class="flex items-center">
-                                                                <img src="https://avatars.githubusercontent.com/u/46704901?v=4" alt="person" class="flex-shrink-0 w-6 h-6 rounded-full" />
-                                                                <span class="block ml-3 truncate">
-                                                                    Select a space
-                                                                </span>
-                                                            </span>
-                                                            <span class="absolute inset-y-0 right-0 flex items-center pr-2 ml-3 pointer-events-none">
-                                                                <svg class="w-5 h-5 text-gray-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
-                                                                    <path fill-rule="evenodd" d="M10 3a1 1 0 01.707.293l3 3a1 1 0 01-1.414 1.414L10 5.414 7.707 7.707a1 1 0 01-1.414-1.414l3-3A1 1 0 0110 3zm-3.707 9.293a1 1 0 011.414 0L10 14.586l2.293-2.293a1 1 0 011.414 1.414l-3 3a1 1 0 01-1.414 0l-3-3a1 1 0 010-1.414z" clip-rule="evenodd">
-                                                                    </path>
-                                                                </svg>
-                                                            </span>
-                                                        </>
-                                                    )}
-                                                </>
+                                                        </span>
+                                                        <span class="absolute inset-y-0 right-0 flex items-center pr-2 ml-3 pointer-events-none">
+                                                            <svg class="w-5 h-5 text-gray-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                                                                <path fill-rule="evenodd" d="M10 3a1 1 0 01.707.293l3 3a1 1 0 01-1.414 1.414L10 5.414 7.707 7.707a1 1 0 01-1.414-1.414l3-3A1 1 0 0110 3zm-3.707 9.293a1 1 0 011.414 0L10 14.586l2.293-2.293a1 1 0 011.414 1.414l-3 3a1 1 0 01-1.414 0l-3-3a1 1 0 010-1.414z" clip-rule="evenodd">
+                                                                </path>
+                                                            </svg>
+                                                        </span>
+                                                    </>
+                                                )}
+                                            </>
                                         </button>
                                         {isOpen && (
                                             <div class="absolute z-10 w-full mt-1 bg-white rounded-md shadow-lg">
