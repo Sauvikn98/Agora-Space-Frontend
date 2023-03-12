@@ -4,7 +4,7 @@ import { useRecoilValue } from 'recoil';
 import { getAllPosts } from '../../recoil/atoms/postAtoms';
 import AllSpacePost from './AllSpacePosts';
 
-function SpaceDetailCard({handleOpenModal}) {
+function SpaceDetailCard({ handleOpenModal }) {
     const { state: space } = useLocation()
     const [counts, setCounts] = useState({});
     const posts = useRecoilValue(getAllPosts)
@@ -18,7 +18,7 @@ function SpaceDetailCard({handleOpenModal}) {
                         <h3 className="text-lg font-bold text-black">{space.name}</h3>
                         <p className="text-black">{space.description}</p>
                     </div>
-                    <AllSpacePost spaceId={space._id} handleOpenModal={handleOpenModal}/>
+                    <AllSpacePost spaceId={space._id} handleOpenModal={handleOpenModal} />
                 </div>
             </div>
         </div>

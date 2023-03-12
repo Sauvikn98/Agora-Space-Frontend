@@ -58,7 +58,10 @@ function Sidebar({ handleOpenModal }) {
                         {isAuthenticated ? (<>
                             <div className="relative" onMouseEnter={() => setTooltipStatus(1)} onMouseLeave={() => setTooltipStatus(0)}>
                                 <div className="object-cover w-10 h-10 rounded-full cursor-pointer">
-                                    <img id="avatarButton" type="button" data-dropdown-toggle="userDropdown" data-dropdown-placement="bottom-start" className="w-10 h-10 rounded-full" src="https://avatars.githubusercontent.com/u/46704901?v=4" alt="" />
+                                    <img
+                                        src={`https://avatars.dicebear.com/api/adventurer/${user.userId}.svg`}
+                                        alt="user avatar"
+                                    />
                                     <span className="bottom-0 left-7 absolute  w-3.5 h-3.5 bg-green-400 border-2 border-white dark:border-gray-800 rounded-full"></span>
                                 </div>
                                 {tooltipStatus == 1 && (
