@@ -100,8 +100,8 @@ function SpaceList({ handleOpenModal }) {
                     <div>
                         {spaces.map(space => (
                             <div key={space._id} className="transition duration-500 ease-in-out transform hover:-translate-y-1 relative">
-                                <div className="hover:outline outline-offset-2 outline-blue-500 p-5 bg-white rounded-lg lg:ml-7 mr-5 mb-6 mt-6 lg:mt-0 ml-6 space-y-2">
-                                    <div className='flex justify-between mr-5 lg:mr-0'>
+                                <div className="shadow-xl hover:outline outline-offset-2 pb-4 outline-blue-500 bg-white rounded-lg lg:ml-7 mr-5 mb-6 mt-6 lg:mt-0 ml-6 space-y-2">
+                                    <div className='bg-gray-100 border-b-2 p-2 pr-6 lg:pr-4 border-gray-200 flex justify-between items-center mr-5 lg:mr-0'>
                                         <div className='flex justify-center'>
                                             <a href="#" class="relative block">
                                                 <img alt="profile" src="https://avatars.githubusercontent.com/u/46704901?v=4" class="mx-auto object-cover rounded-full h-6 w-6 " />
@@ -114,7 +114,10 @@ function SpaceList({ handleOpenModal }) {
                                             </svg>
                                             Join Space</button>
                                     </div>
-                                    <LatestSpacePost spaceId={space._id} spaceName={space.name} handleOpenModal={handleOpenModal} handleNavigate={handleNavigate} />
+                                    <div className='pl-5 pr-16 lg:pr-0'>
+                                        <LatestSpacePost spaceId={space._id} spaceName={space.name} handleOpenModal={handleOpenModal} handleNavigate={handleNavigate} />
+                                    </div>
+
                                     <div className='flex'>
                                         <div className="absolute inset-y-0 w-10 right-5 flex flex-col justify-start items-center bg-blue-500 rounded-r-lg">
                                             <button className="text-gray-100 mt-2" onClick={() => handleUpvote(space._id)}>

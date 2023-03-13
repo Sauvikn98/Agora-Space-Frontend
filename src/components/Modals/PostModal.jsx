@@ -1,9 +1,9 @@
 import { useState, useEffect, useRef } from 'react';
-import { useRecoilValue, useRecoilState, useSetRecoilState } from 'recoil';
+import { useRecoilValue, useRecoilState } from 'recoil';
 import { spacesState } from '../../recoil/atoms/spaceAtoms';
 import { createNewpost } from '../../recoil/atoms/postAtoms';
 import axios from 'axios';
-import { API_POSTS_CREATE, API_SPACES_UPDATE } from '../../api/api';
+import { API_POSTS_CREATE } from '../../api/api';
 import { authState } from '../../recoil/atoms/userAtoms';
 
 function PostModal({ onRequestClose }) {
@@ -16,7 +16,6 @@ function PostModal({ onRequestClose }) {
     const spaces = useRecoilValue(spacesState);
     const [posts, setPosts] = useRecoilState(createNewpost);
     const { user } = useRecoilValue(authState)
-    const setPostsState = useSetRecoilState(createNewpost);
 
     const handleTitleChange = (event) => {
         setTitle(event.target.value);
@@ -42,8 +41,6 @@ function PostModal({ onRequestClose }) {
         try {
             const response = await axios.post(API_POSTS_CREATE, newPost);
             setPosts([...posts, response.data]);
-            setPostsState([...posts, response.data]);
-            await axios.put(API_SPACES_UPDATE + `/${selectedSpace._id}`, { postId: response.data._id });
 
             // Reset the form
             setTitle('');

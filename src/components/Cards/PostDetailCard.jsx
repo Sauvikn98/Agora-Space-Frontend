@@ -26,10 +26,10 @@ function PostDetailCard() {
     }
 
     return (
-        <div className="mt-20 w-full mx-auto">
+        <div className="mt-5 w-full mx-auto">
             <div
                 key={post._id}
-                className="bg-white rounded-lg space-y-10 p-6"
+                className="rounded-lg bg-white space-y-10 p-6"
             >
                 <div className="flex items-center justify-between">
                     <div className="flex items-center space-x-4">
@@ -87,6 +87,7 @@ function PostDetailCard() {
                 </div>
                 <div>
                     <p className="text-gray-700">{post.content}</p>
+                    <img src="https://images.unsplash.com/photo-1575936123452-b67c3203c357?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxzZWFyY2h8Mnx8aW1hZ2V8ZW58MHx8MHx8&auto=format&fit=crop&w=500&q=60" alt="post image" className="w-full mt-5" />
                 </div>
             </div>
         </div>

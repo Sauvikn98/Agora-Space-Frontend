@@ -36,11 +36,11 @@ function CommentInput({ parentId, onComment }) {
   };
 
   return (
-    <div className='mb-6 ml-20 mr-20'>
+    <div className='mb-6'>
       {error && (
         <div className='text-red-500 mb-4 font-medium text-sm'>{error}</div>
       )}
-      <div className='w-1/2 py-2 px-4 mt-6 mb-4 bg-white rounded-lg rounded-t-lg border-2 border-gray-500 dark:bg-gray-800 dark:border-gray-700'>
+      <div className=' py-2 px-4 mt-6 mb-4 bg-white rounded-lg rounded-t-lg border-2 border-gray-500 dark:bg-gray-800 dark:border-gray-700'>
         <textarea
           value={commentBody}
           rows='8'

@@ -29,7 +29,7 @@ function Space() {
           {activeModal === 'comment' && <Comment onRequestClose={handleCloseModal} />}
         </div>
       )}
-      <SpaceDetailCard handleOpenModal={handleOpenModal}/>
+      <SpaceDetailCard handleOpenModal={handleOpenModal} />
     </div>
   )
 }
