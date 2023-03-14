@@ -7,7 +7,7 @@ function TopTabs({ tabs, currentTab, onTabClick }) {
                 <button
                     key={tab}
                     onClick={() => onTabClick(tab)}
-                    className={tab === currentTab ? 'p-3 shadow-lg inline-flex items-center w-full bg-gray-500 text-white  active dark:text-blue-500 dark:border-blue-500 group' : 'shadow-lg w-full inline-flex items-center p-3 bg-gray-200 hover:text-gray-600 hover:border-gray-300 dark:hover:text-gray-300'}
+                    className={tab === currentTab ? 'p-1 shadow-lg inline-flex items-center w-full bg-gray-500 text-white  active dark:text-blue-500 dark:border-blue-500 group' : 'shadow-lg w-full inline-flex items-center p-1 bg-gray-200 hover:text-gray-600 hover:border-gray-300 dark:hover:text-gray-300'}
                 >
                     {tab === 'Create a Post' ? (
                         <>

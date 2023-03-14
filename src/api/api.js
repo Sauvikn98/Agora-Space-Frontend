@@ -22,6 +22,8 @@ export const API_SPACES_CREATE = `${API_BASE_URL}/spaces`;
 export const API_SPACES_GET_ALL = `${API_BASE_URL}/spaces`;
 export const API_SPACES_BY_ID = `${API_BASE_URL}/spaces/:spaceId`;
 export const API_SPACES_UPDATE = `${API_BASE_URL}/spaces`;
+export const API_SPACES_JOIN_SPACE = (spaceId) => `${API_BASE_URL}/spaces/${spaceId}/join`;
+export const API_SPACES_LEAVE_SPACE = (spaceId) => `${API_BASE_URL}/spaces/${spaceId}/leave`;
 export const API_SPACES_DELETE = `${API_BASE_URL}/spaces/:spaceId`;
 export const API_SPACES_GET_POSTS = `${API_BASE_URL}/spaces`
 

@@ -171,19 +171,13 @@ function PostModal({ onRequestClose }) {
                                         value={content}
                                         onChange={handleContentChange}
                                     />
-                                    <div className="mb-4">
-                                        <div className="flex items-center justify-center bg-gray-100 py-2 px-3 rounded-md">
-                                            <svg className="h-6 w-6 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
-                                            </svg>
-                                            <span className="ml-2 text-gray-500">{multimedia ? multimedia.name : 'Select a file'}</span>
-                                            <input
-                                                type="file"
-                                                id="multimedia"
-                                                className="relative inset-0 opacity-0 z-50"
-                                                onChange={handleMediaChange}
-                                            />
-                                        </div>
+                                    <div className="">
+                                        <form class="ml-4 mt-2 flex items-center space-x-6">
+                                            <label class="block">
+                                                <span class="sr-only">Choose Multimedia</span>
+                                                <input type="file" class="block w-full text-sm text-slate-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-violet-50 file:text-violet-700 hover:file:bg-violet-100"/>
+                                            </label>
+                                        </form>
                                     </div>
                                 </div>
                             </div>
