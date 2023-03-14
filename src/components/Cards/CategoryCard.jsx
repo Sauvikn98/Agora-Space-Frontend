@@ -45,20 +45,34 @@ function CategoryCard() {
     }
 
     return (
-        <div className="lg:ml-7 ml-6 mb-7 mt-7 lg:mt-6 flex flex-wrap gap-4">
+        <div className="rounded-lg py-10 bg-white hidden lg:block mr-5 mb-7 h-[70vh] mt-7 lg:mt-6 flex-wrap gap-4 space-y-6">
             {categories.map(category => (
-                <div
-                    key={category.id}
-                    className={`flex items-center p-2 border rounded-lg cursor-pointer ${getGradientClass(category.id)
-                        }`}
-                    onClick={() => handleCategoryClick(category.id)}
-                >
-                    {selectedCategories.includes(category.id) ? (
-                        <CheckCircleIcon className="h-6 w-6 text-gray-300" />
-                    ) : (
-                        <PlusCircleIcon className="h-6 w-6 text-gray-100" />
-                    )}
-                    <h2 className="pl-2 pr-2 text-white">{category.name}</h2>
+                <div class=" flex w-full justify-center">
+                    <div
+                        data-te-chip-init
+                        data-te-ripple-init
+                        class="[word-wrap: break-word] my-[5px] mr-4 flex h-[32px] cursor-pointer items-center justify-between rounded-[16px] border border-[#3b71ca] bg-[#eceff1] bg-[transparent] py-0 px-[12px] text-[13px] font-normal normal-case leading-loose text-[#4f4f4f] shadow-none transition-[opacity] duration-300 ease-linear hover:border-[#3b71ca] hover:!shadow-none dark:text-neutral-200"
+                        data-te-ripple-color="dark">
+                        {category.name}
+
+                        <span
+                            data-te-chip-close
+                            class="float-right w-4 cursor-pointer pl-[8px] text-[16px] text-[#afafaf] opacity-[.53] transition-all duration-200 ease-in-out hover:text-[#8b8b8b] dark:text-neutral-400 dark:hover:text-neutral-100">
+                            <svg
+                                xmlns="http://www.w3.org/2000/svg"
+                                fill="none"
+                                viewBox="0 0 24 24"
+                                stroke-width="1.5"
+                                stroke="currentColor"
+                                class="h-3 w-3">
+                                <path
+                                    stroke-linecap="round"
+                                    stroke-linejoin="round"
+                                    d="M6 18L18 6M6 6l12 12" />
+                            </svg>
+                        </span>
+                    </div>
+                    
                 </div>
             ))}
         </div>

@@ -9,6 +9,9 @@ import PostModal from "../components/Modals/PostModal";
 import SpaceList from "../components/Cards/SpaceList";
 import Comment from "../components/Comments/Comment";
 import { useNavigate } from "react-router-dom";
+import CategoryCard from "../components/Cards/CategoryCard";
+import RecommendedPosts from "../components/Cards/RecommendedPosts";
+import RecommendedSpaces from "../components/Cards/RecommendedSpaces";
 const Landing = () => {
 
   const [activeModal, setActiveModal] = useState(null);
@@ -40,6 +43,7 @@ const Landing = () => {
       <div className="min-h-screen h-full grid lg:grid-cols-custom bg-gray-200 ">
         <Sidebar handleOpenModal={handleOpenModal} />
         <SpaceList handleOpenModal={handleOpenModal}/>
+        <RecommendedSpaces/>
       </div>
     </>
   );

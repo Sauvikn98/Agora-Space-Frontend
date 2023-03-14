@@ -113,14 +113,14 @@ function AllSpacePost({ spaceId, handleOpenModal }) {
                         </div>
 
                         <div className='flex'>
-                            <div className="absolute inset-y-0 w-10 right-5 flex flex-col justify-start items-center bg-blue-500 rounded-r-lg">
-                                <button className="text-gray-100 mt-2" onClick={() => handleUpvote(post._id)}>
+                            <div className="absolute inset-y-0 w-10 right-5 flex flex-col justify-start items-center bg-gray-100 border-l-2 rounded-r-lg">
+                                <button className="text-gray-900 mt-2" onClick={() => handleUpvote(post._id)}>
                                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-6 h-6">
                                         <path fill-rule="evenodd" d="M11.47 7.72a.75.75 0 011.06 0l7.5 7.5a.75.75 0 11-1.06 1.06L12 9.31l-6.97 6.97a.75.75 0 01-1.06-1.06l7.5-7.5z" />
                                     </svg>
                                 </button>
-                                <p className="text-center text-gray-100">{(counts[post._id]?.upvotes || 0) - (counts[post._id]?.downvotes || 0)}</p>
-                                <button className="text-gray-100" onClick={() => handleDownvote(post._id)}>
+                                <p className="text-center text-gray-900">{(counts[post._id]?.upvotes || 0) - (counts[post._id]?.downvotes || 0)}</p>
+                                <button className="text-gray-900" onClick={() => handleDownvote(post._id)}>
                                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-6 h-6">
                                         <path fill-rule="evenodd" d="M12.53 16.28a.75.75 0 01-1.06 0l-7.5-7.5a.75.75 0 011.06-1.06L12 14.69l6.97-6.97a.75.75 0 111.06 1.06l-7.5 7.5z" clip-rule="evenodd" />
                                     </svg>
