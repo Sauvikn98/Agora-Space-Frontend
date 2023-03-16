@@ -4,7 +4,7 @@ import { spacesState } from '../../recoil/atoms/spaceAtoms';
 import { createNewpost } from '../../recoil/atoms/postAtoms';
 import axios from 'axios';
 import { API_POSTS_CREATE } from '../../api/api';
-import { authState } from '../../recoil/atoms/userAtoms';
+import { userAtom } from '../../recoil/atoms/userAtoms';
 
 function PostModal({ onRequestClose }) {
     const [title, setTitle] = useState('');
@@ -15,7 +15,7 @@ function PostModal({ onRequestClose }) {
     const [selectedSpace, setSelectedSpace] = useState(null);
     const spaces = useRecoilValue(spacesState);
     const [posts, setPosts] = useRecoilState(createNewpost);
-    const { user } = useRecoilValue(authState)
+    const user = useRecoilValue(userAtom)
 
     const handleTitleChange = (event) => {
         setTitle(event.target.value);
@@ -34,7 +34,7 @@ function PostModal({ onRequestClose }) {
             space: selectedSpace,
             title,
             content,
-            author: user.userId
+            author: user.userDetails._id
             //multimedia,
         };
 
@@ -175,7 +175,7 @@ function PostModal({ onRequestClose }) {
                                         <form class="ml-4 mt-2 flex items-center space-x-6">
                                             <label class="block">
                                                 <span class="sr-only">Choose Multimedia</span>
-                                                <input type="file" class="block w-full text-sm text-slate-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-violet-50 file:text-violet-700 hover:file:bg-violet-100"/>
+                                                <input type="file" class="block w-full text-sm text-slate-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-violet-50 file:text-violet-700 hover:file:bg-violet-100" />
                                             </label>
                                         </form>
                                     </div>

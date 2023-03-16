@@ -1,13 +1,15 @@
 import React, { useState } from 'react'
-import { useRecoilState } from 'recoil';
-import { authState } from '../../recoil/atoms/userAtoms';
-import { API_USERS_REGISTER } from '../../api/api';
+import { useSetRecoilState } from 'recoil';
 import classNames from "classnames";
-import axios from 'axios';
+import { isAuthenticatedAtom, signUp } from '../../recoil/atoms/authAtom';
+import { userAtom } from '../../recoil/atoms/userAtoms';
 
 function SignUpModal({ onRequestClose }) {
-    const [newUser, setNewUser] = useState({ userName: "", email: "", password: "" });
-    const [auth, setAuth] = useRecoilState(authState);
+    const [userName, setUserName] = useState('');
+    const [email, setEmail] = useState('');
+    const [password, setPassword] = useState('');
+    const setUser = useSetRecoilState(userAtom);
+    const setIsAuthenticated = useSetRecoilState(isAuthenticatedAtom)
     const [isLoading, setIsLoading] = useState(false);
     const [errors, setErrors] = useState({});
 
@@ -16,15 +18,15 @@ function SignUpModal({ onRequestClose }) {
 
         // Perform validation
         const newErrors = {};
-        if (!newUser.userName) {
+        if (!userName) {
             newErrors.userName = "Username is required";
         }
-        if (!newUser.email) {
+        if (!email) {
             newErrors.email = "Email is required";
         }
-        if (!newUser.password) {
+        if (!password) {
             newErrors.password = "Password is required";
-        } else if (newUser.password.length < 8) {
+        } else if (password.length < 8) {
             newErrors.password = "Password must be at least 8 characters long";
         }
         setErrors(newErrors);
@@ -32,42 +34,14 @@ function SignUpModal({ onRequestClose }) {
         // Submit the form if there are no errors
         if (Object.keys(newErrors).length === 0) {
             setIsLoading(true);
-
-            try {
-                const response = await axios.post(API_USERS_REGISTER, newUser, {
-                    headers: {
-                        "Content-Type": "application/json",
-                    },
-                });
-                console.log(response.data)
-                const { token, user } = response.data;
-                console.log(response.data)
-                if (token) {
-                    setNewUser({
-                        userName: newUser.userName,
-                        token: token,
-                        userId: user._id
-                    });
-                    setAuth({
-                        isAuthenticated: true,
-                        user: {
-                            userName: newUser.userName,
-                            token: token,
-                            userId: user._id
-                        },
-                    });
-                } else {
-                    setAuth({
-                        isAuthenticated: false,
-                        user: null,
-                    });
-                }
-            } catch (error) {
-                console.error(error);
-                setAuth({
-                    isAuthenticated: false,
-                    user: null,
-                });
+            const success = await signUp(userName, email, password)
+            if(success){
+                setUser({token: success.token, userDetails: success.user})
+                setIsAuthenticated(true)
+            }
+            else{
+                setUser({token: null, userDetails: null})
+                setIsAuthenticated(false)
             }
             setIsLoading(false);
             onRequestClose();
@@ -98,7 +72,7 @@ function SignUpModal({ onRequestClose }) {
                     <div className={` ${errors.userName ? 'space-y-8' : 'space-y-6'} ${errors.email ? 'space-y-8' : 'space-y-6'} ${errors.password ? 'space-y-8' : 'space-y-6'}`} >
                         <div className="relative">
                             <input
-                                type="text" value={newUser.userName} onChange={(event) => setNewUser({ ...newUser, userName: event.target.value })}
+                                type="text" value={userName} onChange={(event) => setUserName(event.target.value)}
                                 placeholder="Username"
                                 className={classNames(
                                     "block text-sm py-3 px-3 rounded-lg w-full border placeholder-gray-500 border-gray-300 outline-none",
@@ -122,7 +96,7 @@ function SignUpModal({ onRequestClose }) {
                         </div>
                         <div className="relative">
                             <input
-                                type="email" value={newUser.email} onChange={(event) => setNewUser({ ...newUser, email: event.target.value })}
+                                type="email" value={email} onChange={(event) => setEmail(event.target.value)}
                                 placeholder="Email"
                                 className={classNames(
                                     "block text-sm py-3 px-3 rounded-lg w-full border placeholder-gray-500 border-gray-300 outline-none",
@@ -146,7 +120,7 @@ function SignUpModal({ onRequestClose }) {
                         </div>
                         <div className="relative">
                             <input
-                                type="password" value={newUser.password} onChange={(event) => setNewUser({ ...newUser, password: event.target.value })}
+                                type="password" value={password} onChange={(event) => setPassword(event.target.value)}
                                 placeholder="Password"
                                 className={classNames(
                                     "block text-sm py-3 px-3 rounded-lg w-full border placeholder-gray-500 border-gray-300 outline-none",

@@ -9,7 +9,7 @@ module.exports = {
       gridTemplateColumns: {
         'custom': '0.9fr 2fr 0.7fr',
         'custom2': '2fr 1.1fr',
-        'custom3': '0.6fr 2fr',
+        'custom3': '0.4fr 2fr',
       },
     },
   },

@@ -1,18 +1,14 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect } from 'react';
 import CommentInput from './CommentInput';
 import CommentItem from './CommentItem';
-import { useRecoilValue, useRecoilState } from 'recoil';
+import { useRecoilState } from 'recoil';
 import { useLocation } from 'react-router-dom';
 import { commentsState } from '../../recoil/atoms/commentAtoms';
 import axios from 'axios';
 import { API_COMMENTS_GET_BY_POST } from '../../api/api';
 
-function Comment({ postId }) {
+function Comment() {
   const { state: post } = useLocation();
-
-  const [currentPage, setCurrentPage] = useState(1);
-  const commentsPerPage = 10;
-
   const [comments, setComments] = useRecoilState(commentsState);
 
   useEffect(() => {

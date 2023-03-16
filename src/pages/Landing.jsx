@@ -1,17 +1,14 @@
 import React, { useState } from "react";
-
 import Navbar from "../components/Navbar/Navbar";
 import SignUpModal from "../components/Modals/SignUpModal";
 import SignInModal from "../components/Modals/SignInModal";
-import Sidebar from "../components/Sidebar/Sidebar";
 import SignOutModal from "../components/Modals/SignOutModal";
 import PostModal from "../components/Modals/PostModal";
 import SpaceList from "../components/Cards/SpaceList";
 import Comment from "../components/Comments/Comment";
 import { useNavigate } from "react-router-dom";
-import CategoryCard from "../components/Cards/CategoryCard";
-import RecommendedPosts from "../components/Cards/RecommendedPosts";
 import RecommendedSpaces from "../components/Cards/RecommendedSpaces";
+import LandingSidebar from "../components/Sidebar/LandingSidebar";
 const Landing = () => {
 
   const [activeModal, setActiveModal] = useState(null);
@@ -37,13 +34,13 @@ const Landing = () => {
           {activeModal === 'signup' && <SignUpModal onRequestClose={handleCloseModal} />}
           {activeModal === 'signout' && <SignOutModal onRequestClose={handleCloseModal} />}
           {activeModal === 'post' && <PostModal onRequestClose={handleCloseModal} />}
-          {activeModal === 'comment' && <Comment onRequestClose={handleCloseModal}/>}
+          {activeModal === 'comment' && <Comment onRequestClose={handleCloseModal} />}
         </div>
       )}
       <div className="min-h-screen h-full grid lg:grid-cols-custom bg-gray-200 ">
-        <Sidebar handleOpenModal={handleOpenModal} />
-        <SpaceList handleOpenModal={handleOpenModal}/>
-        <RecommendedSpaces/>
+        <LandingSidebar handleOpenModal={handleOpenModal} />
+        <SpaceList handleOpenModal={handleOpenModal} />
+        <RecommendedSpaces />
       </div>
     </>
   );

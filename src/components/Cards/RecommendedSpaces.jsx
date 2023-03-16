@@ -15,7 +15,7 @@ const RecommendedSpaces = () => {
                         href="#"
                         className="text-blue-500 text-sm hover:underline hover:text-blue-700"
                     >
-                        Read more...
+                        Join Space
                     </a>
                 </div>
             </div>
@@ -30,7 +30,7 @@ const RecommendedSpaces = () => {
                         href="#"
                         className="text-blue-500 text-sm hover:underline hover:text-blue-700"
                     >
-                        Read more...
+                        Join Space
                     </a>
                 </div>
             </div>
@@ -45,7 +45,7 @@ const RecommendedSpaces = () => {
                         href="#"
                         className="text-blue-500 text-sm hover:underline hover:text-blue-700"
                     >
-                        Read more...
+                        Join Space
                     </a>
                 </div>
             </div>

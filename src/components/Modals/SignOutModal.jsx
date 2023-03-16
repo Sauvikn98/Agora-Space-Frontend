@@ -1,15 +1,19 @@
 import React from 'react'
 import { useSetRecoilState } from 'recoil';
-import { authState } from '../../recoil/atoms/userAtoms';
+import { userAtom } from '../../recoil/atoms/userAtoms';
 import { useNavigate } from 'react-router-dom';
+import { isAuthenticatedAtom } from '../../recoil/atoms/authAtom';
+
 
 function SignOutModal({ onRequestClose }) {
-    const setAuthState = useSetRecoilState(authState);
+    const setisAuthenticated = useSetRecoilState(isAuthenticatedAtom);
+    const setUser = useSetRecoilState(userAtom)
     const navigate = useNavigate();
 
     const handleLogout = () => {
         // Perform the logout logic here
-        setAuthState({ isAuthenticated: false, user: null, token: null });
+        setisAuthenticated(false);
+        setUser({ token: null, userDetails: null })
         navigate('/');
         onRequestClose();
     };

@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from 'react'
 import logo from "../../assets/logo.png"
 import { useRecoilValue } from 'recoil';
-import { authState } from '../../recoil/atoms/userAtoms';
+import { isAuthenticatedAtom } from '../../recoil/atoms/authAtom';
 
 function Navbar({ handleOpenModal }) {
   const [isScrolled, setIsScrolled] = useState(false);
-  const { isAuthenticated } = useRecoilValue(authState);
+  const isAuthenticated = useRecoilValue(isAuthenticatedAtom);
 
   useEffect(() => {
     const handleScroll = () => {

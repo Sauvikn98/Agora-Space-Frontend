@@ -1,13 +1,15 @@
 import React, { useState } from 'react';
 import CommentInput from './CommentInput';
-import { authState } from '../../recoil/atoms/userAtoms';
+import { userAtom } from '../../recoil/atoms/userAtoms';
 import { useRecoilValue } from 'recoil';
+import { isAuthenticatedAtom } from '../../recoil/atoms/authAtom';
 
 function CommentItem({ comment, userName, userId }) {
   const childComments = comment.children || [];
   const [showReplyInput, setShowReplyInput] = useState(false);
   const [showMenu, setShowMenu] = useState(false);
-  const auth = useRecoilValue(authState)
+  const user = useRecoilValue(userAtom)
+  const isAuthenticated = useRecoilValue(isAuthenticatedAtom)
 
   const handleReplyClick = () => {
     setShowReplyInput(!showReplyInput);
@@ -48,7 +50,7 @@ function CommentItem({ comment, userName, userId }) {
           <p className="text-gray-500 text-xs sm:text-sm">{timeAgo(new Date(comment.createdAt))}</p>
         </div>
       </div>
-      {auth.isAuthenticated && auth.user.userId === comment.author._id && (
+      {isAuthenticated && user.userDetails._id === comment.author._id && (
         <div className="absolute right-0 top-5">
           <button className="text-gray-500 text-xs sm:text-sm focus:outline-none" onClick={handleMenuClick}>
             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">

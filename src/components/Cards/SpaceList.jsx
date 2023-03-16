@@ -1,13 +1,12 @@
-import React, { useState, useEffect, useMemo } from 'react'
-import CategoryCard from './CategoryCard';
+import React, { useState, useEffect } from 'react'
 import { useNavigate } from "react-router-dom"
 import { useRecoilState, useRecoilValue } from 'recoil';
 import { API_SPACES_GET_ALL, API_SPACES_JOIN_SPACE, API_SPACES_LEAVE_SPACE } from '../../api/api';
 import { spacesState } from '../../recoil/atoms/spaceAtoms';
 import axios from "axios";
 import LatestSpacePost from './LatestSpacePost';
-import { ChevronDownIcon } from '@heroicons/react/24/solid';
-import { authState } from '../../recoil/atoms/userAtoms';
+import { userAtom } from '../../recoil/atoms/userAtoms';
+import { isAuthenticatedAtom } from '../../recoil/atoms/authAtom';
 
 function SpaceList({ handleOpenModal }) {
     const [isLoading, setIsLoading] = useState(true);
@@ -16,7 +15,8 @@ function SpaceList({ handleOpenModal }) {
     const navigate = useNavigate();
     const [votedPosts, setVotedPosts] = useState({});
     const [isOpen, setIsOpen] = useState(false);
-    const { user, isAuthenticated } = useRecoilValue(authState)
+    const user = useRecoilValue(userAtom)
+    const isAuthenticated = useRecoilValue(isAuthenticatedAtom)
     const [isHovering, setIsHovering] = useState([])
 
     const handleClick = () => {
@@ -115,7 +115,7 @@ function SpaceList({ handleOpenModal }) {
                         if (space._id === spaceId) {
                             return {
                                 ...space,
-                                members: [...space.members, user.userId],
+                                members: [...space.members, user.userDetails._id],
                             };
                         } else {
                             return space;
@@ -145,7 +145,7 @@ function SpaceList({ handleOpenModal }) {
                         if (space._id === spaceId) {
                             return {
                                 ...space,
-                                members: space.members.filter((memberId) => memberId !== user.userId),
+                                members: space.members.filter((memberId) => memberId !== user.userDetails._id),
                             };
                         } else {
                             return space;
@@ -164,7 +164,7 @@ function SpaceList({ handleOpenModal }) {
 
     const isMember = (spaceId) => {
         const space = spaces.find((space) => space._id === spaceId);
-        return space.members.includes(user.userId);
+        return space.members.includes(user.userDetails._id);
     }
 
 
@@ -230,14 +230,19 @@ function SpaceList({ handleOpenModal }) {
                         </button>
                     </div>
                     <div>
-                        
+
                     </div>
-
                 </div>
-
                 {isLoading ? (
-                    <div className='lg:ml-7 mr-10 mb-6 mt-6 lg:mt-0 ml-4'>
-                        <h3 className="text-sm font-bold text-gray-700">Loading Spaces...</h3>
+                    <div class="fixed inset-0 flex items-center justify-center">
+                        <div
+                            class="inline-block h-8 w-8 animate-spin rounded-full border-4 border-solid border-current border-r-transparent align-[-0.125em] motion-reduce:animate-[spin_1.5s_linear_infinite]"
+                            role="status">
+                            <span
+                                class="absolute h-px w-px overflow-hidden whitespace-nowrap border-0 !p-0 ![clip:rect(0,0,0,0)]"
+                            >Loading...</span
+                            >
+                        </div>
                     </div>
                 ) : (
                     <div>
