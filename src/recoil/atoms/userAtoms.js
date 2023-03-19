@@ -14,8 +14,7 @@ export const userAtom = atom({
   default: {
     token: null,
     userDetails: null,
-  },
-  effects_UNSTABLE: [persistAtom]
+  }
 });
 
 

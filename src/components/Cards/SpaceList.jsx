@@ -7,77 +7,22 @@ import axios from "axios";
 import LatestSpacePost from './LatestSpacePost';
 import { userAtom } from '../../recoil/atoms/userAtoms';
 import { isAuthenticatedAtom } from '../../recoil/atoms/authAtom';
+import Toast from '../Toast/Toast';
 
 function SpaceList({ handleOpenModal }) {
     const [isLoading, setIsLoading] = useState(true);
     const [spaces, setSpaces] = useRecoilState(spacesState);
-    const [counts, setCounts] = useState({});
     const navigate = useNavigate();
-    const [votedPosts, setVotedPosts] = useState({});
     const [isOpen, setIsOpen] = useState(false);
     const user = useRecoilValue(userAtom)
     const isAuthenticated = useRecoilValue(isAuthenticatedAtom)
     const [isHovering, setIsHovering] = useState([])
+    const [showToast, setShowToast] = useState(false);
+    const [toastProps, setToastProps] = useState({ success: false, message: '' });
 
     const handleClick = () => {
         setIsOpen(!isOpen);
     };
-
-    function handleUpvote(postId) {
-        if (votedPosts[postId] === 'downvote') {
-            setCounts(prevCounts => ({
-                ...prevCounts,
-                [postId]: {
-                    upvotes: (prevCounts[postId]?.upvotes || 0) + 1,
-                    downvotes: (prevCounts[postId]?.downvotes || 0) - 1
-                }
-            }));
-            setVotedPosts(prevVotedPosts => ({
-                ...prevVotedPosts,
-                [postId]: 'upvote'
-            }));
-        } else if (!votedPosts[postId]) {
-            setCounts(prevCounts => ({
-                ...prevCounts,
-                [postId]: {
-                    upvotes: (prevCounts[postId]?.upvotes || 0) + 1,
-                    downvotes: prevCounts[postId]?.downvotes || 0
-                }
-            }));
-            setVotedPosts(prevVotedPosts => ({
-                ...prevVotedPosts,
-                [postId]: 'upvote'
-            }));
-        }
-    }
-
-    function handleDownvote(postId) {
-        if (votedPosts[postId] === 'upvote') {
-            setCounts(prevCounts => ({
-                ...prevCounts,
-                [postId]: {
-                    upvotes: (prevCounts[postId]?.upvotes || 0) - 1,
-                    downvotes: (prevCounts[postId]?.downvotes || 0) + 1
-                }
-            }));
-            setVotedPosts(prevVotedPosts => ({
-                ...prevVotedPosts,
-                [postId]: 'downvote'
-            }));
-        } else if (!votedPosts[postId]) {
-            setCounts(prevCounts => ({
-                ...prevCounts,
-                [postId]: {
-                    upvotes: prevCounts[postId]?.upvotes || 0,
-                    downvotes: (prevCounts[postId]?.downvotes || 0) + 1
-                }
-            }));
-            setVotedPosts(prevVotedPosts => ({
-                ...prevVotedPosts,
-                [postId]: 'downvote'
-            }));
-        }
-    }
 
     const handleNavigate = (spaceName) => {
         const modifiedSpaceName = spaceName.replace(/\s/g, '');
@@ -122,12 +67,20 @@ function SpaceList({ handleOpenModal }) {
                         }
                     });
                 });
-                console.log(response.data.message);
+                setShowToast(true);
+                setToastProps({ success: true, message: 'Successfully joined Space!' });
+                setTimeout(() => setShowToast(false), 5000);
             } else {
                 console.error(`Failed to join space: ${response.data.error}`);
+                setShowToast(true);
+                setToastProps({ success: false, message: 'Failed to Join Space, Try Again !' });
+                setTimeout(() => setShowToast(false), 5000);
             }
         } catch (error) {
             console.error(error);
+            setShowToast(true);
+            setToastProps({ success: false, message: 'Failed to Join Space, Try Again !' });
+            setTimeout(() => setShowToast(false), 5000);
         }
     };
 
@@ -153,11 +106,20 @@ function SpaceList({ handleOpenModal }) {
                     });
                 });
                 console.log(response.data.message);
+                setShowToast(true);
+                setToastProps({ success: true, message: 'Successfully Left the Space !' });
+                setTimeout(() => setShowToast(false), 5000);
             } else {
                 console.error(`Failed to leave space: ${response.data.error}`);
+                setShowToast(true);
+                setToastProps({ success: false, message: 'Failed to Leave Space, Try Again !' });
+                setTimeout(() => setShowToast(false), 5000);
             }
         } catch (error) {
             console.error(error);
+            setShowToast(true);
+            setToastProps({ success: false, message: 'Failed to Leave Space, Try Again !' });
+            setTimeout(() => setShowToast(false), 5000);
         }
     };
 
@@ -267,32 +229,24 @@ function SpaceList({ handleOpenModal }) {
                                             </button>
                                         ) : (
                                             <button onClick={() => handleJoinSpace(space._id)} className='inline-flex text-sm bg-indigo-700 text-white items-center px-3 py-1 transition ease-in duration-200 rounded-md hover:bg-gray-700 hover:text-white shadow-lg focus:outline-none mr-4 lg:mr-10'>
-
-                                                Join Space</button>
+                                                Join Space
+                                            </button>
                                         )}
                                     </div>
                                     <div className='pl-5 pr-16 lg:pr-0'>
                                         <LatestSpacePost spaceId={space._id} spaceName={space.name} handleOpenModal={handleOpenModal} handleNavigate={handleNavigate} />
                                     </div>
-
-                                    <div className='flex'>
-                                        <div className="mt-[45px] absolute inset-y-0 w-10 right-5 flex flex-col justify-start items-center bg-gray-100 border-l-2 rounded-r-lg">
-                                            <button className="text-gray-900 mt-2" onClick={() => handleUpvote(space._id)}>
-                                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-6 h-6">
-                                                    <path fill-rule="evenodd" d="M11.47 7.72a.75.75 0 011.06 0l7.5 7.5a.75.75 0 11-1.06 1.06L12 9.31l-6.97 6.97a.75.75 0 01-1.06-1.06l7.5-7.5z" />
-                                                </svg>
-                                            </button>
-                                            <p className="text-center text-gray-900">{(counts[space._id]?.upvotes || 0) - (counts[space._id]?.downvotes || 0)}</p>
-                                            <button className="text-gray-900" onClick={() => handleDownvote(space._id)}>
-                                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-6 h-6">
-                                                    <path fill-rule="evenodd" d="M12.53 16.28a.75.75 0 01-1.06 0l-7.5-7.5a.75.75 0 011.06-1.06L12 14.69l6.97-6.97a.75.75 0 111.06 1.06l-7.5 7.5z" clip-rule="evenodd" />
-                                                </svg>
-                                            </button>
-                                        </div>
-                                    </div>
                                 </div>
                             </div>
                         ))}
+
+                        {showToast && (
+                            <div className="fixed inset-0 z-50 flex items-end justify-center px-4 py-6 pointer-events-none sm:p-6 sm:items-start sm:justify-end">
+                                <div className="max-w-sm w-full bg-white shadow-lg rounded-lg pointer-events-auto">
+                                    <Toast success={toastProps.success} message={toastProps.message} showToast={showToast} setShowToast={setShowToast}/>
+                                </div>
+                            </div>
+                        )}
                     </div>
                 )}
             </div>

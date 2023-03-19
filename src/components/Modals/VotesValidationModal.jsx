@@ -1,25 +1,28 @@
 import React, { useState } from 'react'
 import { useSetRecoilState } from 'recoil';
-import classNames from 'classnames';
-import { isAuthenticatedAtom, signIn } from '../../recoil/atoms/authAtom';
+import classNames from "classnames";
+import { isAuthenticatedAtom, signUp } from '../../recoil/atoms/authAtom';
 import { userAtom } from '../../recoil/atoms/userAtoms';
-import Toast from '../Toast/Toast';
 
-function SignInModal({ onRequestClose }) {
+function VotesValidationModal({ onRequestClose }) {
     const [userName, setUserName] = useState('');
+    const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
+    const setUser = useSetRecoilState(userAtom);
+    const setIsAuthenticated = useSetRecoilState(isAuthenticatedAtom)
     const [isLoading, setIsLoading] = useState(false);
-    const [errors, setErrors] = useState({})
-    const setIsAuthenticated = useSetRecoilState(isAuthenticatedAtom);
-    const setUser = useSetRecoilState(userAtom)
-    const [showToast, setShowToast] = useState(false);
-    const [toastProps, setToastProps] = useState({ success: false, message: '' });
+    const [errors, setErrors] = useState({});
 
-    const handleSignIn = async (event) => {
+    const handleSignUp = async (event) => {
         event.preventDefault();
+
+        // Perform validation
         const newErrors = {};
         if (!userName) {
             newErrors.userName = "Username is required";
+        }
+        if (!email) {
+            newErrors.email = "Email is required";
         }
         if (!password) {
             newErrors.password = "Password is required";
@@ -27,29 +30,21 @@ function SignInModal({ onRequestClose }) {
             newErrors.password = "Password must be at least 8 characters long";
         }
         setErrors(newErrors);
-        if (Object.keys(newErrors).length === 0) {
-            event.preventDefault();
-            setIsLoading(true);
-            const success = await signIn(userName, password);
-            if (success) {
-                setUser({ token: success.token, userDetails: success.user });
-                setIsAuthenticated(true);
-                setShowToast(true);
-                setToastProps({ success: true, message: 'Sign In Successfull !' });
-                setTimeout(() => setShowToast(false), 5000);
-                setIsLoading(false);
-                setTimeout(() => onRequestClose(), 2000);
 
+        // Submit the form if there are no errors
+        if (Object.keys(newErrors).length === 0) {
+            setIsLoading(true);
+            const success = await signUp(userName, email, password)
+            if (success) {
+                setUser({ token: success.token, userDetails: success.user })
+                setIsAuthenticated(true)
             }
             else {
-                setUser({ token: null, userDetails: null });
-                setIsAuthenticated(false);
-                setShowToast(true);
-                setToastProps({ success: false, message: 'Sign In Failed, Try Again !' });
-                setTimeout(() => setShowToast(false), 5000);
+                setUser({ token: null, userDetails: null })
+                setIsAuthenticated(false)
             }
-
-            console.log(showToast)
+            setIsLoading(false);
+            onRequestClose();
         }
     };
 
@@ -61,9 +56,9 @@ function SignInModal({ onRequestClose }) {
 
     return (
         <div className="min-h-full h-full w-full flex justify-center items-center" onClick={handleOutsideClick}>
-            <div className="bg-white py-8 px-12 rounded-2xl shadow-xl" >
-                <div className="mb-20">
-                    <div className='flex justify-end mb-10'>
+            <div className="bg-white py-7 lg:py-8 px-9 lg:px-12 rounded-2xl shadow-xl" >
+                <div className="">
+                    <div className='flex justify-end lg:mb-10 mb-0'>
                         <button onClick={onRequestClose}>
                             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className="w-8 h-8">
                                 <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
@@ -71,10 +66,10 @@ function SignInModal({ onRequestClose }) {
                         </button>
                     </div>
                     <div className='mb-10'>
-                        <h1 className="text-3xl font-bold mb-4 cursor-pointer text-gray-900">Sign In</h1>
+                        <h1 className="text-xl font-bold mb-4 cursor-pointer text-gray-900">You can vote on posts and <br /> comments to help everyone <br /> find the best content with a <br /> Agora Space account.</h1>
                         <p className="w-80 text-sm mb-8 font-semibold text-gray-900 tracking-wide cursor-pointer">By continuing, you agree are setting up a Agora Space and agree to our <span className='text-blue-500'>User Agreement</span> and <span className='text-blue-500'>Privacy Policy.</span></p>
                     </div>
-                    <div className={` ${errors.userName ? 'space-y-8' : 'space-y-6'} ${errors.password ? 'space-y-8' : 'space-y-6'}`} >
+                    <div className={` ${errors.userName ? 'space-y-8' : 'space-y-6'} ${errors.email ? 'space-y-8' : 'space-y-6'} ${errors.password ? 'space-y-8' : 'space-y-6'}`} >
                         <div className="relative">
                             <input
                                 type="text" value={userName} onChange={(event) => setUserName(event.target.value)}
@@ -94,6 +89,30 @@ function SignInModal({ onRequestClose }) {
                                     </svg>
                                     <span className="absolute text-sm text-red-500 -top-6">
                                         {errors.userName}
+                                    </span>
+                                </>
+
+                            )}
+                        </div>
+                        <div className="relative">
+                            <input
+                                type="email" value={email} onChange={(event) => setEmail(event.target.value)}
+                                placeholder="Email"
+                                className={classNames(
+                                    "block text-sm py-3 px-3 rounded-lg w-full border placeholder-gray-500 border-gray-300 outline-none",
+                                    {
+                                        "border-red-500": errors.email,
+                                    }
+                                )}
+                            />
+                            {errors.email && (
+                                <>
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" fill="currentColor" className="absolute text-red-500 right-2 bottom-4" viewBox="0 0 1792 1792">
+                                        <path d="M1024 1375v-190q0-14-9.5-23.5t-22.5-9.5h-192q-13 0-22.5 9.5t-9.5 23.5v190q0 14 9.5 23.5t22.5 9.5h192q13 0 22.5-9.5t9.5-23.5zm-2-374l18-459q0-12-10-19-13-11-24-11h-220q-11 0-24 11-10 7-10 21l17 457q0 10 10 16.5t24 6.5h185q14 0 23.5-6.5t10.5-16.5zm-14-934l768 1408q35 63-2 126-17 29-46.5 46t-63.5 17h-1536q-34 0-63.5-17t-46.5-46q-37-63-2-126l768-1408q17-31 47-49t65-18 65 18 47 49z">
+                                        </path>
+                                    </svg>
+                                    <span className="absolute text-sm text-red-500 -top-6">
+                                        {errors.email}
                                     </span>
                                 </>
 
@@ -125,7 +144,7 @@ function SignInModal({ onRequestClose }) {
                     </div>
                     <div className="text-center mt-6">
                         <button
-                            onClick={handleSignIn}
+                            onClick={handleSignUp}
                             className="py-3 w-64 text-xl text-white bg-indigo-500 rounded-2xl"
                             disabled={isLoading}
                         >
@@ -137,25 +156,17 @@ function SignInModal({ onRequestClose }) {
                                     </svg>
                                     Loading...
                                 </>
-                            ) : 'Sign In'}
+                            ) : 'Sign Up'}
                         </button>
-                        <p className="mt-4 text-sm text-gray-900">
-                            Don't Have An Account?{' '}
-                            <span className="underline cursor-pointer">Sign Up</span>
+                        <p className="mt-4 text-sm text-gray-900 lg:mb-4">
+                            Already Have An Account?{' '}
+                            <span className="underline cursor-pointer">Sign In</span>
                         </p>
                     </div>
-
                 </div>
-                {showToast && (
-                    <div className="fixed inset-0 z-50 flex items-end justify-center px-4 py-6 pointer-events-none sm:p-6 sm:items-start sm:justify-end">
-                        <div className="max-w-sm w-full bg-white shadow-lg rounded-lg pointer-events-auto">
-                            <Toast success={toastProps.success} message={toastProps.message} showToast={showToast} setShowToast={setShowToast} />
-                        </div>
-                    </div>
-                )}
             </div>
         </div>
     )
 }
 
-export default SignInModal
+export default VotesValidationModal

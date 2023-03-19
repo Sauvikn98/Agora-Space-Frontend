@@ -9,6 +9,7 @@ import Comment from "../components/Comments/Comment";
 import { useNavigate } from "react-router-dom";
 import RecommendedSpaces from "../components/Cards/RecommendedSpaces";
 import LandingSidebar from "../components/Sidebar/LandingSidebar";
+import VotesValidationModal from "../components/Modals/VotesValidationModal";
 const Landing = () => {
 
   const [activeModal, setActiveModal] = useState(null);
@@ -35,6 +36,7 @@ const Landing = () => {
           {activeModal === 'signout' && <SignOutModal onRequestClose={handleCloseModal} />}
           {activeModal === 'post' && <PostModal onRequestClose={handleCloseModal} />}
           {activeModal === 'comment' && <Comment onRequestClose={handleCloseModal} />}
+          {activeModal === 'votes validation' && <VotesValidationModal onRequestClose={handleCloseModal} />}
         </div>
       )}
       <div className="min-h-screen h-full grid lg:grid-cols-custom bg-gray-200 ">

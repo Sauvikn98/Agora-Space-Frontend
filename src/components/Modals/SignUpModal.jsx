@@ -3,6 +3,7 @@ import { useSetRecoilState } from 'recoil';
 import classNames from "classnames";
 import { isAuthenticatedAtom, signUp } from '../../recoil/atoms/authAtom';
 import { userAtom } from '../../recoil/atoms/userAtoms';
+import Toast from '../Toast/Toast';
 
 function SignUpModal({ onRequestClose }) {
     const [userName, setUserName] = useState('');
@@ -12,6 +13,8 @@ function SignUpModal({ onRequestClose }) {
     const setIsAuthenticated = useSetRecoilState(isAuthenticatedAtom)
     const [isLoading, setIsLoading] = useState(false);
     const [errors, setErrors] = useState({});
+    const [showToast, setShowToast] = useState(false);
+    const [toastProps, setToastProps] = useState({ success: false, message: '' });
 
     const handleSignUp = async (event) => {
         event.preventDefault();
@@ -34,17 +37,23 @@ function SignUpModal({ onRequestClose }) {
         // Submit the form if there are no errors
         if (Object.keys(newErrors).length === 0) {
             setIsLoading(true);
-            const success = await signUp(userName, email, password)
-            if(success){
-                setUser({token: success.token, userDetails: success.user})
-                setIsAuthenticated(true)
+            const success = await signUp(userName, email, password);
+            if (success) {
+                setUser({ token: success.token, userDetails: success.user });
+                setIsAuthenticated(true);
+                setShowToast(true);
+                setToastProps({ success: true, message: 'Sign Up Successfull !' });
+                setTimeout(() => setShowToast(false), 5000);
+                setIsLoading(false);
+                setTimeout(() => onRequestClose(), 2000)
             }
-            else{
-                setUser({token: null, userDetails: null})
-                setIsAuthenticated(false)
+            else {
+                setUser({ token: null, userDetails: null });
+                setIsAuthenticated(false);
+                setShowToast(true);
+                setToastProps({ success: false, message: 'Sign Up Failed, Try Again !' });
+                setTimeout(() => setShowToast(false), 5000);
             }
-            setIsLoading(false);
-            onRequestClose();
         }
     };
 
@@ -164,6 +173,13 @@ function SignUpModal({ onRequestClose }) {
                         </p>
                     </div>
                 </div>
+                {showToast && (
+                    <div className="fixed inset-0 z-50 flex items-end justify-center px-4 py-6 pointer-events-none sm:p-6 sm:items-start sm:justify-end">
+                        <div className="max-w-sm w-full bg-white shadow-lg rounded-lg pointer-events-auto">
+                            <Toast success={toastProps.success} message={toastProps.message} showToast={showToast} setShowToast={setShowToast} />
+                        </div>
+                    </div>
+                )}
             </div>
         </div>
     )

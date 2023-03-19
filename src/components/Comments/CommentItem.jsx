@@ -86,12 +86,17 @@ function CommentItem({ comment, userName, userId }) {
           <p className="text-gray-800 text-sm sm:text-base">{comment.content}</p>
         </div>
         <div className="mt-2 flex justify-between items-center">
-          <button className="text-gray-500 text-xs sm:text-sm focus:outline-none" onClick={handleReplyClick}>
-            {showReplyInput ? "Cancel" : "Reply"}
-            {childComments.length > 0 && (
-              <span className="text-gray-500 text-xs sm:text-sm ml-1">({childComments.length} replies)</span>
-            )}
-          </button>
+          {isAuthenticated ? (
+            <button className="text-gray-500 text-xs sm:text-sm focus:outline-none" onClick={handleReplyClick}>
+              {showReplyInput ? "Cancel" : "Reply"}
+              {childComments.length > 0 && (
+                <span className="text-gray-500 text-xs sm:text-sm ml-1">({childComments.length} replies)</span>
+              )}
+            </button>
+          ) : (
+            <></>
+          )}
+
         </div>
       </div>
       {showReplyInput && (

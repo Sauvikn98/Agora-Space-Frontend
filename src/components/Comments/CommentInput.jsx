@@ -5,6 +5,7 @@ import { API_COMMENTS_CREATE } from '../../api/api';
 import { newCommentState } from '../../recoil/atoms/commentAtoms';
 import { userAtom } from '../../recoil/atoms/userAtoms';
 import axios from 'axios';
+import CommentValidationModal from '../Modals/CommentValidationModal';
 
 function CommentInput({ parentId, onComment }) {
   const { state: post } = useLocation();
@@ -12,7 +13,14 @@ function CommentInput({ parentId, onComment }) {
   const [commentBody, setCommentBody] = useRecoilState(newCommentState);
   const [error, setError] = useState(null);
 
+  const [showModal, setShowModal] = useState(false);
+
   const handleSubmit = async () => {
+    if (!user.userDetails) {
+      setShowModal(true);
+      return;
+    }
+
     try {
       const response = await axios.post(API_COMMENTS_CREATE, {
         author: user.userDetails._id,
@@ -35,10 +43,15 @@ function CommentInput({ parentId, onComment }) {
     }
   };
 
+
   return (
     <div className='mb-6'>
       {error && (
         <div className='text-red-500 mb-4 font-medium text-sm'>{error}</div>
+      )}
+      {showModal && (
+        <CommentValidationModal />
+
       )}
       <div className=' py-2 px-4 mt-6 mb-4 bg-white rounded-lg rounded-t-lg border-2 border-gray-500 dark:bg-gray-800 dark:border-gray-700'>
         <div class="px-4 py-2 bg-white rounded-t-lg dark:bg-gray-800">

@@ -1,15 +1,74 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-import { useRecoilState } from "recoil";
+import { useRecoilState, useRecoilValue } from "recoil";
 import { getAllPosts } from "../../recoil/atoms/postAtoms";
 import { API_POSTS_GET_ALL } from "../../api/api";
 import { useNavigate } from "react-router-dom";
+import { isAuthenticatedAtom } from "../../recoil/atoms/authAtom";
 
-function LatestSpacePost({ spaceId }) {
+function LatestSpacePost({ spaceId, handleOpenModal }) {
     const [isLoading, setIsLoading] = useState(true);
     const [posts, setPosts] = useRecoilState(getAllPosts);
     const navigate = useNavigate();
+    const [counts, setCounts] = useState({});
+    const [votedPosts, setVotedPosts] = useState({});
+    const isAuthenticated = useRecoilValue(isAuthenticatedAtom)
 
+    function handleUpvote(postId) {
+        if (votedPosts[postId] === 'downvote') {
+            setCounts(prevCounts => ({
+                ...prevCounts,
+                [postId]: {
+                    upvotes: (prevCounts[postId]?.upvotes || 0) + 1,
+                    downvotes: (prevCounts[postId]?.downvotes || 0) - 1
+                }
+            }));
+            setVotedPosts(prevVotedPosts => ({
+                ...prevVotedPosts,
+                [postId]: 'upvote'
+            }));
+        } else if (!votedPosts[postId]) {
+            setCounts(prevCounts => ({
+                ...prevCounts,
+                [postId]: {
+                    upvotes: (prevCounts[postId]?.upvotes || 0) + 1,
+                    downvotes: prevCounts[postId]?.downvotes || 0
+                }
+            }));
+            setVotedPosts(prevVotedPosts => ({
+                ...prevVotedPosts,
+                [postId]: 'upvote'
+            }));
+        }
+    }
+
+    function handleDownvote(postId) {
+        if (votedPosts[postId] === 'upvote') {
+            setCounts(prevCounts => ({
+                ...prevCounts,
+                [postId]: {
+                    upvotes: (prevCounts[postId]?.upvotes || 0) - 1,
+                    downvotes: (prevCounts[postId]?.downvotes || 0) + 1
+                }
+            }));
+            setVotedPosts(prevVotedPosts => ({
+                ...prevVotedPosts,
+                [postId]: 'downvote'
+            }));
+        } else if (!votedPosts[postId]) {
+            setCounts(prevCounts => ({
+                ...prevCounts,
+                [postId]: {
+                    upvotes: prevCounts[postId]?.upvotes || 0,
+                    downvotes: (prevCounts[postId]?.downvotes || 0) + 1
+                }
+            }));
+            setVotedPosts(prevVotedPosts => ({
+                ...prevVotedPosts,
+                [postId]: 'downvote'
+            }));
+        }
+    }
 
     useEffect(() => {
         setIsLoading(true);
@@ -94,26 +153,28 @@ function LatestSpacePost({ spaceId }) {
                         <div className=" w-full mx-auto">
                             <div
                                 key={post._id}
-                                onClick={() => handleCommentNavigate(post.title)}
                                 className="rounded-lg bg-white "
                             >
-                                <div className="flex items-center justify-between">
-                                    <div className="flex items-center space-x-4">
-                                        <img
-                                            src={`https://avatars.dicebear.com/api/adventurer/${post.author._id}.svg`}
-                                            alt="user avatar"
-                                            className="w-14 h-14 rounded-full"
-                                        />
-                                        <div>
-                                            <h5 className="text-[12px] text-gray-600">{`posted by @${post.author.userName} - ${timeAgo(new Date(post.createdAt))}`}</h5>
-                                            <h3 className="text-lg font-bold text-gray-700">{post.title}</h3>
+                                <div onClick={() => handleCommentNavigate(post.title)}>
+                                    <div className="flex items-center justify-between">
+                                        <div className="flex items-center space-x-4">
+                                            <img
+                                                src={`https://avatars.dicebear.com/api/adventurer/${post.author._id}.svg`}
+                                                alt="user avatar"
+                                                className="w-14 h-14 rounded-full"
+                                            />
+                                            <div>
+                                                <h5 className="text-[12px] text-gray-600">{`posted by @${post.author.userName} - ${timeAgo(new Date(post.createdAt))}`}</h5>
+                                                <h3 className="text-lg font-bold text-gray-700">{post.title}</h3>
+                                            </div>
                                         </div>
                                     </div>
+                                    <div>
+                                        <p className="text-gray-700">{post.content}</p>
+                                        <img src="https://images.unsplash.com/photo-1575936123452-b67c3203c357?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxzZWFyY2h8Mnx8aW1hZ2V8ZW58MHx8MHx8&auto=format&fit=crop&w=500&q=60" alt="post image" className="object-cover mt-5" />
+                                    </div>
                                 </div>
-                                <div>
-                                    <p className="text-gray-700">{post.content}</p>
-                                    <img src="https://images.unsplash.com/photo-1575936123452-b67c3203c357?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxzZWFyY2h8Mnx8aW1hZ2V8ZW58MHx8MHx8&auto=format&fit=crop&w=500&q=60" alt="post image" className="object-cover mt-5" />
-                                </div>
+
                                 <div className="flex items-center justify-between mt-6">
                                     <div className="flex items-center space-x-4">
                                         <div className="flex items-center justify-center ">
@@ -137,6 +198,41 @@ function LatestSpacePost({ spaceId }) {
                                         </button>
                                     </div>
                                 </div>
+
+                                {isAuthenticated ? (
+                                    <div className='flex'>
+                                        <div className="mt-[45px] absolute inset-y-0 w-10 right-5 flex flex-col justify-start items-center bg-gray-100 border-l-2 rounded-r-lg">
+                                            <button className="text-gray-900 mt-2" onClick={() => handleUpvote(post._id)}>
+                                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-6 h-6">
+                                                    <path fill-rule="evenodd" d="M11.47 7.72a.75.75 0 011.06 0l7.5 7.5a.75.75 0 11-1.06 1.06L12 9.31l-6.97 6.97a.75.75 0 01-1.06-1.06l7.5-7.5z" />
+                                                </svg>
+                                            </button>
+                                            <p className="text-center text-gray-900">{(counts[post._id]?.upvotes || 0) - (counts[post._id]?.downvotes || 0)}</p>
+                                            <button className="text-gray-900" onClick={() => handleDownvote(post._id)}>
+                                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-6 h-6">
+                                                    <path fill-rule="evenodd" d="M12.53 16.28a.75.75 0 01-1.06 0l-7.5-7.5a.75.75 0 011.06-1.06L12 14.69l6.97-6.97a.75.75 0 111.06 1.06l-7.5 7.5z" clip-rule="evenodd" />
+                                                </svg>
+                                            </button>
+                                        </div>
+                                    </div>
+                                ) : (
+                                    <div className='flex'>
+                                        <div className="mt-[45px] absolute inset-y-0 w-10 right-5 flex flex-col justify-start items-center bg-gray-100 border-l-2 rounded-r-lg">
+                                            <button className="text-gray-900 mt-2" onClick={() => handleOpenModal("votes validation")}>
+                                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-6 h-6">
+                                                    <path fill-rule="evenodd" d="M11.47 7.72a.75.75 0 011.06 0l7.5 7.5a.75.75 0 11-1.06 1.06L12 9.31l-6.97 6.97a.75.75 0 01-1.06-1.06l7.5-7.5z" />
+                                                </svg>
+                                            </button>
+                                            <p className="text-center text-gray-900">{(counts[post._id]?.upvotes || 0) - (counts[post._id]?.downvotes || 0)}</p>
+                                            <button className="text-gray-900" onClick={() => handleOpenModal("votes validation")}>
+                                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-6 h-6">
+                                                    <path fill-rule="evenodd" d="M12.53 16.28a.75.75 0 01-1.06 0l-7.5-7.5a.75.75 0 011.06-1.06L12 14.69l6.97-6.97a.75.75 0 111.06 1.06l-7.5 7.5z" clip-rule="evenodd" />
+                                                </svg>
+                                            </button>
+                                        </div>
+                                    </div>
+                                )}
+
                             </div>
                         </div>
                     ))}
