@@ -22,7 +22,7 @@ const RecommendedSpaces = () => {
                 <div className="bg-white rounded-md shadow-md p-6">
                     <h2 className="text-lg font-bold mb-4">New Space 2</h2>
                     <p className="text-gray-700 text-sm mb-2">
-                    This Space gives all the latest news about Sports and Fitness. All about new tips and tricks on Sports and proper training
+                        This Space gives all the latest news about Sports and Fitness. All about new tips and tricks on Sports and proper training
                     </p>
                     <a
                         href="#"
@@ -36,7 +36,7 @@ const RecommendedSpaces = () => {
                 <div className="bg-white rounded-md shadow-md p-6">
                     <h2 className="text-lg font-bold mb-4">New Space 3</h2>
                     <p className="text-gray-700 text-sm mb-2">
-                    This Space gives all the latest news about Health and Wellbeing. All about healthy Lifestyle and diet planning.
+                        This Space gives all the latest news about Health and Wellbeing. All about healthy Lifestyle and diet planning.
                     </p>
                     <a
                         href="#"

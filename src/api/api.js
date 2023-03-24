@@ -13,6 +13,8 @@ export const API_POSTS_CREATE = `${API_BASE_URL}/posts`;
 export const API_POSTS_GET_ALL = `${API_BASE_URL}/posts`;
 export const API_POSTS_SEARCH = `${API_BASE_URL}/posts/search`;
 export const API_POSTS_BY_ID = `${API_BASE_URL}/posts/:postId`;
+export const API_POSTS_UPVOTE = (postId) => `${API_BASE_URL}/posts/${postId}/upvote`;
+export const API_POSTS_DOWNVOTE = (postId) => `${API_BASE_URL}/posts/${postId}/downvote`;
 export const API_POSTS_UPDATE = `${API_BASE_URL}/posts/:postId`;
 export const API_POSTS_DELETE = `${API_BASE_URL}/posts/:postId`;
 

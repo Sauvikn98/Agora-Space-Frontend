@@ -55,12 +55,12 @@ function SpaceDetailCard({ handleOpenModal }) {
                 )}
                 {currentTab === 'Settings' && (
                     <div className="pt-7 border-t border-gray-100">
-                        <SpaceSettings name={space.name} description={space.description}/>  
+                        <SpaceSettings name={space.name} description={space.description} />
                     </div>
                 )}
                 {currentTab === 'Notifications' && (
                     <div className="pt-10 border-t border-gray-100">
-                        
+
                     </div>
                 )}
             </div>

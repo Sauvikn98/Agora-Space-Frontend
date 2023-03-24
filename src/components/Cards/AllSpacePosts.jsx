@@ -1,15 +1,19 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-import { useRecoilState } from "recoil";
+import { useRecoilState, useRecoilValue } from "recoil";
 import { getAllPosts } from "../../recoil/atoms/postAtoms";
-import { API_POSTS_GET_ALL } from "../../api/api";
+import { API_POSTS_DOWNVOTE, API_POSTS_GET_ALL, API_POSTS_UPVOTE } from "../../api/api";
 import { useNavigate } from "react-router-dom";
+import { userAtom } from "../../recoil/atoms/userAtoms";
 
 function AllSpacePost({ spaceId, handleOpenModal }) {
     const [isLoading, setIsLoading] = useState(true);
     const [posts, setPosts] = useRecoilState(getAllPosts);
     const [counts, setCounts] = useState(0)
     const navigate = useNavigate();
+    const [votes, setVotes] = useState(0);
+    const user = useRecoilValue(userAtom)
+
 
     useEffect(() => {
         setIsLoading(true);
@@ -26,27 +30,39 @@ function AllSpacePost({ spaceId, handleOpenModal }) {
 
     const postsOfSpace = posts.filter((post) => post.space === spaceId);
     postsOfSpace.sort((a, b) => b.createdAt - a.createdAt);
-
     function handleUpvote(postId) {
-        setCounts(prevCounts => ({
-            ...prevCounts,
-            [postId]: {
-                upvotes: (prevCounts[postId]?.upvotes || 0) + 1,
-                downvotes: prevCounts[postId]?.downvotes || 0
-            }
-        }));
+        axios.patch(API_POSTS_UPVOTE(postId), null, {
+            headers: {
+                Authorization: `Bearer ${user.token}`,
+            },
+        })
+            .then(response => {
+                setVotes(prevVotes => ({
+                    ...prevVotes,
+                    [postId]: response.data.votes,
+                }));
+            })
+            .catch(error => {
+                console.error(error);
+            });
     }
 
     function handleDownvote(postId) {
-        setCounts(prevCounts => ({
-            ...prevCounts,
-            [postId]: {
-                upvotes: prevCounts[postId]?.upvotes || 0,
-                downvotes: (prevCounts[postId]?.downvotes || 0) + 1
-            }
-        }));
+        axios.patch(API_POSTS_DOWNVOTE(postId), null, {
+            headers: {
+                Authorization: `Bearer ${user.token}`,
+            },
+        })
+            .then(response => {
+                setVotes(prevVotes => ({
+                    ...prevVotes,
+                    [postId]: response.data.votes,
+                }));
+            })
+            .catch(error => {
+                console.error(error);
+            });
     }
-
     const handleCommentNavigate = (postTitle, event) => {
         const modifiedTitle = postTitle.replace(/\s+/g, '_');
         navigate(`/comments/${modifiedTitle}`, {
@@ -119,7 +135,7 @@ function AllSpacePost({ spaceId, handleOpenModal }) {
                                         <path fill-rule="evenodd" d="M11.47 7.72a.75.75 0 011.06 0l7.5 7.5a.75.75 0 11-1.06 1.06L12 9.31l-6.97 6.97a.75.75 0 01-1.06-1.06l7.5-7.5z" />
                                     </svg>
                                 </button>
-                                <p className="text-center text-gray-900">{(counts[post._id]?.upvotes || 0) - (counts[post._id]?.downvotes || 0)}</p>
+                                <p className="text-center text-gray-900">{post.upvotes.length - post.downvotes.length}</p>
                                 <button className="text-gray-900" onClick={() => handleDownvote(post._id)}>
                                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-6 h-6">
                                         <path fill-rule="evenodd" d="M12.53 16.28a.75.75 0 01-1.06 0l-7.5-7.5a.75.75 0 011.06-1.06L12 14.69l6.97-6.97a.75.75 0 111.06 1.06l-7.5 7.5z" clip-rule="evenodd" />
