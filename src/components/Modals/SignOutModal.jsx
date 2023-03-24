@@ -3,6 +3,7 @@ import { useSetRecoilState } from 'recoil';
 import { userAtom } from '../../recoil/atoms/userAtoms';
 import { useNavigate } from 'react-router-dom';
 import { isAuthenticatedAtom } from '../../recoil/atoms/authAtom';
+import spaceSocket from '../../utils/socket';
 
 
 function SignOutModal({ onRequestClose }) {
@@ -16,6 +17,7 @@ function SignOutModal({ onRequestClose }) {
         setUser({ token: null, userDetails: null })
         navigate('/');
         onRequestClose();
+        spaceSocket.disconnect()
     };
 
     const handleOutsideClick = (event) => {

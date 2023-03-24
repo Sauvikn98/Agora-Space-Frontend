@@ -3,6 +3,8 @@ import CommentInput from './CommentInput';
 import { userAtom } from '../../recoil/atoms/userAtoms';
 import { useRecoilValue } from 'recoil';
 import { isAuthenticatedAtom } from '../../recoil/atoms/authAtom';
+import axios from 'axios';
+import { API_COMMENTS_DELETE } from '../../api/api';
 
 function CommentItem({ comment, userName, userId }) {
   const childComments = comment.children || [];
@@ -10,6 +12,21 @@ function CommentItem({ comment, userName, userId }) {
   const [showMenu, setShowMenu] = useState(false);
   const user = useRecoilValue(userAtom)
   const isAuthenticated = useRecoilValue(isAuthenticatedAtom)
+
+  
+  const handleDeleteComment = async (commentId) => {
+    try {
+      await axios.delete(API_COMMENTS_DELETE(commentId), {
+        headers: {
+          Authorization: `Bearer ${user.token}`,
+        },
+      });
+      // TODO: handle comment deletion on UI
+    } catch (error) {
+      console.error(error);
+      // TODO: handle error on UI
+    }
+  };
 
   const handleReplyClick = () => {
     setShowReplyInput(!showReplyInput);
@@ -71,7 +88,7 @@ function CommentItem({ comment, userName, userId }) {
               <button
                 className="block w-full text-left px-4 py-2 text-sm text-red-500 hover:bg-gray-100 dark:hover:bg-gray-700 focus:outline-none"
                 onClick={() => {
-                  // TODO: handle delete comment
+                  handleDeleteComment(comment._id)
                   setShowMenu(false);
                 }}
               >

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import Landing from './pages/Landing'
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { RecoilRoot } from 'recoil';

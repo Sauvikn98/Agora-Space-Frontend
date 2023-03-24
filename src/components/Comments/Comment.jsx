@@ -6,7 +6,6 @@ import { useLocation } from 'react-router-dom';
 import { commentsState } from '../../recoil/atoms/commentAtoms';
 import axios from 'axios';
 import { API_COMMENTS_GET_BY_POST } from '../../api/api';
-import socket from '../../utils/socket';
 import { isAuthenticatedAtom } from '../../recoil/atoms/authAtom';
 import NotificationTooltip from '../Tooltip/NotificationTooltip';
 import { notificationsState } from '../../recoil/atoms/notificationAtom';
@@ -28,21 +27,7 @@ function Comment() {
       }
     }
     fetchComments();
-
-    // Listen for new notifications
-    socket.on('notification', (notification) => {
-      // Update the notifications state with the new notification
-      setNotifications((prevNotifications) => [...prevNotifications, notification]);
-    });
-
-    return () => {
-      // Clean up the event listener when the component unmounts
-      socket.off('notification');
-    };
   }, [post._id, setComments]);
-
-
-
 
   function countComments(comments) {
     let count = comments.length;

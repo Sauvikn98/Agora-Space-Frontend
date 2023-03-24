@@ -4,6 +4,7 @@ import classNames from 'classnames';
 import { isAuthenticatedAtom, signIn } from '../../recoil/atoms/authAtom';
 import { userAtom } from '../../recoil/atoms/userAtoms';
 import Toast from '../Toast/Toast';
+import spaceSocket from '../../utils/socket';
 
 function SignInModal({ onRequestClose }) {
     const [userName, setUserName] = useState('');
@@ -39,13 +40,15 @@ function SignInModal({ onRequestClose }) {
                 setTimeout(() => setShowToast(false), 5000);
                 setIsLoading(false);
                 setTimeout(() => onRequestClose(), 2000);
-
+                spaceSocket.auth = { token: success.token }
+                spaceSocket.connect();
             }
             else {
                 setUser({ token: null, userDetails: null });
                 setIsAuthenticated(false);
                 setShowToast(true);
                 setToastProps({ success: false, message: 'Sign In Failed, Try Again !' });
+                setIsLoading(false);
                 setTimeout(() => setShowToast(false), 5000);
             }
 
@@ -127,7 +130,7 @@ function SignInModal({ onRequestClose }) {
                         <button
                             onClick={handleSignIn}
                             className="py-3 w-64 text-xl text-white bg-indigo-500 rounded-2xl"
-                            disabled={isLoading}
+
                         >
                             {isLoading ? (
                                 <>

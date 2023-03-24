@@ -34,7 +34,8 @@ function PostModal({ onRequestClose }) {
             space: selectedSpace,
             title,
             content,
-            author: user.userDetails._id
+            author: user.userDetails._id,
+            category: ['Gaming', 'Technology']
             //multimedia,
         };
 
