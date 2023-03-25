@@ -3,10 +3,8 @@ import { useSetRecoilState } from 'recoil';
 import classNames from "classnames";
 import { isAuthenticatedAtom, signUp } from '../../recoil/atoms/authAtom';
 import { userAtom } from '../../recoil/atoms/userAtoms';
-import Toast from '../Toast/Toast';
-import spaceSocket from '../../utils/socket';
 
-function SignUpModal({ onRequestClose }) {
+function VotesValidationModal({ onRequestClose }) {
     const [userName, setUserName] = useState('');
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
@@ -14,8 +12,6 @@ function SignUpModal({ onRequestClose }) {
     const setIsAuthenticated = useSetRecoilState(isAuthenticatedAtom)
     const [isLoading, setIsLoading] = useState(false);
     const [errors, setErrors] = useState({});
-    const [showToast, setShowToast] = useState(false);
-    const [toastProps, setToastProps] = useState({ success: false, message: '' });
 
     const handleSignUp = async (event) => {
         event.preventDefault();
@@ -38,26 +34,17 @@ function SignUpModal({ onRequestClose }) {
         // Submit the form if there are no errors
         if (Object.keys(newErrors).length === 0) {
             setIsLoading(true);
-            const success = await signUp(userName, email, password);
+            const success = await signUp(userName, email, password)
             if (success) {
-                setUser({ token: success.token, userDetails: success.user });
-                setIsAuthenticated(true);
-                setShowToast(true);
-                setToastProps({ success: true, message: 'Sign Up Successfull !' });
-                setTimeout(() => setShowToast(false), 5000);
-                setIsLoading(false);
-                setTimeout(() => onRequestClose(), 2000)
-                spaceSocket.auth = { token: success.token }
-                spaceSocket.connect();
+                setUser({ token: success.token, userDetails: success.user })
+                setIsAuthenticated(true)
             }
             else {
-                setUser({ token: null, userDetails: null });
-                setIsAuthenticated(false);
-                setShowToast(true);
-                setToastProps({ success: false, message: 'Sign Up Failed, Try Again !' });
-                setIsLoading(false);
-                setTimeout(() => setShowToast(false), 5000);
+                setUser({ token: null, userDetails: null })
+                setIsAuthenticated(false)
             }
+            setIsLoading(false);
+            onRequestClose();
         }
     };
 
@@ -69,9 +56,9 @@ function SignUpModal({ onRequestClose }) {
 
     return (
         <div className="min-h-full h-full w-full flex justify-center items-center" onClick={handleOutsideClick}>
-            <div className="bg-white py-8 px-12 rounded-2xl shadow-xl" >
-                <div className="mb-20">
-                    <div className='flex justify-end mb-10'>
+            <div className="bg-white py-7 lg:py-8 px-9 lg:px-12 rounded-2xl shadow-xl" >
+                <div className="">
+                    <div className='flex justify-end lg:mb-10 mb-0'>
                         <button onClick={onRequestClose}>
                             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className="w-8 h-8">
                                 <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
@@ -79,7 +66,7 @@ function SignUpModal({ onRequestClose }) {
                         </button>
                     </div>
                     <div className='mb-10'>
-                        <h1 className="text-3xl font-bold mb-4 cursor-pointer text-gray-900">Sign Up</h1>
+                        <h1 className="text-xl font-bold mb-4 cursor-pointer text-gray-900">You can vote on posts and <br /> comments to help everyone <br /> find the best content with a <br /> Agora Space account.</h1>
                         <p className="w-80 text-sm mb-8 font-semibold text-gray-900 tracking-wide cursor-pointer">By continuing, you agree are setting up a Agora Space and agree to our <span className='text-blue-500'>User Agreement</span> and <span className='text-blue-500'>Privacy Policy.</span></p>
                     </div>
                     <div className={` ${errors.userName ? 'space-y-8' : 'space-y-6'} ${errors.email ? 'space-y-8' : 'space-y-6'} ${errors.password ? 'space-y-8' : 'space-y-6'}`} >
@@ -171,22 +158,15 @@ function SignUpModal({ onRequestClose }) {
                                 </>
                             ) : 'Sign Up'}
                         </button>
-                        <p className="mt-4 text-sm text-gray-900">
+                        <p className="mt-4 text-sm text-gray-900 lg:mb-4">
                             Already Have An Account?{' '}
                             <span className="underline cursor-pointer">Sign In</span>
                         </p>
                     </div>
                 </div>
-                {showToast && (
-                    <div className="fixed inset-0 z-50 flex items-end justify-center px-4 py-6 pointer-events-none sm:p-6 sm:items-start sm:justify-end">
-                        <div className="max-w-sm w-full bg-white shadow-lg rounded-lg pointer-events-auto">
-                            <Toast success={toastProps.success} message={toastProps.message} showToast={showToast} setShowToast={setShowToast} />
-                        </div>
-                    </div>
-                )}
             </div>
         </div>
     )
 }
 
-export default SignUpModal
+export default VotesValidationModal

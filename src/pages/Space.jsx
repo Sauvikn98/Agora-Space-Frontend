@@ -4,6 +4,7 @@ import Navbar from '../components/Navbar/Navbar'
 import SignUpModal from "../components/Modals/SignUpModal";
 import SignInModal from "../components/Modals/SignInModal";
 import SpaceDetailCard from '../components/Cards/SpaceDetailCard';
+import PostModal from '../components/Modals/PostModal';
 
 
 function Space() {
@@ -26,9 +27,10 @@ function Space() {
         <div className="backdrop-blur-lg fixed top-0 left-0 w-full h-full z-50 flex justify-center items-center">
           {activeModal === 'signin' && <SignInModal onRequestClose={handleCloseModal} />}
           {activeModal === 'signup' && <SignUpModal onRequestClose={handleCloseModal} />}
+          {activeModal === 'post' && <PostModal onRequestClose={handleCloseModal} />}
         </div>
       )}
-      <SpaceDetailCard />
+      <SpaceDetailCard handleOpenModal={handleOpenModal} />
     </div>
   )
 }

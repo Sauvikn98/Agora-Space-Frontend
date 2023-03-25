@@ -1,68 +1,58 @@
 import React, { useState } from 'react'
-import { useRecoilState } from 'recoil';
-import { authState } from '../../recoil/atoms/userAtoms';
-import { API_USERS_LOGIN } from '../../api/api';
+import { useSetRecoilState } from 'recoil';
 import classNames from 'classnames';
-import axios from 'axios';
+import { isAuthenticatedAtom, signIn } from '../../recoil/atoms/authAtom';
+import { userAtom } from '../../recoil/atoms/userAtoms';
+import Toast from '../Toast/Toast';
+import spaceSocket from '../../utils/socket';
 
 function SignInModal({ onRequestClose }) {
-    const [userCredentials, setUserCredentials] = useState({ userName: "", password: "" });
-    const [auth, setAuth] = useRecoilState(authState);
+    const [userName, setUserName] = useState('');
+    const [password, setPassword] = useState('');
     const [isLoading, setIsLoading] = useState(false);
     const [errors, setErrors] = useState({})
+    const setIsAuthenticated = useSetRecoilState(isAuthenticatedAtom);
+    const setUser = useSetRecoilState(userAtom)
+    const [showToast, setShowToast] = useState(false);
+    const [toastProps, setToastProps] = useState({ success: false, message: '' });
 
     const handleSignIn = async (event) => {
         event.preventDefault();
         const newErrors = {};
-        if (!userCredentials.userName) {
+        if (!userName) {
             newErrors.userName = "Username is required";
         }
-        if (!userCredentials.password) {
+        if (!password) {
             newErrors.password = "Password is required";
-        } else if (userCredentials.password.length < 8) {
+        } else if (password.length < 8) {
             newErrors.password = "Password must be at least 8 characters long";
         }
         setErrors(newErrors);
         if (Object.keys(newErrors).length === 0) {
             event.preventDefault();
             setIsLoading(true);
-            try {
-                const response = await axios.post(API_USERS_LOGIN, userCredentials, {
-                    headers: {
-                        'Content-Type': 'application/json'
-                    }
-                });
-                const { token, user} = response.data;
-                console.log(response.data)
-                if (token) {
-                    setUserCredentials({
-                        userName: user.userName,
-                        token: token,
-                        userId: user._id
-                    });
-                    setAuth({
-                        isAuthenticated: true,
-                        user: {
-                            userName: user.userName,
-                            token: token,
-                            userId: user._id
-                        },
-                    });
-                } else {
-                    setAuth({
-                        isAuthenticated: false,
-                        user: null
-                    });
-                }
-            } catch (error) {
-                console.error(error);
-                setAuth({
-                    isAuthenticated: false,
-                    user: null
-                });
+            const success = await signIn(userName, password);
+            if (success) {
+                setUser({ token: success.token, userDetails: success.user });
+                setIsAuthenticated(true);
+                setShowToast(true);
+                setToastProps({ success: true, message: 'Sign In Successfull !' });
+                setTimeout(() => setShowToast(false), 5000);
+                setIsLoading(false);
+                setTimeout(() => onRequestClose(), 2000);
+                spaceSocket.auth = { token: success.token }
+                spaceSocket.connect();
             }
-            setIsLoading(false);
-            onRequestClose()
+            else {
+                setUser({ token: null, userDetails: null });
+                setIsAuthenticated(false);
+                setShowToast(true);
+                setToastProps({ success: false, message: 'Sign In Failed, Try Again !' });
+                setIsLoading(false);
+                setTimeout(() => setShowToast(false), 5000);
+            }
+
+            console.log(showToast)
         }
     };
 
@@ -90,7 +80,7 @@ function SignInModal({ onRequestClose }) {
                     <div className={` ${errors.userName ? 'space-y-8' : 'space-y-6'} ${errors.password ? 'space-y-8' : 'space-y-6'}`} >
                         <div className="relative">
                             <input
-                                type="text" value={userCredentials.userName} onChange={(event) => setUserCredentials({ ...userCredentials, userName: event.target.value })}
+                                type="text" value={userName} onChange={(event) => setUserName(event.target.value)}
                                 placeholder="Username"
                                 className={classNames(
                                     "block text-sm py-3 px-3 rounded-lg w-full border placeholder-gray-500 border-gray-300 outline-none",
@@ -114,7 +104,7 @@ function SignInModal({ onRequestClose }) {
                         </div>
                         <div className="relative">
                             <input
-                                type="password" value={userCredentials.password} onChange={(event) => setUserCredentials({ ...userCredentials, password: event.target.value })}
+                                type="password" value={password} onChange={(event) => setPassword(event.target.value)}
                                 placeholder="Password"
                                 className={classNames(
                                     "block text-sm py-3 px-3 rounded-lg w-full border placeholder-gray-500 border-gray-300 outline-none",
@@ -140,7 +130,7 @@ function SignInModal({ onRequestClose }) {
                         <button
                             onClick={handleSignIn}
                             className="py-3 w-64 text-xl text-white bg-indigo-500 rounded-2xl"
-                            disabled={isLoading}
+
                         >
                             {isLoading ? (
                                 <>
@@ -157,7 +147,15 @@ function SignInModal({ onRequestClose }) {
                             <span className="underline cursor-pointer">Sign Up</span>
                         </p>
                     </div>
+
                 </div>
+                {showToast && (
+                    <div className="fixed inset-0 z-50 flex items-end justify-center px-4 py-6 pointer-events-none sm:p-6 sm:items-start sm:justify-end">
+                        <div className="max-w-sm w-full bg-white shadow-lg rounded-lg pointer-events-auto">
+                            <Toast success={toastProps.success} message={toastProps.message} showToast={showToast} setShowToast={setShowToast} />
+                        </div>
+                    </div>
+                )}
             </div>
         </div>
     )
