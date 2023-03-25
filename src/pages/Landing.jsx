@@ -45,6 +45,7 @@ const Landing = () => {
         <RecommendedSpaces />
       </div>
     </>
+    </div>
   );
 };
 
