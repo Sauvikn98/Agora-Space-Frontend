@@ -76,12 +76,13 @@ function SpaceList({ handleOpenModal }) {
                 setTimeout(() => setShowToast(false), 5000);
                 const notification = {
                     userId: user.userDetails._id,
-                    notificationType: 'new-member of space',
+                    notificationType: `New Member of space`,
                     seen: false,
                     intent: {
                         action: "/space",
                         parameters: {
                             memberName: user.userDetails.userName,
+                            spaceId: spaceId,
                             receivers: members(spaceId)
                         }
                     }
@@ -127,6 +128,20 @@ function SpaceList({ handleOpenModal }) {
                 setShowToast(true);
                 setToastProps({ success: true, message: 'Successfully Left the Space !' });
                 setTimeout(() => setShowToast(false), 5000);
+                const notification = {
+                    userId: user.userDetails._id,
+                    notificationType: `Member Left Space`,
+                    seen: false,
+                    intent: {
+                      action: "/space",
+                      parameters: {
+                        memberName: user.userDetails.userName,
+                        spaceId: spaceId,
+                        receivers: members(spaceId)
+                      }
+                    }
+                  };
+                  spaceSocket.emit('leaveSpace', { spaceId, notification });
             } else {
                 console.error(`Failed to leave space: ${response.data.error}`);
                 setShowToast(true);
