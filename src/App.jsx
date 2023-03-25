@@ -1,16 +1,23 @@
-import React, { useState } from 'react';
+import React from 'react';
 import Landing from './pages/Landing'
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import PostDetail from './pages/PostDetail';
+import { RecoilRoot } from 'recoil';
+import Space from './pages/Space';
+import Post from './pages/Post';
+import Settings from './pages/Settings';
 
 function App() {
   return (
-    <BrowserRouter>
-      <Routes>
-        <Route path="/" element={<Landing />}></Route>
-        <Route path="/post/:id" element={<PostDetail />}></Route>
-      </Routes>
-    </BrowserRouter>
+    <RecoilRoot>
+      <BrowserRouter>
+        <Routes>
+          <Route path="/" element={<Landing />}></Route>
+          <Route path="/agora/:spaceName" element={<Space />}></Route>
+          <Route path="comments/:postTitle" element={<Post/>}></Route>
+          <Route path="/settings" element={<Settings/>}></Route>
+        </Routes>
+      </BrowserRouter>
+    </RecoilRoot>
   )
 }
 
