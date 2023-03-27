@@ -144,8 +144,19 @@ function LatestSpacePost({ spaceId, handleOpenModal }) {
                                                 className="w-14 h-14 rounded-full"
                                             />
                                             <div>
-                                                <h5 className="text-[12px] text-gray-600">{`posted by @${post.author.userName} - ${timeAgo(new Date(post.createdAt))}`}</h5>
-                                                <h3 className="text-lg font-bold text-gray-700">{post.title}</h3>
+                                                <h5 className="text-[12px] text-gray-600 mb-1">{`posted by @${post.author.userName} - ${timeAgo(new Date(post.createdAt))}`}</h5>
+                                                <div className="flex space-x-3">
+                                                    <h3 className="text-lg font-bold text-gray-700">{post.title}</h3>
+                                                    <div class="pl-3 h-6 pr-3 bg-purple-500 text-white rounded-full flex items-center ">
+                                                        <h3 className="text-sm text-white">New Post</h3>
+                                                    </div>
+                                                    <div class="pl-3 h-6 pr-3 bg-blue-500 text-white rounded-full flex items-center ">
+                                                        <h3 className="text-sm text-white">I made this</h3>
+                                                    </div>
+                                                    <div class="pl-3 h-6 pr-3 bg-yellow-500 text-white rounded-full flex items-center ">
+                                                        <h3 className="text-sm text-black">Nice Post</h3>
+                                                    </div>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
@@ -165,17 +176,22 @@ function LatestSpacePost({ spaceId, handleOpenModal }) {
                                             </button>
                                             <p className="text-gray-500 ml-1">{post.comments.length} Comments</p>
                                         </div>
-                                        <button className="text-gray-500">
-                                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" className="w-6 h-6">
-                                                <path stroke-linecap="round" stroke-linejoin="round" d="M17.593 3.322c1.1.128 1.907 1.077 1.907 2.185V21L12 17.25 4.5 21V5.507c0-1.108.806-2.057 1.907-2.185a48.507 48.507 0 0111.186 0z" />
-                                            </svg>
-
-                                        </button>
-                                        <button className="text-gray-500">
-                                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" className="w-6 h-6">
-                                                <path stroke-linecap="round" stroke-linejoin="round" d="M7.217 10.907a2.25 2.25 0 100 2.186m0-2.186c.18.324.283.696.283 1.093s-.103.77-.283 1.093m0-2.186l9.566-5.314m-9.566 7.5l9.566 5.314m0 0a2.25 2.25 0 103.935 2.186 2.25 2.25 0 00-3.935-2.186zm0-12.814a2.25 2.25 0 103.933-2.185 2.25 2.25 0 00-3.933 2.185z" />
-                                            </svg>
-                                        </button>
+                                        <div className="flex items-center justify-center ">
+                                            <button className="text-gray-500">
+                                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" className="w-6 h-6">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" d="M17.593 3.322c1.1.128 1.907 1.077 1.907 2.185V21L12 17.25 4.5 21V5.507c0-1.108.806-2.057 1.907-2.185a48.507 48.507 0 0111.186 0z" />
+                                                </svg>
+                                            </button>
+                                            <p className="text-gray-500 ml-1">Save</p>
+                                        </div>
+                                        <div className="flex items-center justify-center ">
+                                            <button className="text-gray-500">
+                                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" className="w-6 h-6">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" d="M7.217 10.907a2.25 2.25 0 100 2.186m0-2.186c.18.324.283.696.283 1.093s-.103.77-.283 1.093m0-2.186l9.566-5.314m-9.566 7.5l9.566 5.314m0 0a2.25 2.25 0 103.935 2.186 2.25 2.25 0 00-3.935-2.186zm0-12.814a2.25 2.25 0 103.933-2.185 2.25 2.25 0 00-3.933 2.185z" />
+                                                </svg>
+                                            </button>
+                                            <p className="text-gray-500 ml-1">Share</p>
+                                        </div>
                                     </div>
                                 </div>
 
@@ -212,7 +228,6 @@ function LatestSpacePost({ spaceId, handleOpenModal }) {
                                         </div>
                                     </div>
                                 )}
-
                             </div>
                         </div>
                     ))}

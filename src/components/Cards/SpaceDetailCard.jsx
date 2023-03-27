@@ -6,6 +6,7 @@ import SpaceTabs from '../Tabs/SpaceTabs';
 import TopTabs from '../Tabs/TopTabs';
 import AllSpacePost from './AllSpacePosts';
 import RecommendedPosts from './RecommendedPosts';
+import SpaceMembers from './SpaceMembers';
 
 function SpaceDetailCard({ handleOpenModal }) {
     const { state: space } = useLocation();
@@ -49,12 +50,12 @@ function SpaceDetailCard({ handleOpenModal }) {
                     </div>
                 )}
                 {currentTab === 'Members' && (
-                    <div className="pt-10 border-t border-gray-100">
-
+                    <div className="border-t border-gray-100">
+                        <SpaceMembers spaceId={space._id} />
                     </div>
                 )}
                 {currentTab === 'Settings' && (
-                    <div className="pt-7 border-t border-gray-100">
+                    <div className="border-t border-gray-100">
                         <SpaceSettings name={space.name} description={space.description} />
                     </div>
                 )}

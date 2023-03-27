@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import { useRecoilValue, useSetRecoilState } from 'recoil';
 import { userAtom } from '../../recoil/atoms/userAtoms';
 import axios from 'axios';
-import { API_SPACES_UPDATE, API_USERS_UPDATE } from '../../api/api';
+import { API_SPACES_UPDATE } from '../../api/api';
 
 
 function SpaceSettings({ name, description }) {
@@ -12,9 +12,7 @@ function SpaceSettings({ name, description }) {
     const user = useRecoilValue(userAtom)
     const setUserData = useSetRecoilState(userAtom);
     const [formData, setFormData] = useState({
-        email: user.userDetails.email,
-        userName: user.userDetails.userName,
-        password: '',
+
     });
     const [isLoading, setIsLoading] = useState(false);
     const [successMessage, setSuccessMessage] = useState('');
@@ -38,12 +36,9 @@ function SpaceSettings({ name, description }) {
         }
         setIsLoading(false);
     };
-
-
     return (
         <aside className='h-[92.4vh] lg:sticky flex top-[3.52rem] bottom-[2.8rem]'>
             <div className="bg-white p-6 w-full h-screen">
-                <h1 className="text-2xl font-medium mb-6">Space Settings</h1>
                 <div className='lg:w-2/3 lg:my-4 p-6 '>
                     <div className={`mb-10 ${!successMessage && ('hidden')}`}>
                         {successMessage &&

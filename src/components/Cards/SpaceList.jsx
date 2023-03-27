@@ -21,7 +21,7 @@ function SpaceList({ handleOpenModal }) {
     const [isHovering, setIsHovering] = useState([])
     const [showToast, setShowToast] = useState(false);
     const [toastProps, setToastProps] = useState({ success: false, message: '' });
-
+    const [filteredSpaces, setFilteredSpaces] = useState(spaces);
 
     const handleClick = () => {
         setIsOpen(!isOpen);
@@ -45,6 +45,9 @@ function SpaceList({ handleOpenModal }) {
             });
     }, []);
 
+    useEffect(() => {
+        setFilteredSpaces(spaces);
+    }, [spaces]);
 
     const handleJoinSpace = async (spaceId) => {
         try {
@@ -102,7 +105,6 @@ function SpaceList({ handleOpenModal }) {
         }
     };
 
-
     const handleLeaveSpace = async (spaceId) => {
         try {
             const response = await axios.delete(API_SPACES_LEAVE_SPACE(spaceId), {
@@ -133,15 +135,15 @@ function SpaceList({ handleOpenModal }) {
                     notificationType: `Member Left Space`,
                     seen: false,
                     intent: {
-                      action: "/space",
-                      parameters: {
-                        memberName: user.userDetails.userName,
-                        spaceId: spaceId,
-                        receivers: members(spaceId)
-                      }
+                        action: "/space",
+                        parameters: {
+                            memberName: user.userDetails.userName,
+                            spaceId: spaceId,
+                            receivers: members(spaceId).filter((memberId) => memberId !== user.userDetails._id)
+                        }
                     }
-                  };
-                  spaceSocket.emit('leaveSpace', { spaceId, notification });
+                };
+                spaceSocket.emit('leaveSpace', { spaceId, notification });
             } else {
                 console.error(`Failed to leave space: ${response.data.error}`);
                 setShowToast(true);
@@ -164,11 +166,17 @@ function SpaceList({ handleOpenModal }) {
 
     const members = (spaceId) => {
         const space = spaces.find((space) => space._id === spaceId);
-        return space.members
-    }
+        return space.members.map((memberId) => memberId);
+    };
 
 
-
+    const handleCategorySelect = (selectedCategory) => {
+        // filter the spaces based on the selected category
+        const newFilteredSpaces = spaces.filter(space =>
+            space.category.some(category => category === selectedCategory)
+        );
+        setFilteredSpaces(newFilteredSpaces);
+    };
 
     return (
         <div>
@@ -197,8 +205,6 @@ function SpaceList({ handleOpenModal }) {
                                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="gray" class="w-6 h-6">
                                     <path fill-rule="evenodd" d="M15.22 6.268a.75.75 0 01.968-.432l5.942 2.28a.75.75 0 01.431.97l-2.28 5.941a.75.75 0 11-1.4-.537l1.63-4.251-1.086.483a11.2 11.2 0 00-5.45 5.174.75.75 0 01-1.199.19L9 12.31l-6.22 6.22a.75.75 0 11-1.06-1.06l6.75-6.75a.75.75 0 011.06 0l3.606 3.605a12.694 12.694 0 015.68-4.973l1.086-.484-4.251-1.631a.75.75 0 01-.432-.97z" clip-rule="evenodd" />
                                 </svg>
-
-
                             </div>
                         </button>
 
@@ -224,15 +230,11 @@ function SpaceList({ handleOpenModal }) {
                                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
                                     <path stroke-linecap="round" stroke-linejoin="round" d="M6 13.5V3.75m0 9.75a1.5 1.5 0 010 3m0-3a1.5 1.5 0 000 3m0 3.75V16.5m12-3V3.75m0 9.75a1.5 1.5 0 010 3m0-3a1.5 1.5 0 000 3m0 3.75V16.5m-6-9V3.75m0 3.75a1.5 1.5 0 010 3m0-3a1.5 1.5 0 000 3m0 9.75V10.5" />
                                 </svg>
-
-
                             </div>
                         </button>
-
                     </div>
-                    {isOpen && <CategoryCard />}
+                    {isOpen && <CategoryCard handleCategorySelect={handleCategorySelect} />}
                     <div>
-
                     </div>
                 </div>
                 {isLoading ? (
@@ -248,7 +250,7 @@ function SpaceList({ handleOpenModal }) {
                     </div>
                 ) : (
                     <div>
-                        {spaces.map(space => (
+                        {filteredSpaces.map(space => (
                             <div key={space._id} className="transition duration-500 ease-in-out transform hover:-translate-y-1 relative">
                                 <div className="shadow-xl hover:outline outline-offset-2 pb-4 outline-blue-500 bg-white rounded-lg lg:ml-7 mr-5 mb-6 mt-6 lg:mt-6 ml-6 space-y-2">
                                     <div className='bg-gray-100 border-b-2 p-2 border-gray-200 flex justify-between items-center mr-5 lg:mr-0'>
