@@ -6,6 +6,11 @@ export const spacesState = atom({
 });
 
 export const latestSpacePost = atom({
-    key: 'spacePostsState',
-    default: [],
-  });
+  key: 'spacePostsState',
+  default: [],
+});
+
+export const labelsState = atom({
+  key: 'labelsState',
+  default: [],
+});

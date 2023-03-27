@@ -1,15 +1,16 @@
 import React, { useState } from 'react';
 
-const categories = [
-    { id: 1, name: 'Gaming' },
-    { id: 2, name: 'Sports' },
-    { id: 3, name: 'Business' },
-    { id: 4, name: 'Technology' },
-    { id: 5, name: 'Art' },
-    { id: 6, name: 'Anime' },
-    { id: 7, name: 'Crypto' },
-    { id: 8, name: 'Fashion' },
-    { id: 9, name: 'Food and Drink' },
+export const categories = [
+    { id: 1, name: 'All' },
+    { id: 2, name: 'Gaming' },
+    { id: 3, name: 'Sports' },
+    { id: 4, name: 'Business' },
+    { id: 5, name: 'Technology' },
+    { id: 6, name: 'Art' },
+    { id: 7, name: 'Anime' },
+    { id: 8, name: 'Crypto' },
+    { id: 9, name: 'Fashion' },
+    { id: 10, name: 'Food and Drink' },
 ];
 
 function CategoryCard({ handleCategorySelect }) {
@@ -25,9 +26,9 @@ function CategoryCard({ handleCategorySelect }) {
             {categories.map(category => (
                 <div key={category.id}>
                     <div className="flex items-center py-1 " role="none">
-                        <a href="#" class={`font-medium text-gray-900 block w-full px-4 py-2 text-sm hover:bg-indigo-600 hover:text-white ${selectedCategory.includes(category.name) ? 'bg-indigo-600 text-white' : ''}`} role="menuitem" tabindex="-1" id={`menu-item-${category.id}`} onClick={() => handleCategoryClick(category.name)}>
+                        <div class={`font-medium text-gray-900 block w-full px-4 py-2 text-sm hover:bg-indigo-600 hover:text-white hover:cursor-pointer ${selectedCategory.includes(category.name) ? 'bg-indigo-600 text-white' : ''}`} role="menuitem" tabindex="-1" id={`menu-item-${category.id}`} onClick={() => handleCategoryClick(category.name)}>
                             {category.name}
-                        </a>
+                        </div>
                     </div>
                 </div>
             ))}

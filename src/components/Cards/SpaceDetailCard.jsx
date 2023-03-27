@@ -1,16 +1,53 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useLocation } from "react-router-dom";
-import ProfileSettings from '../Settings.jsx/ProfileSettings';
+import { API_SPACES_GET_ALL_LABELS } from '../../api/api';
+import LabelForm from '../Labels/LabelForm';
+import LabelList from '../Labels/LabelList';
 import SpaceSettings from '../Settings.jsx/SpaceSettings';
 import SpaceTabs from '../Tabs/SpaceTabs';
-import TopTabs from '../Tabs/TopTabs';
 import AllSpacePost from './AllSpacePosts';
 import RecommendedPosts from './RecommendedPosts';
 import SpaceMembers from './SpaceMembers';
+import axios from 'axios';
 
 function SpaceDetailCard({ handleOpenModal }) {
     const { state: space } = useLocation();
     const [currentTab, setCurrentTab] = useState('Posts');
+    const [labels, setLabels] = useState([]);
+
+    const handleAddLabel = (newLabel) => {
+        setLabels((prevLabels) => [...prevLabels, newLabel]);
+    };
+
+    const handleUpdateLabel = (updatedLabel) => {
+        setLabels((prevLabels) =>
+            prevLabels.map((label) =>
+                label.id === updatedLabel.id ? updatedLabel : label
+            )
+        );
+    };
+
+    const handleDeleteLabel = (labelToDelete) => {
+        setLabels((prevLabels) =>
+            prevLabels.filter((label) => label !== labelToDelete)
+        );
+    };
+
+    useEffect(() => {
+        const getAllLabels = async (spaceId) => {
+            try {
+                const response = await axios.get(API_SPACES_GET_ALL_LABELS(spaceId));
+                setLabels(response.data)
+            } catch (error) {
+                console.error(error);
+                return null;
+            }
+        };
+        getAllLabels(space._id);
+    }, []);
+
+
+
     return (
         <div className="bg-gray-300 w-full min-h-screen grid grid-cols-custom2">
             <div className="rounded-lg shadow-lg overflow-hidden">
@@ -30,7 +67,7 @@ function SpaceDetailCard({ handleOpenModal }) {
                         <p className="mt-2 text-gray-600">{space.description}</p>
                         <div className='flex mt-7'>
                             <SpaceTabs
-                                tabs={['Posts', 'Members', 'Settings', 'Notifications']}
+                                tabs={['Posts', 'Members', 'Settings', 'Labels']}
                                 currentTab={currentTab}
                                 onTabClick={setCurrentTab}
                             />
@@ -59,9 +96,14 @@ function SpaceDetailCard({ handleOpenModal }) {
                         <SpaceSettings name={space.name} description={space.description} />
                     </div>
                 )}
-                {currentTab === 'Notifications' && (
-                    <div className="pt-10 border-t border-gray-100">
-
+                {currentTab === 'Labels' && (
+                    <div className="bg-white h-full pt-10 border-t border-gray-100">
+                        <LabelForm onSubmit={handleAddLabel} spaceId={space._id} />
+                        <LabelList
+                            labels={labels}
+                            onUpdate={handleUpdateLabel}
+                            onDelete={handleDeleteLabel}
+                        />
                     </div>
                 )}
             </div>

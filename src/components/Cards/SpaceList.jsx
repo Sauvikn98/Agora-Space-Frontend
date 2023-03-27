@@ -171,11 +171,15 @@ function SpaceList({ handleOpenModal }) {
 
 
     const handleCategorySelect = (selectedCategory) => {
-        // filter the spaces based on the selected category
-        const newFilteredSpaces = spaces.filter(space =>
-            space.category.some(category => category === selectedCategory)
-        );
-        setFilteredSpaces(newFilteredSpaces);
+        if (selectedCategory === 'All') {
+            setFilteredSpaces(spaces)
+        }
+        else {
+            const newFilteredSpaces = spaces.filter(space =>
+                space.category.some(category => category === selectedCategory)
+            );
+            setFilteredSpaces(newFilteredSpaces);
+        }
     };
 
     return (
