@@ -46,11 +46,10 @@ function SpaceDetailCard({ handleOpenModal }) {
         getAllLabels(space._id);
     }, []);
 
-
-
+    
     return (
         <div className="bg-gray-300 w-full min-h-screen grid grid-cols-custom2">
-            <div className="rounded-lg shadow-lg overflow-hidden">
+            <div className="overflow-hidden">
                 <div className="relative h-40">
                     <img
                         src="https://images.unsplash.com/photo-1451187580459-43490279c0fa?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxzZWFyY2h8NHx8bGlua2VkaW4lMjBiYW5uZXJ8ZW58MHx8MHx8&auto=format&fit=crop&w=500&q=60"
