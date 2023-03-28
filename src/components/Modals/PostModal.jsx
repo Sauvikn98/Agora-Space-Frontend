@@ -15,6 +15,7 @@ function PostModal({ onRequestClose }) {
     const [selectedSpace, setSelectedSpace] = useState(null);
     const spaces = useRecoilValue(spacesState);
     const [posts, setPosts] = useRecoilState(createNewpost);
+    const [uploadProgress, setUploadProgress] = useState(0);
     const user = useRecoilValue(userAtom)
 
     const handleTitleChange = (event) => {
@@ -35,12 +36,20 @@ function PostModal({ onRequestClose }) {
             title,
             content,
             author: user.userDetails._id,
-            category: ['Gaming', 'Technology']
-            //multimedia,
+            category: ['Gaming', 'Technology'],
+            multimedia: multimedia,
         };
 
         try {
-            const response = await axios.post(API_POSTS_CREATE, newPost);
+            const response = await axios.post(API_POSTS_CREATE, newPost, {
+                onUploadProgress: (progressEvent) => {
+                    const percentCompleted = Math.round((progressEvent.loaded * 100) / progressEvent.total);
+                    setUploadProgress(percentCompleted);
+                },
+                headers: {
+                    "Content-Type": "multipart/form-data",
+                },
+            });
             setPosts([...posts, response.data]);
 
             // Reset the form
@@ -48,7 +57,6 @@ function PostModal({ onRequestClose }) {
             setContent('');
             setMultiMedia(null);
             setSelectedSpace(null);
-
             onRequestClose();
         } catch (error) {
             console.error(error);
@@ -154,7 +162,6 @@ function PostModal({ onRequestClose }) {
                                 </div>
                                 <div className="mt-2">
                                     <div className="mb-4">
-
                                         <input
                                             type="text"
                                             id="title"
@@ -176,9 +183,16 @@ function PostModal({ onRequestClose }) {
                                         <form class="ml-4 mt-2 flex items-center space-x-6">
                                             <label class="block">
                                                 <span class="sr-only">Choose Multimedia</span>
-                                                <input type="file" class="block w-full text-sm text-slate-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-violet-50 file:text-violet-700 hover:file:bg-violet-100" />
+                                                <input onChange={handleMediaChange} type="file" class="block w-full text-sm text-slate-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-violet-50 file:text-violet-700 hover:file:bg-violet-100" />
                                             </label>
                                         </form>
+                                        {uploadProgress > 0 && (
+                                            <div className="relative pt-1">
+                                                <div className="overflow-hidden h-2 mb-4 text-xs flex rounded bg-indigo-200">
+                                                    <div style={{ width: `${uploadProgress}%` }} className="shadow-none flex flex-col text-center whitespace-nowrap text-white justify-center bg-indigo-500"></div>
+                                                </div>
+                                            </div>
+                                        )}
                                     </div>
                                 </div>
                             </div>

@@ -84,11 +84,10 @@ function Toast({ success, message, showToast, setShowToast }) {
 
             <div className="bg-gray-300 h-1 rounded-b">
                 <div
-                    className={`bg-${success ? 'green' : 'red'}-500 h-1 rounded-b transition-width duration-500`}
+                    className={`${success ? 'bg-green-500' : 'bg-red-500'} h-1 rounded-b transition-width duration-500`}
                     style={{ width: `${progress}%` }}
                 />
             </div>
-
         </div>
     );
 }
