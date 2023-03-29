@@ -30,6 +30,11 @@ function PostModal({ onRequestClose }) {
         setMultiMedia(event.target.files[0]);
     };
 
+    const handleRemoveImage = () => {
+        setMultiMedia(null);
+        document.getElementById("media-input").value = "";
+    };
+
     const handleSubmit = async () => {
         const newPost = {
             space: selectedSpace,
@@ -72,6 +77,8 @@ function PostModal({ onRequestClose }) {
             setIsOpen(false);
         }
     };
+
+
 
     useEffect(() => {
         document.addEventListener("mousedown", handleOutsideClick);
@@ -179,18 +186,30 @@ function PostModal({ onRequestClose }) {
                                         value={content}
                                         onChange={handleContentChange}
                                     />
+                                    {multimedia && (
+                                        <div className={`absolute ${uploadProgress > 0 ? ('bottom-40') : ('bottom-28')} left-1/2 transform -translate-x-1/2 mt-2 mr-2 `}>
+                                            <button
+                                                onClick={handleRemoveImage}
+                                                className="bg-red-500 flex items-center absolute  right-0 top-2 text-white h-6 hover:bg-red-600 p-1"
+                                            >
+                                                X
+                                            </button>
+                                            <img src={URL.createObjectURL(multimedia)} alt="Selected media" className="mt-2 object-cover h-[270px]" />
+                                        </div>
+                                    )}
                                     <div className="">
                                         <form class="ml-4 mt-2 flex items-center space-x-6">
-                                            <label class="block">
+                                            <label htmlFor="media-input" class="block">
                                                 <span class="sr-only">Choose Multimedia</span>
-                                                <input onChange={handleMediaChange} type="file" class="block w-full text-sm text-slate-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-violet-50 file:text-violet-700 hover:file:bg-violet-100" />
+                                                <input id="media-input" onChange={handleMediaChange} type="file" class="block w-full text-sm text-slate-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-violet-50 file:text-violet-700 hover:file:bg-violet-100" />
                                             </label>
                                         </form>
                                         {uploadProgress > 0 && (
-                                            <div className="relative pt-1">
-                                                <div className="overflow-hidden h-2 mb-4 text-xs flex rounded bg-indigo-200">
+                                            <div className="relative pl-5 pr-5 pt-3 pb-2">
+                                                <div className=" overflow-hidden h-2 text-xs flex rounded bg-indigo-200">
                                                     <div style={{ width: `${uploadProgress}%` }} className="shadow-none flex flex-col text-center whitespace-nowrap text-white justify-center bg-indigo-500"></div>
                                                 </div>
+                                                <h2 className='flex items-end justify-end'>{uploadProgress}%</h2>
                                             </div>
                                         )}
                                     </div>

@@ -87,7 +87,11 @@ function PostDetailCard() {
                 </div>
                 <div>
                     <p className="text-gray-700">{post.content}</p>
-                    <img src={post.multimedia} alt="post image" className="w-full mt-5" />
+                    {post.multimedia.includes('.mp4', '.mpeg', './quicktime') ? (
+                        <video src={post.multimedia} alt="post image" className="w-full mt-5" controls />
+                    ) : (
+                        <img src={post.multimedia} alt="post image" className="w-full mt-5" />
+                    )}
                 </div>
             </div>
         </div>

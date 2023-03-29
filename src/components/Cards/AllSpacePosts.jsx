@@ -166,9 +166,15 @@ function AllSpacePost({ spaceId, handleOpenModal }) {
                                     </div>
                                     <div className="flex justify-between flex-row lg:flex-col mt-2 lg:mt-1" onClick={() => handleCommentNavigate(post.title)}>
                                         <p className="relative text-gray-700 mb-4">{post.content}</p>
-                                        <div className="lg:w-[700px] w-[80px]">
-                                            <img src={post.multimedia} alt="post image" className="object-cover w-[100%] h-[100%]" />
-                                        </div>
+                                        {post.multimedia && post.multimedia.includes('.mp4', '.mpeg', '.quicktime') ? (
+                                            <div className="lg:w-[700px] w-[80px]">
+                                                <video src={post.multimedia} alt="post video" className=" object-cover w-[100%] h-[100%]" controls />
+                                            </div>
+                                        ) : (
+                                            <div className="lg:w-[700px] w-[80px]">
+                                                <img src={post.multimedia} alt="post image" className="object-cover w-[100%] h-[100%]" />
+                                            </div>
+                                        )}
                                     </div>
                                     <div className="flex items-center justify-between mt-6">
                                         <div className="flex items-center space-x-4">
