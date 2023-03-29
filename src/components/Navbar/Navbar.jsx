@@ -2,10 +2,39 @@ import React, { useState, useEffect } from 'react'
 import logo from "../../assets/logo.png"
 import { useRecoilValue } from 'recoil';
 import { isAuthenticatedAtom } from '../../recoil/atoms/authAtom';
+import axios from 'axios';
+import { API_POSTS_SEARCH } from '../../api/api';
+import { useNavigate } from 'react-router-dom';
 
 function Navbar({ handleOpenModal }) {
   const [isScrolled, setIsScrolled] = useState(false);
   const isAuthenticated = useRecoilValue(isAuthenticatedAtom);
+  const [searchResults, setSearchResults] = useState([]);
+  const navigate = useNavigate()
+
+  const searchPosts = async (text) => {
+    try {
+      const response = await axios.get(API_POSTS_SEARCH(text));
+      setSearchResults(response.data);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  const handleSearchInputChange = (event) => {
+    const text = event.target.value;
+    searchPosts(text);
+  };
+
+  const handleCommentNavigate = (postTitle, event) => {
+    const modifiedTitle = postTitle.replace(/\s+/g, '_');
+    navigate(`/comments/${modifiedTitle}`, {
+      state: searchResults.find((post) => post.title === postTitle),
+    });
+  };
+
+  const resultHeight = searchResults.length > 0 ? `${searchResults.length * 3}rem` : '0';
+
 
   useEffect(() => {
     const handleScroll = () => {
@@ -36,13 +65,37 @@ function Navbar({ handleOpenModal }) {
           <img class="w-auto mr-6 h-12 lg:ml-2" src={logo} alt="" />
         </a>
         <div className='lg:w-2/6'>
-          <label for="default-search" class=" text-sm font-medium text-gray-900 sr-only dark:text-white">Search</label>
-          <div class="relative">
-            <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
-              <svg aria-hidden="true" class="w-5 h-5 text-gray-500 dark:text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
+          <label htmlFor="default-search" className="text-sm font-medium text-gray-900 sr-only dark:text-white">Search</label>
+          <div className="relative">
+            <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
+              <svg aria-hidden="true" className="w-5 h-5 text-gray-500 dark:text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
             </div>
-            <input type="search" id="default-search" class="block w-full p-2 pl-10 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white" placeholder="Enter your Keyword to search" required />
+            <input type="search" id="default-search" className="block w-full p-2 pl-10 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white" placeholder="Enter your Keyword to search" onChange={handleSearchInputChange} required />
           </div>
+          {searchResults.length > 0 &&
+            <div className="w-2/5 lg:w-[32.7%] absolute mt-2 bg-white border border-gray-300 dark:bg-gray-800 rounded-lg shadow-lg overflow-y-scroll h-72">
+              <h1 className='pl-4 pt-4 pb-2'>Posts</h1>
+              <ul>
+                {searchResults.map((post) => (
+                  <li key={post._id} className="px-4 py-3 cursor-pointer hover:bg-indigo-600 hover:text-white hover:cursor-pointer">
+                    <div onClick={() => handleCommentNavigate(post.title)} className="flex items-center space-x-4">
+                      <img
+                        src={`https://avatars.dicebear.com/api/adventurer/${post.author._id}.svg`}
+                        alt="user avatar"
+                        className="w-14 h-14 rounded-full"
+                      />
+                      <div>
+                        <div className="flex space-x-3">
+                          <h3 className="text-md font-bold">{post.title}</h3>
+                        </div>
+                        <h5 className="text-sm mb-1">{post.content}</h5>
+                      </div>
+                    </div>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          }
         </div>
         <div className="block lg:hidden flex justify-between items-center">
           <button className={`${isScrolled
