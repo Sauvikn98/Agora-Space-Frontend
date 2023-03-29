@@ -15,6 +15,7 @@ function LatestSpacePost({ spaceId, handleOpenModal }) {
     const [votes, setVotes] = useState(0);
     const isAuthenticated = useRecoilValue(isAuthenticatedAtom)
     const user = useRecoilValue(userAtom)
+    const [showMenu, setShowMenu] = useState(false);
 
     function handleUpvote(postId) {
         axios.patch(API_POSTS_UPVOTE(postId), null, {
@@ -98,6 +99,12 @@ function LatestSpacePost({ spaceId, handleOpenModal }) {
         return `${days} ${days === 1 ? 'day' : 'days'} ago`;
     }
 
+
+    const handleMenuClick = () => {
+        setShowMenu(!showMenu);
+    };
+
+
     return (
         <div>
             {isLoading ? (
@@ -135,7 +142,7 @@ function LatestSpacePost({ spaceId, handleOpenModal }) {
                                 key={post._id}
                                 className="rounded-lg bg-white "
                             >
-                                <div onClick={() => handleCommentNavigate(post.title)}>
+                                <div>
                                     <div className="flex items-center justify-between">
                                         <div className="flex items-center space-x-4">
                                             <img
@@ -144,31 +151,61 @@ function LatestSpacePost({ spaceId, handleOpenModal }) {
                                                 className="w-14 h-14 rounded-full"
                                             />
                                             <div>
-                                                <h5 className="text-[12px] text-gray-600 mb-1">{`posted by @${post.author.userName} - ${timeAgo(new Date(post.createdAt))}`}</h5>
-                                                <div className="flex space-x-3">
+                                                <div className="flex justify-between">
+                                                    <h5 className="text-[12px] text-gray-600 mb-1">{`posted by @${post.author.userName} - ${timeAgo(new Date(post.createdAt))}`}</h5>
+                                                    {isAuthenticated && user.userDetails._id === post.author._id && (
+                                                        <div className="absolute  right-20 top-14">
+                                                            <button className="text-gray-500 text-xs sm:text-sm focus:outline-none" onClick={handleMenuClick}>
+                                                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
+                                                                    <path stroke-linecap="round" stroke-linejoin="round" d="M12 6.75a.75.75 0 110-1.5.75.75 0 010 1.5zM12 12.75a.75.75 0 110-1.5.75.75 0 010 1.5zM12 18.75a.75.75 0 110-1.5.75.75 0 010 1.5z" />
+                                                                </svg>
+                                                            </button>
+                                                            {showMenu && (
+                                                                <div className="absolute right-0 top-full mt-2 w-48 bg-white dark:bg-gray-800 shadow-lg rounded-lg z-10">
+                                                                    <button
+                                                                        className="block w-full text-left px-4 py-2 text-sm text-gray-700 dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 focus:outline-none"
+                                                                        onClick={() => {
+                                                                            // TODO: handle edit comment
+                                                                            setShowMenu(false);
+                                                                        }}
+                                                                    >
+                                                                        Edit
+                                                                    </button>
+                                                                    <button
+                                                                        className="block w-full text-left px-4 py-2 text-sm text-red-500 hover:bg-gray-100 dark:hover:bg-gray-700 focus:outline-none"
+                                                                        onClick={() => {
+                                                                            setShowMenu(false);
+                                                                        }}
+                                                                    >
+                                                                        Delete
+                                                                    </button>
+                                                                </div>
+                                                            )}
+                                                        </div>
+                                                    )}
+                                                </div>
+                                                <div onClick={() => handleCommentNavigate(post.title)} className="flex space-x-3">
                                                     <h3 className="text-lg font-bold text-gray-700">{post.title}</h3>
-                                                    <div class="pl-3 h-6 pr-3 bg-purple-500 text-white rounded-full flex items-center ">
+                                                    <div class="hidden lg:block pl-3 h-6 pr-3 bg-purple-500 text-white rounded-full flex items-center ">
                                                         <h3 className="text-sm text-white">New Post</h3>
                                                     </div>
-                                                    <div class="pl-3 h-6 pr-3 bg-blue-500 text-white rounded-full flex items-center ">
+                                                    <div class="hidden lg:block pl-3 h-6 pr-3 bg-blue-500 text-white rounded-full flex items-center ">
                                                         <h3 className="text-sm text-white">I made this</h3>
                                                     </div>
-                                                    <div class="pl-3 h-6 pr-3 bg-yellow-500 text-white rounded-full flex items-center ">
+                                                    <div class="hidden lg:block pl-3 h-6 pr-3 bg-yellow-500 text-white rounded-full flex items-center ">
                                                         <h3 className="text-sm text-black">Nice Post</h3>
                                                     </div>
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
-                                    <div>
-                                        <p className="text-gray-700 mb-4">{post.content}</p>
-                                        <div style={{ width: '700px' }}>
-                                            <img src={post.multimedia} alt="post image" style={{ objectFit: 'cover', width: '100%', height: '100%' }} />
+                                    <div className="flex justify-between flex-row lg:flex-col mt-2 lg:mt-1" onClick={() => handleCommentNavigate(post.title)}>
+                                        <p className="relative text-gray-700 mb-4">{post.content}</p>
+                                        <div className="lg:w-[700px] w-[80px]">
+                                            <img src={post.multimedia} alt="post image" className="object-cover w-[100%] h-[100%]" />
                                         </div>
-
                                     </div>
                                 </div>
-
                                 <div className="flex items-center justify-between mt-6">
                                     <div className="flex items-center space-x-4">
                                         <div className="flex items-center justify-center ">

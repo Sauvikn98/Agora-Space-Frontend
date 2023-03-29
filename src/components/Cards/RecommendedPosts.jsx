@@ -2,7 +2,7 @@ import React from 'react';
 
 const RecommendedPosts = () => {
     return (
-        <div className='ml-4 mr-4'>
+        <div className='hidden lg:block ml-4 mr-4'>
             <div className='col-span-1 mt-4'>
                 <div className="bg-white rounded-md shadow-md p-6">
                     <h2 className="text-lg font-bold mb-4">Recommended Post 1</h2>
