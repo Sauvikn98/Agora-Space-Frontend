@@ -15,7 +15,7 @@ export const API_POSTS_SEARCH = (text) => `${API_BASE_URL}/posts/search?text=${t
 export const API_POSTS_BY_ID = `${API_BASE_URL}/posts/:postId`;
 export const API_POSTS_UPVOTE = (postId) => `${API_BASE_URL}/posts/${postId}/upvote`;
 export const API_POSTS_DOWNVOTE = (postId) => `${API_BASE_URL}/posts/${postId}/downvote`;
-export const API_POSTS_UPDATE = `${API_BASE_URL}/posts/:postId`;
+export const API_POSTS_UPDATE = (postId) => `${API_BASE_URL}/posts/${postId}`;
 export const API_POSTS_DELETE = `${API_BASE_URL}/posts/:postId`;
 
 
@@ -27,6 +27,7 @@ export const API_SPACES_JOIN_SPACE = (spaceId) => `${API_BASE_URL}/spaces/${spac
 export const API_SPACES_LEAVE_SPACE = (spaceId) => `${API_BASE_URL}/spaces/${spaceId}/leave`;
 export const API_SPACES_GET_ALL_MEMBERS = (spaceId) => `${API_BASE_URL}/spaces/${spaceId}/members`;
 export const API_SPACES_CREATE_LABEL = (spaceId) => `${API_BASE_URL}/spaces/${spaceId}/labels`
+export const API_SPACES_UPLOAD_COVER_PHOTO = (spaceId) => `${API_BASE_URL}/spaces/${spaceId}/cover-photo`
 export const API_SPACES_GET_ALL_LABELS = (spaceId) => `${API_BASE_URL}/spaces/${spaceId}/labels`
 export const API_SPACES_UPDATE_LABEL = (spaceId, labelId) => `${API_BASE_URL}/spaces/${spaceId}/labels/${labelId}`
 export const API_SPACES_DELETE_LABEL = (spaceId, labelId) => `${API_BASE_URL}/spaces/${spaceId}/labels/${labelId}`

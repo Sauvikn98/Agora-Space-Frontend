@@ -1,22 +1,33 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-import { useRecoilState, useRecoilValue } from "recoil";
-import { getAllPosts } from "../../recoil/atoms/postAtoms";
+import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
+import { bookmarksState, currentPostIdState, postAtom, useAddBookmark, useGetPosts } from "../../recoil/atoms/postAtoms";
 import { API_POSTS_DOWNVOTE, API_POSTS_GET_ALL, API_POSTS_UPVOTE } from "../../api/api";
 import { useNavigate } from "react-router-dom";
 import { isAuthenticatedAtom } from "../../recoil/atoms/authAtom";
 import { userAtom } from "../../recoil/atoms/userAtoms";
 
 function LatestSpacePost({ spaceId, handleOpenModal }) {
-    const [isLoading, setIsLoading] = useState(true);
-    const [posts, setPosts] = useRecoilState(getAllPosts);
+    const { isLoading } = useGetPosts(spaceId)
+    const posts = useRecoilValue(postAtom);
     const navigate = useNavigate();
-    const [counts, setCounts] = useState({});
     const [votes, setVotes] = useState(0);
     const isAuthenticated = useRecoilValue(isAuthenticatedAtom)
     const user = useRecoilValue(userAtom)
     const [showMenu, setShowMenu] = useState(false);
+    const setCurrentPostId = useSetRecoilState(currentPostIdState);
+    const bookmarks = useRecoilValue(bookmarksState);
+    const addBookmark = useAddBookmark();
+    const [shareLink, setShareLink] = useState('');
 
+    const handleShareLink = (postTitle, event) => {
+        const modifiedTitle = postTitle.replace(/\s+/g, '_');
+        // Generate shareable link and copy to clipboard
+        const currentUrl = window.location.href;
+        const shareUrl = `${currentUrl.split('#')[0]}comments/${modifiedTitle}`;
+        setShareLink(shareUrl);
+        navigator.clipboard.writeText(shareUrl);
+    };
     function handleUpvote(postId) {
         axios.patch(API_POSTS_UPVOTE(postId), null, {
             headers: {
@@ -50,19 +61,6 @@ function LatestSpacePost({ spaceId, handleOpenModal }) {
                 console.error(error);
             });
     }
-
-    useEffect(() => {
-        setIsLoading(true);
-        axios
-            .get(API_POSTS_GET_ALL, { params: { space: spaceId } })
-            .then((response) => {
-                setPosts(response.data);
-                setIsLoading(false);
-            })
-            .catch((error) => {
-                console.log(error);
-            });
-    }, [spaceId]);
 
     const spaces = {};
 
@@ -102,6 +100,10 @@ function LatestSpacePost({ spaceId, handleOpenModal }) {
 
     const handleMenuClick = () => {
         setShowMenu(!showMenu);
+    };
+
+    const handlePostClick = (post) => {
+        setCurrentPostId(post);
     };
 
 
@@ -165,7 +167,8 @@ function LatestSpacePost({ spaceId, handleOpenModal }) {
                                                                     <button
                                                                         className="block w-full text-left px-4 py-2 text-sm text-gray-700 dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 focus:outline-none"
                                                                         onClick={() => {
-                                                                            // TODO: handle edit comment
+                                                                            handlePostClick(post)
+                                                                            handleOpenModal('post')
                                                                             setShowMenu(false);
                                                                         }}
                                                                     >
@@ -174,6 +177,7 @@ function LatestSpacePost({ spaceId, handleOpenModal }) {
                                                                     <button
                                                                         className="block w-full text-left px-4 py-2 text-sm text-red-500 hover:bg-gray-100 dark:hover:bg-gray-700 focus:outline-none"
                                                                         onClick={() => {
+                                                                            handlePostClick(post)
                                                                             setShowMenu(false);
                                                                         }}
                                                                     >
@@ -223,7 +227,7 @@ function LatestSpacePost({ spaceId, handleOpenModal }) {
                                             <p className="text-gray-500 ml-1">{post.comments.length} Comments</p>
                                         </div>
                                         <div className="flex items-center justify-center ">
-                                            <button className="text-gray-500">
+                                            <button onClick={() => addBookmark(post)} className="text-gray-500">
                                                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" className="w-6 h-6">
                                                     <path stroke-linecap="round" stroke-linejoin="round" d="M17.593 3.322c1.1.128 1.907 1.077 1.907 2.185V21L12 17.25 4.5 21V5.507c0-1.108.806-2.057 1.907-2.185a48.507 48.507 0 0111.186 0z" />
                                                 </svg>
@@ -231,7 +235,7 @@ function LatestSpacePost({ spaceId, handleOpenModal }) {
                                             <p className="text-gray-500 ml-1">Save</p>
                                         </div>
                                         <div className="flex items-center justify-center ">
-                                            <button className="text-gray-500">
+                                            <button onClick={() => handleShareLink(post.title)} className="text-gray-500">
                                                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" className="w-6 h-6">
                                                     <path stroke-linecap="round" stroke-linejoin="round" d="M7.217 10.907a2.25 2.25 0 100 2.186m0-2.186c.18.324.283.696.283 1.093s-.103.77-.283 1.093m0-2.186l9.566-5.314m-9.566 7.5l9.566 5.314m0 0a2.25 2.25 0 103.935 2.186 2.25 2.25 0 00-3.935-2.186zm0-12.814a2.25 2.25 0 103.933-2.185 2.25 2.25 0 00-3.933 2.185z" />
                                                 </svg>

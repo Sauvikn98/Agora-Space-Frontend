@@ -27,7 +27,7 @@ function NotificationTooltip({ onRequestClose }) {
     }
     return (
         <>
-            <div id="toast-notification" class=" w-full max-w-xs p-4 text-gray-900 bg-white rounded-lg shadow dark:bg-gray-800 dark:text-gray-300" role="alert">
+            <div id="toast-notification" class=" w-full max-w-xs p-4 text-gray-900 bg-white rounded-r-lg shadow dark:bg-gray-800 dark:text-gray-300" role="alert">
                 <div class="flex items-center mb-3">
                     <span class="mb-1 text-sm font-semibold text-gray-900 dark:text-white">New notification</span>
                     <button onClick={() => onRequestClose()} class="ml-auto -mx-1.5 -my-1.5 bg-white text-gray-400 hover:text-gray-900 rounded-lg focus:ring-2 focus:ring-gray-300 p-1.5 hover:bg-gray-100 inline-flex h-8 w-8 dark:text-gray-500 dark:hover:text-white dark:bg-gray-800 dark:hover:bg-gray-700" data-dismiss-target="toast-notification" aria-label="Close">

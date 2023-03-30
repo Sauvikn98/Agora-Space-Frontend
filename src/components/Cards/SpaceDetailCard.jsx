@@ -1,6 +1,6 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState, useRef } from 'react'
 import { useLocation } from "react-router-dom";
-import { API_SPACES_GET_ALL_LABELS } from '../../api/api';
+import { API_SPACES_GET_ALL_LABELS, API_SPACES_UPLOAD_COVER_PHOTO } from '../../api/api';
 import LabelForm from '../Labels/LabelForm';
 import LabelList from '../Labels/LabelList';
 import SpaceSettings from '../Settings.jsx/SpaceSettings';
@@ -9,11 +9,32 @@ import AllSpacePost from './AllSpacePosts';
 import RecommendedPosts from './RecommendedPosts';
 import SpaceMembers from './SpaceMembers';
 import axios from 'axios';
+import { useRecoilValue } from 'recoil';
+import { userAtom } from '../../recoil/atoms/userAtoms';
 
 function SpaceDetailCard({ handleOpenModal }) {
     const { state: space } = useLocation();
     const [currentTab, setCurrentTab] = useState('Posts');
     const [labels, setLabels] = useState([]);
+    const fileInputRef = useRef(null);
+    const user = useRecoilValue(userAtom)
+
+    const handleImageClick = async () => {
+        fileInputRef.current.click();
+
+        const file = fileInputRef.current.files[0];
+        if (!file) return;
+
+        const formData = new FormData();
+        formData.append('coverPhoto', file);
+
+        try {
+            const response = await axios.post(API_SPACES_UPLOAD_COVER_PHOTO(space._id), formData);
+            console.log(response.data);
+        } catch (error) {
+            console.error(error);
+        }
+    };
 
     const handleAddLabel = (newLabel) => {
         setLabels((prevLabels) => [...prevLabels, newLabel]);
@@ -50,13 +71,20 @@ function SpaceDetailCard({ handleOpenModal }) {
     return (
         <div className="bg-gray-300 w-full min-h-screen grid lg:grid-cols-custom2">
             <div className="overflow-hidden">
-                <div className="relative h-40">
+                <div className="relative w-full h-52">
                     <img
-                        src="https://images.unsplash.com/photo-1451187580459-43490279c0fa?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxzZWFyY2h8NHx8bGlua2VkaW4lMjBiYW5uZXJ8ZW58MHx8MHx8&auto=format&fit=crop&w=500&q=60"
+                        src={space.coverPhoto}
                         className="w-full h-full object-cover"
                         alt=""
                     />
-                    <div className="absolute inset-0 bg-gray-900 opacity-25"></div>
+                    <div onClick={handleImageClick} className="group absolute inset-0 flex items-center justify-center opacity-0 hover:opacity-100 transition duration-500 ease-in-out">
+                        <svg className="w-12 h-12 text-white fill-current cursor-pointer" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                            <path d="M0 0h24v24H0z" fill="none" />
+                            <path d="M12 2a9 9 0 1 0 9 9c0-4.97-4.03-9-9-9zm-1 15v-4H8v-2h3V7h2v4h3v2h-3v4h-2z" />
+                        </svg>
+                        <span className="ml-3 text-white text-sm cursor-pointer">Add Cover Picture</span>
+                        <input type="file" className="hidden" ref={fileInputRef} />
+                    </div>
                 </div>
                 <div className="flex justify-between bg-white pt-6 pl-6 pr-6 pb-2">
                     <div>
@@ -66,7 +94,7 @@ function SpaceDetailCard({ handleOpenModal }) {
                         <p className="mt-2 text-gray-600">{space.description}</p>
                         <div className='flex mt-7'>
                             <SpaceTabs
-                                tabs={['Posts', 'Members', 'Settings', 'Labels']}
+                                tabs={['Posts', 'Members', 'Settings']}
                                 currentTab={currentTab}
                                 onTabClick={setCurrentTab}
                             />
@@ -95,18 +123,17 @@ function SpaceDetailCard({ handleOpenModal }) {
                         <SpaceSettings name={space.name} description={space.description} />
                     </div>
                 )}
-                {currentTab === 'Labels' && (
-                    <div className="bg-white h-full pt-10 border-t border-gray-100">
-                        <LabelForm onSubmit={handleAddLabel} spaceId={space._id} />
-                        <LabelList
-                            labels={labels}
-                            onUpdate={handleUpdateLabel}
-                            onDelete={handleDeleteLabel}
-                        />
-                    </div>
-                )}
             </div>
-            <RecommendedPosts />
+
+            <div>
+                <LabelList
+                    labels={labels}
+                    onUpdate={handleUpdateLabel}
+                    onDelete={handleDeleteLabel}
+                />
+                <RecommendedPosts />
+            </div>
+
         </div>
     );
 }

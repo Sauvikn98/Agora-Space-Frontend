@@ -13,6 +13,7 @@ import LandingGrid1 from "../components/Grid/LandingGrid1";
 import NotificationTooltip from "../components/Tooltip/NotificationTooltip";
 import ProfileTooltip from "../components/Tooltip/ProfileTooltip";
 import { useNavigate } from "react-router-dom";
+import BookmarkTooltip from "../components/Tooltip/BookmarkTooltip";
 
 const Landing = () => {
   const [activeModal, setActiveModal] = useState(null);
@@ -64,6 +65,9 @@ const Landing = () => {
           </div>
           <div className="fixed z-50 flex top-60 left-16">
             {activeTooltip === 'notificationTooltip' && <NotificationTooltip onRequestClose={handleCloseTooltip} />}
+          </div>
+          <div className="fixed z-50 flex top-52 left-16">
+            {activeTooltip === 'bookmarkTooltip' && <BookmarkTooltip onRequestClose={handleCloseTooltip} />}
           </div>
         </>
       )}
