@@ -19,39 +19,32 @@ function SpaceDetailCard({ handleOpenModal }) {
     const fileInputRef = useRef(null);
     const user = useRecoilValue(userAtom)
 
-    const handleImageClick = async () => {
-        fileInputRef.current.click();
-
-        const file = fileInputRef.current.files[0];
+    const handleImageUpload = async (file) => {
         if (!file) return;
 
         const formData = new FormData();
         formData.append('coverPhoto', file);
 
         try {
-            const response = await axios.post(API_SPACES_UPLOAD_COVER_PHOTO(space._id), formData);
+            const response = await axios.post(API_SPACES_UPLOAD_COVER_PHOTO(space._id), formData, {
+                headers: {
+                    Authorization: `Bearer ${user.token}`
+                }
+            });
             console.log(response.data);
+            console.log(response)
         } catch (error) {
             console.error(error);
         }
     };
 
-    const handleAddLabel = (newLabel) => {
-        setLabels((prevLabels) => [...prevLabels, newLabel]);
+    const handleImageClick = () => {
+        fileInputRef.current.click();
     };
 
-    const handleUpdateLabel = (updatedLabel) => {
-        setLabels((prevLabels) =>
-            prevLabels.map((label) =>
-                label.id === updatedLabel.id ? updatedLabel : label
-            )
-        );
-    };
-
-    const handleDeleteLabel = (labelToDelete) => {
-        setLabels((prevLabels) =>
-            prevLabels.filter((label) => label !== labelToDelete)
-        );
+    const handleFileInputChange = () => {
+        const file = fileInputRef.current.files[0];
+        handleImageUpload(file);
     };
 
     useEffect(() => {
@@ -65,27 +58,36 @@ function SpaceDetailCard({ handleOpenModal }) {
             }
         };
         getAllLabels(space._id);
-    }, []);
+    }, [labels]);
 
 
     return (
         <div className="bg-gray-300 w-full min-h-screen grid lg:grid-cols-custom2">
             <div className="overflow-hidden">
                 <div className="relative w-full h-52">
-                    <img
-                        src={space.coverPhoto}
-                        className="w-full h-full object-cover"
-                        alt=""
-                    />
+                    {space.coverPhoto ? (
+                        <img
+                            src={space.coverPhoto}
+                            className="w-full h-full object-cover"
+                            alt=""
+                        />
+                    ) : (
+                        <div className="flex-col flex justify-center items-center w-full h-full bg-blue-500">
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="text-white w-20 h-20">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 15.75l5.159-5.159a2.25 2.25 0 013.182 0l5.159 5.159m-1.5-1.5l1.409-1.409a2.25 2.25 0 013.182 0l2.909 2.909m-18 3.75h16.5a1.5 1.5 0 001.5-1.5V6a1.5 1.5 0 00-1.5-1.5H3.75A1.5 1.5 0 002.25 6v12a1.5 1.5 0 001.5 1.5zm10.5-11.25h.008v.008h-.008V8.25zm.375 0a.375.375 0 11-.75 0 .375.375 0 01.75 0z" />
+                            </svg>
+                            <span className="ml-3 text-white text-md cursor-pointer">Add a Cover Picture</span>
+                        </div>
+                    )}
                     <div onClick={handleImageClick} className="group absolute inset-0 flex items-center justify-center opacity-0 hover:opacity-100 transition duration-500 ease-in-out">
-                        <svg className="w-12 h-12 text-white fill-current cursor-pointer" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                        <svg className="w-12 h-12 text-gray-700 fill-current cursor-pointer" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
                             <path d="M0 0h24v24H0z" fill="none" />
                             <path d="M12 2a9 9 0 1 0 9 9c0-4.97-4.03-9-9-9zm-1 15v-4H8v-2h3V7h2v4h3v2h-3v4h-2z" />
                         </svg>
-                        <span className="ml-3 text-white text-sm cursor-pointer">Add Cover Picture</span>
-                        <input type="file" className="hidden" ref={fileInputRef} />
+                        <input type="file" className="hidden" ref={fileInputRef} onChange={handleFileInputChange} />
                     </div>
                 </div>
+
                 <div className="flex justify-between bg-white pt-6 pl-6 pr-6 pb-2">
                     <div>
                         <h2 className=" text-2xl font-semibold text-gray-900">
@@ -128,8 +130,7 @@ function SpaceDetailCard({ handleOpenModal }) {
             <div>
                 <LabelList
                     labels={labels}
-                    onUpdate={handleUpdateLabel}
-                    onDelete={handleDeleteLabel}
+                    spaceId={space._id}
                 />
                 <RecommendedPosts />
             </div>

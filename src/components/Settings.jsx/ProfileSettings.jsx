@@ -42,7 +42,7 @@ function ProfileSettings() {
 
     return (
         <aside className='h-[92.4vh] lg:sticky flex top-[3.52rem] bottom-[2.8rem]'>
-            <div className="bg-white p-6 w-full h-screen">
+            <div className="bg-gray-300 p-6 w-full h-screen">
                 <h1 className="text-2xl font-medium mb-6">Profile Settings</h1>
                 <div className='lg:w-2/6 lg:my-4 p-6 '>
                     <div className={`mb-10 ${!successMessage && ('hidden')}`}>

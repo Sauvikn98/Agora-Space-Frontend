@@ -29,14 +29,12 @@ function Post() {
         </div>
       )}
       <div className="container mx-auto px-4">
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+        <div className="grid grid-cols-1 md:grid-cols-custom2 gap-8">
           <div>
             <PostDetailCard />
-            <RecommendedPosts />
-          </div>
-          <div className="md:col-span-2 mt-5">
             <Comment />
           </div>
+          <RecommendedPosts />
         </div>
       </div>
     </div>

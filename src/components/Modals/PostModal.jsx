@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from 'react';
 import { useRecoilValue, useSetRecoilState } from 'recoil';
-import { spacesState } from '../../recoil/atoms/spaceAtoms';
+import { spaceAtom } from '../../recoil/atoms/spaceAtoms';
 import { currentPostIdState, useAddPost, useUpdatePost } from '../../recoil/atoms/postAtoms';
 import { userAtom } from '../../recoil/atoms/userAtoms';
 
@@ -12,10 +12,17 @@ function PostModal({ onRequestClose }) {
     const [isOpen, setIsOpen] = useState(false);
     const dropdownRef = useRef(null);
     const [selectedSpace, setSelectedSpace] = useState(null);
-    const spaces = useRecoilValue(spacesState);
+    const [selectedLabel, setSelectedLabel] = useState(null);
+    const spaces = useRecoilValue(spaceAtom);
     const user = useRecoilValue(userAtom)
-    const { addPost, percentCompleted } = useAddPost();
+    const { addPost, percentCompleted, isLoading } = useAddPost();
     const { updatePost } = useUpdatePost()
+    const [isLabelOpen, setIsLabelOpen] = useState(false);
+
+    const toggleList = () => {
+        setIsLabelOpen(!isLabelOpen);
+    };
+
 
     const handleTitleChange = (event) => {
         setTitle(event.target.value);
@@ -47,7 +54,6 @@ function PostModal({ onRequestClose }) {
             setTitle('');
             setContent('');
             setMultiMedia(null);
-            onRequestClose();
         }
         else {
             const newPost = {
@@ -55,16 +61,18 @@ function PostModal({ onRequestClose }) {
                 title,
                 content,
                 author: user.userDetails._id,
-                multimedia: multimedia,
+                label: selectedLabel ? { name: selectedLabel.name, color: selectedLabel.color } : null,
+                multimedia: multimedia ? multimedia : null
             };
             addPost(newPost);
             setTitle('');
             setContent('');
             setMultiMedia(null);
             setSelectedSpace(null);
-            onRequestClose();
         }
     };
+
+    console.log(selectedSpace)
 
     const handleModalClose = () => {
         setTitle('');
@@ -140,13 +148,12 @@ function PostModal({ onRequestClose }) {
                                                             </span>
                                                         </>
                                                     )}
-
                                                 </button>
                                                 {isOpen && (
                                                     <div class="absolute z-10 w-full mt-1 bg-white rounded-md shadow-lg">
                                                         <ul tabindex="-1" role="listbox" aria-labelledby="listbox-label" aria-activedescendant="listbox-item-3" class="py-1 overflow-auto text-base rounded-md max-h-56 ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm">
                                                             {spaces
-                                                                .filter(space => space.members.includes(user.userDetails._id))
+                                                                .filter(space => space.members.includes(user.userDetails._id) || space.creator.includes(user.userDetails._id))
                                                                 .map(space => (
                                                                     <li key={space._id}
                                                                         id={`listbox-item-${space._id}`}
@@ -210,21 +217,62 @@ function PostModal({ onRequestClose }) {
                                             <img src={post?.multimedia || URL.createObjectURL(multimedia)} alt="Selected media" className="mt-2 object-cover h-[270px]" />
                                         </div>
                                     )}
-                                    <div className="">
-                                        <form class="ml-4 mt-2 flex items-center space-x-6">
-                                            <label htmlFor="media-input" class="block">
-                                                <span class="sr-only">Choose Multimedia</span>
-                                                <input id="media-input" onChange={handleMediaChange} type="file" class="block w-full text-sm text-slate-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-violet-50 file:text-violet-700 hover:file:bg-violet-100" />
-                                            </label>
-                                        </form>
-                                        {percentCompleted > 0 && (
-                                            <div className="relative pl-5 pr-5 pt-3 pb-2">
-                                                <div className=" overflow-hidden h-2 text-xs flex rounded bg-indigo-200">
-                                                    <div style={{ width: `${percentCompleted}%` }} className="shadow-none flex flex-col text-center whitespace-nowrap text-white justify-center bg-indigo-500"></div>
+                                    <div className='flex justify-between'>
+                                        <div className="">
+                                            <form class="ml-4 mt-2 flex items-center space-x-6">
+                                                <label htmlFor="media-input" class="block">
+                                                    <span class="sr-only">Choose Multimedia</span>
+                                                    <input id="media-input" onChange={handleMediaChange} type="file" class="block w-full text-sm text-slate-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-violet-50 file:text-violet-700 hover:file:bg-violet-100" />
+                                                </label>
+                                            </form>
+                                            {percentCompleted > 0 && (
+                                                <div className="relative pl-5 pr-5 pt-3 pb-2">
+                                                    <div className=" overflow-hidden h-2 text-xs flex rounded bg-indigo-200">
+                                                        <div style={{ width: `${percentCompleted}%` }} className="shadow-none flex flex-col text-center whitespace-nowrap text-white justify-center bg-indigo-500"></div>
+                                                    </div>
+                                                    <h2 className='flex items-end justify-end'>{percentCompleted}%</h2>
                                                 </div>
-                                                <h2 className='flex items-end justify-end'>{percentCompleted}%</h2>
+                                            )}
+                                        </div>
+                                        {post ? (
+                                            <></>
+                                        ) : (
+                                            <div class="relative">
+                                                {selectedLabel ? (
+                                                    <button type="button" class="focus:outline-none" onClick={toggleList}>
+                                                        <ul tabindex="-1" role="listbox" aria-labelledby="listbox-label" aria-activedescendant="listbox-item-3" className="mr-5 lg:mt-2 lg:mb-2 mt-1 pl-2 rounded-full flex items-center justify-center bg-violet-50">
+                                                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="mr-2 w-5 h-5">
+                                                                <path stroke-linecap="round" stroke-linejoin="round" d="M9.568 3H5.25A2.25 2.25 0 003 5.25v4.318c0 .597.237 1.17.659 1.591l9.581 9.581c.699.699 1.78.872 2.607.33a18.095 18.095 0 005.223-5.223c.542-.827.369-1.908-.33-2.607L11.16 3.66A2.25 2.25 0 009.568 3z" />
+                                                                <path stroke-linecap="round" stroke-linejoin="round" d="M6 6h.008v.008H6V6z" />
+                                                            </svg>
+                                                            <h3 class="text-sm text-slate-500 mr-4 rounded-full border-0 text-sm font-semibold text-violet-700 file:bg-violet-100">{selectedLabel.name}</h3>
+                                                        </ul>
+                                                    </button>
+                                                ) : (
+                                                    <button type="button" class="focus:outline-none" onClick={toggleList}>
+                                                        <ul tabindex="-1" role="listbox" aria-labelledby="listbox-label" aria-activedescendant="listbox-item-3" className="mr-5 lg:mt-2 lg:mb-2 mt-1 pl-2 rounded-full flex items-center justify-center bg-violet-50">
+                                                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="mr-2 w-5 h-5">
+                                                                <path stroke-linecap="round" stroke-linejoin="round" d="M9.568 3H5.25A2.25 2.25 0 003 5.25v4.318c0 .597.237 1.17.659 1.591l9.581 9.581c.699.699 1.78.872 2.607.33a18.095 18.095 0 005.223-5.223c.542-.827.369-1.908-.33-2.607L11.16 3.66A2.25 2.25 0 009.568 3z" />
+                                                                <path stroke-linecap="round" stroke-linejoin="round" d="M6 6h.008v.008H6V6z" />
+                                                            </svg>
+                                                            <h3 class="text-sm text-slate-500 mr-4 rounded-full border-0 text-sm font-semibold text-violet-700 file:bg-violet-100">Label</h3>
+                                                        </ul>
+                                                    </button>
+                                                )}
+
+                                                {isLabelOpen && (
+                                                    <ul class="absolute bg-white rounded-lg shadow p-2 mr-2 bottom-10">
+                                                        {selectedSpace.labels.map(label => (
+                                                            <li onClick={() => {
+                                                                setSelectedLabel(label);
+                                                                setIsLabelOpen(false);
+                                                            }} class={`cursor-pointer rounded-full inline-flex items-center py-1 px-3 mr-2 mb-2 text-sm text-white font-medium ${label.color} `}>{label.name}</li>
+                                                        ))}
+                                                    </ul>
+                                                )}
                                             </div>
                                         )}
+
                                     </div>
                                 </div>
                             </div>

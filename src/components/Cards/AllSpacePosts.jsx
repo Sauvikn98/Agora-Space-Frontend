@@ -56,7 +56,7 @@ function AllSpacePost({ spaceId, handleOpenModal }) {
     }
     const handleCommentNavigate = (postTitle, event) => {
         const modifiedTitle = postTitle.replace(/\s+/g, '_');
-        navigate(`/comments/${modifiedTitle}`, {
+        navigate(`/post/${modifiedTitle}`, {
             state: postsOfSpace.find((post) => post.title === postTitle),
         });
     };
@@ -119,6 +119,11 @@ function AllSpacePost({ spaceId, handleOpenModal }) {
                 </div>
             ) : (
                 <div className="h-full">
+                    {postsOfSpace.length === 0 && (
+                        <div className='flex items-center lg:absolute mb-20 lg:mb-0 lg:mt-0 mt-20 bottom-40 left-80 justify-center'>
+                            <h1 className="font-bold animate-bounce">No Posts Available, Create a new Post</h1>
+                        </div>
+                    )}
                     {postsOfSpace.map(post => (
                         <div key={post._id} className="transition duration-500 ease-in-out transform hover:-translate-y-1 relative">
                             <div className="hover:outline outline-offset-2 pb-4 outline-blue-500 bg-white rounded-lg lg:ml-7 mr-5 mb-6 mt-6 lg:mt-0 ml-6 space-y-2">
@@ -170,29 +175,31 @@ function AllSpacePost({ spaceId, handleOpenModal }) {
                                                         </div>
                                                         <div onClick={() => handleCommentNavigate(post.title)} className="flex space-x-3">
                                                             <h3 className="text-lg font-bold text-gray-700">{post.title}</h3>
-                                                            <div class="hidden lg:block pl-3 h-6 pr-3 bg-purple-500 text-white rounded-full flex items-center ">
-                                                                <h3 className="text-sm text-white">New Post</h3>
-                                                            </div>
-                                                            <div class="hidden lg:block pl-3 h-6 pr-3 bg-blue-500 text-white rounded-full flex items-center ">
-                                                                <h3 className="text-sm text-white">I made this</h3>
-                                                            </div>
-                                                            <div class="hidden lg:block pl-3 h-6 pr-3 bg-yellow-500 text-white rounded-full flex items-center ">
-                                                                <h3 className="text-sm text-black">Nice Post</h3>
-                                                            </div>
+                                                            {post.label && (
+                                                                <>
+                                                                    <div class={`hidden lg:block pl-3 pr-3 ${post.label.color} pt-[3px] text-white rounded-full flex justify-center items-center `}>
+                                                                        <h3 className="text-sm text-white">{post.label.name}</h3>
+                                                                    </div>
+                                                                </>
+                                                            )}
                                                         </div>
                                                     </div>
                                                 </div>
                                             </div>
                                             <div className="flex justify-between flex-row lg:flex-col mt-2 lg:mt-1" onClick={() => handleCommentNavigate(post.title)}>
                                                 <p className="relative text-gray-700 mb-4">{post.content}</p>
-                                                {post.multimedia && post.multimedia.includes('.mp4', '.mpeg', '.quicktime') ? (
-                                                    <div className="lg:w-[700px] w-[80px]">
-                                                        <video src={post.multimedia} alt="post video" className=" object-cover w-[100%] h-[100%]" controls />
-                                                    </div>
-                                                ) : (
-                                                    <div className="lg:w-[700px] w-[80px]">
-                                                        <img src={post.multimedia} alt="post image" className="object-cover w-[100%] h-[100%]" />
-                                                    </div>
+                                                {post.multimedia && (
+                                                    <>
+                                                        {post.multimedia && post.multimedia.includes('.mp4', '.mpeg', '.quicktime') ? (
+                                                            <div className="lg:w-[700px] w-[80px]">
+                                                                <video src={post.multimedia} alt="post video" className=" object-cover w-[100%] h-[100%]" controls />
+                                                            </div>
+                                                        ) : (
+                                                            <div className="lg:w-[700px] w-[80px]">
+                                                                <img src={post.multimedia} alt="post image" className="object-cover w-[100%] h-[100%]" />
+                                                            </div>
+                                                        )}
+                                                    </>
                                                 )}
                                             </div>
                                             <div className="flex items-center justify-between mt-6">

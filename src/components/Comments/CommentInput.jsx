@@ -53,8 +53,8 @@ function CommentInput({ parentId, onComment }) {
         <CommentValidationModal />
 
       )}
-      <div className=' py-2 px-4 mt-6 mb-4 bg-white rounded-lg rounded-t-lg border-2 border-gray-500 dark:bg-gray-800 dark:border-gray-700'>
-        <div class="px-4 py-2 bg-white rounded-t-lg dark:bg-gray-800">
+      <div className=' py-2 lg:w-[700px] px-4 mt-6 mb-4 rounded-lg rounded-t-lg border-2 border-gray-500 '>
+        <div class="px-4 py-2 rounded-t-lg dark:bg-gray-800">
           <label for="comment" class="sr-only">Your comment</label>
           <textarea
             id="comment"

@@ -28,12 +28,10 @@ function Navbar({ handleOpenModal }) {
 
   const handleCommentNavigate = (postTitle, event) => {
     const modifiedTitle = postTitle.replace(/\s+/g, '_');
-    navigate(`/comments/${modifiedTitle}`, {
+    navigate(`/post/${modifiedTitle}`, {
       state: searchResults.find((post) => post.title === postTitle),
     });
   };
-
-  const resultHeight = searchResults.length > 0 ? `${searchResults.length * 3}rem` : '0';
 
 
   useEffect(() => {

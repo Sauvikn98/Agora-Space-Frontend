@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react'
 import { useNavigate } from "react-router-dom"
-import { useRecoilState, useRecoilValue } from 'recoil';
+import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
 import { API_SPACES_GET_ALL, API_SPACES_JOIN_SPACE, API_SPACES_LEAVE_SPACE } from '../../api/api';
-import { spacesState } from '../../recoil/atoms/spaceAtoms';
+import { spaceAtom, useGetAllSpaces, useJoinSpace, useLeaveSpace } from '../../recoil/atoms/spaceAtoms';
 import axios from "axios";
 import LatestSpacePost from './LatestSpacePost';
 import { userAtom } from '../../recoil/atoms/userAtoms';
@@ -12,8 +12,9 @@ import CategoryCard from './CategoryCard';
 import spaceSocket from '../../utils/socket';
 
 function SpaceList({ handleOpenModal }) {
-    const [isLoading, setIsLoading] = useState(true);
-    const [spaces, setSpaces] = useRecoilState(spacesState);
+    const { isLoading } = useGetAllSpaces();
+    const spaces = useRecoilValue(spaceAtom);
+    const setSpaces = useSetRecoilState(spaceAtom)
     const navigate = useNavigate();
     const [isOpen, setIsOpen] = useState(false);
     const user = useRecoilValue(userAtom)
@@ -22,6 +23,10 @@ function SpaceList({ handleOpenModal }) {
     const [showToast, setShowToast] = useState(false);
     const [toastProps, setToastProps] = useState({ success: false, message: '' });
     const [filteredSpaces, setFilteredSpaces] = useState(spaces);
+    const [selectedCategory, setSelectedCategory] = useState(null);
+    const [showCreateSpaceMessage, setShowCreateSpaceMessage] = useState(false);
+    const joinSpace = useJoinSpace()
+    const leaveSpace = useLeaveSpace()
 
     const handleClick = () => {
         setIsOpen(!isOpen);
@@ -33,72 +38,30 @@ function SpaceList({ handleOpenModal }) {
     };
 
     useEffect(() => {
-        setIsLoading(true);
-        axios
-            .get(API_SPACES_GET_ALL)
-            .then(response => {
-                setSpaces(response.data);
-                setIsLoading(false);
-            })
-            .catch(error => {
-                console.error(error);
-            });
-    }, []);
-
-    useEffect(() => {
         setFilteredSpaces(spaces);
     }, [spaces]);
 
     const handleJoinSpace = async (spaceId) => {
-        try {
-            const response = await axios.put(
-                API_SPACES_JOIN_SPACE(spaceId),
-                { spaceId },
-                {
-                    headers: {
-                        Authorization: `Bearer ${user.token}`,
-                    },
-                }
-            );
-
-            if (response.status === 200) {
-                setSpaces((prev) => {
-                    return prev.map((space) => {
-                        if (space._id === spaceId) {
-                            return {
-                                ...space,
-                                members: [...space.members, user.userDetails._id],
-                            };
-                        } else {
-                            return space;
-                        }
-                    });
-                });
-                setShowToast(true);
-                setToastProps({ success: true, message: 'Successfully joined Space!' });
-                setTimeout(() => setShowToast(false), 5000);
-                const notification = {
-                    userId: user.userDetails._id,
-                    notificationType: `New Member of space`,
-                    seen: false,
-                    intent: {
-                        action: "/space",
-                        parameters: {
-                            memberName: user.userDetails.userName,
-                            spaceId: spaceId,
-                            receivers: members(spaceId)
-                        }
+        const success = await joinSpace(spaceId);
+        if (success) {
+            setShowToast(true);
+            setToastProps({ success: true, message: 'Successfully joined Space!' });
+            setTimeout(() => setShowToast(false), 5000);
+            const notification = {
+                userId: user.userDetails._id,
+                notificationType: `New Member of space`,
+                seen: false,
+                intent: {
+                    action: "/space",
+                    parameters: {
+                        memberName: user.userDetails.userName,
+                        spaceId: spaceId,
+                        receivers: members(spaceId)
                     }
-                };
-                spaceSocket.emit('joinSpace', { spaceId, notification });
-            } else {
-                console.error(`Failed to join space: ${response.data.error}`);
-                setShowToast(true);
-                setToastProps({ success: false, message: 'Failed to Join Space, Try Again !' });
-                setTimeout(() => setShowToast(false), 5000);
-            }
-        } catch (error) {
-            console.error(error);
+                }
+            };
+            spaceSocket.emit('joinSpace', { spaceId, notification });
+        } else {
             setShowToast(true);
             setToastProps({ success: false, message: 'Failed to Join Space, Try Again !' });
             setTimeout(() => setShowToast(false), 5000);
@@ -106,56 +69,32 @@ function SpaceList({ handleOpenModal }) {
     };
 
     const handleLeaveSpace = async (spaceId) => {
-        try {
-            const response = await axios.delete(API_SPACES_LEAVE_SPACE(spaceId), {
-                headers: {
-                    Authorization: `Bearer ${user.token}`,
-                },
-            });
-
-            if (response.status === 200) {
-                setSpaces((prev) => {
-                    return prev.map((space) => {
-                        if (space._id === spaceId) {
-                            return {
-                                ...space,
-                                members: space.members.filter((memberId) => memberId !== user.userDetails._id),
-                            };
-                        } else {
-                            return space;
-                        }
-                    });
-                });
-                console.log(response.data.message);
-                setShowToast(true);
-                setToastProps({ success: true, message: 'Successfully Left the Space !' });
-                setTimeout(() => setShowToast(false), 5000);
-                const notification = {
-                    userId: user.userDetails._id,
-                    notificationType: `Member Left Space`,
-                    seen: false,
-                    intent: {
-                        action: "/space",
-                        parameters: {
-                            memberName: user.userDetails.userName,
-                            spaceId: spaceId,
-                            receivers: members(spaceId).filter((memberId) => memberId !== user.userDetails._id)
-                        }
+        const success = leaveSpace(spaceId)
+        if (success) {
+            setShowToast(true);
+            setToastProps({ success: true, message: 'Successfully Left the Space !' });
+            setTimeout(() => setShowToast(false), 5000);
+            const notification = {
+                userId: user.userDetails._id,
+                notificationType: `Member Left Space`,
+                seen: false,
+                intent: {
+                    action: "/space",
+                    parameters: {
+                        memberName: user.userDetails.userName,
+                        spaceId: spaceId,
+                        receivers: members(spaceId).filter((memberId) => memberId !== user.userDetails._id)
                     }
-                };
-                spaceSocket.emit('leaveSpace', { spaceId, notification });
-            } else {
-                console.error(`Failed to leave space: ${response.data.error}`);
-                setShowToast(true);
-                setToastProps({ success: false, message: 'Failed to Leave Space, Try Again !' });
-                setTimeout(() => setShowToast(false), 5000);
-            }
-        } catch (error) {
-            console.error(error);
+                }
+            };
+            spaceSocket.emit('leaveSpace', { spaceId, notification });
+        } else {
+            console.error(`Failed to leave space: ${response.data.error}`);
             setShowToast(true);
             setToastProps({ success: false, message: 'Failed to Leave Space, Try Again !' });
             setTimeout(() => setShowToast(false), 5000);
         }
+
     };
 
 
@@ -169,16 +108,21 @@ function SpaceList({ handleOpenModal }) {
         return space.members.map((memberId) => memberId);
     };
 
-
     const handleCategorySelect = (selectedCategory) => {
         if (selectedCategory === 'All') {
-            setFilteredSpaces(spaces)
-        }
-        else {
+            setFilteredSpaces(spaces);
+        } else {
             const newFilteredSpaces = spaces.filter(space =>
                 space.category.some(category => category === selectedCategory)
             );
-            setFilteredSpaces(newFilteredSpaces);
+            if (newFilteredSpaces.length === 0) {
+                setFilteredSpaces([]);
+                setSelectedCategory(selectedCategory);
+                setShowCreateSpaceMessage(true);
+            } else {
+                setFilteredSpaces(newFilteredSpaces);
+                setShowCreateSpaceMessage(false);
+            }
         }
     };
 
@@ -264,19 +208,25 @@ function SpaceList({ handleOpenModal }) {
                                             </a>
                                             <h3 onClick={() => handleNavigate(space.name)} className="hover:underline text-sm font-bold text-gray-700 ml-2"><span className='text-indigo-700'>agora/</span>{space.name}</h3>
                                         </div>
-                                        {isAuthenticated && isMember(space._id) ? (
-                                            <button
-                                                onMouseEnter={() => setIsHovering({ ...isHovering, [space._id]: true })}
-                                                onMouseLeave={() => setIsHovering({ ...isHovering, [space._id]: false })}
-                                                onClick={() => handleLeaveSpace(space._id)}
-                                                className='inline-flex text-sm bg-gray-700 text-white items-center px-3 py-1 rounded-md hover:bg-red-700 hover:text-white shadow-lg focus:outline-none mr-4 lg:mr-10'
-                                            >
-                                                {isHovering[space._id] ? "Leave" : "Joined"}
-                                            </button>
+                                        {space.creator === user.userDetails._id ? (
+                                            <></>
                                         ) : (
-                                            <button onClick={() => handleJoinSpace(space._id)} className='inline-flex text-sm bg-indigo-700 text-white items-center px-3 py-1 transition ease-in duration-200 rounded-md hover:bg-gray-700 hover:text-white shadow-lg focus:outline-none mr-4 lg:mr-10'>
-                                                Join Space
-                                            </button>
+                                            <>
+                                                {isAuthenticated && isMember(space._id) ? (
+                                                    <button
+                                                        onMouseEnter={() => setIsHovering({ ...isHovering, [space._id]: true })}
+                                                        onMouseLeave={() => setIsHovering({ ...isHovering, [space._id]: false })}
+                                                        onClick={() => handleLeaveSpace(space._id)}
+                                                        className='inline-flex text-sm bg-gray-700 text-white items-center px-3 py-1 rounded-md hover:bg-red-700 hover:text-white shadow-lg focus:outline-none mr-4 lg:mr-10'
+                                                    >
+                                                        {isHovering[space._id] ? "Leave" : "Joined"}
+                                                    </button>
+                                                ) : (
+                                                    <button onClick={() => handleJoinSpace(space._id)} className='inline-flex text-sm bg-indigo-700 text-white items-center px-3 py-1 transition ease-in duration-200 rounded-md hover:bg-gray-700 hover:text-white shadow-lg focus:outline-none mr-4 lg:mr-10'>
+                                                        Join Space
+                                                    </button>
+                                                )}
+                                            </>
                                         )}
                                     </div>
                                     <div className='pl-5 pr-16 lg:pr-0'>
@@ -285,6 +235,12 @@ function SpaceList({ handleOpenModal }) {
                                 </div>
                             </div>
                         ))}
+
+                        {showCreateSpaceMessage &&
+                            <div className='fixed inset-0 flex items-center justify-center'>
+                                <h1>Create a new {selectedCategory} space</h1>
+                            </div>
+                        }
 
                         {showToast && (
                             <div className="fixed inset-0 z-50 flex items-end justify-center px-4 py-6 pointer-events-none sm:p-6 sm:items-start sm:justify-end">

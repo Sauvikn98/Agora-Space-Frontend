@@ -13,8 +13,8 @@ function App() {
         <Routes>
           <Route path="/" element={<Landing />}></Route>
           <Route path="/agora/:spaceName" element={<Space />}></Route>
-          <Route path="comments/:postTitle" element={<Post/>}></Route>
-          <Route path="/settings" element={<Settings/>}></Route>
+          <Route path="post/:postTitle" element={<Post />} ></Route>
+          <Route path="/settings" element={<Settings />}></Route>
         </Routes>
       </BrowserRouter>
     </RecoilRoot>

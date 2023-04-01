@@ -10,7 +10,7 @@ const COLORS = [
     "bg-purple-400",
 ];
 
-function LabelForm({ onSubmit, spaceId }) {
+function LabelForm({ spaceId }) {
     const [name, setName] = useState("");
     const [color, setColor] = useState(COLORS[0]);
 
@@ -21,8 +21,7 @@ function LabelForm({ onSubmit, spaceId }) {
             color,
         };
         try {
-            const res = await axios.post(API_SPACES_CREATE_LABEL(spaceId), newLabel);
-            onSubmit(res.data);
+            await axios.post(API_SPACES_CREATE_LABEL(spaceId), newLabel);
             setName("");
             setColor(COLORS[0]);
         } catch (err) {
@@ -30,17 +29,17 @@ function LabelForm({ onSubmit, spaceId }) {
         }
     };
     return (
-        <form onSubmit={handleSubmit}>
+        <form>
             <div className="flex items-center mb-2 ml-4">
                 <input
                     type="text"
-                    placeholder="New label"
-                    className="rounded-full py-1 px-3 mr-2 text-sm font-medium w-32 border-none text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-blue-600"
+                    placeholder="Create New label"
+                    className="rounded-full py-1 px-3 mr-2 text-sm font-medium w-36 border-none text-gray-700 leading-tight focus:outline-none ring-2 ring-blue-600"
                     value={name}
                     onChange={(e) => setName(e.target.value)}
                 />
                 <select
-                    className="rounded-full py-1 px-3 mr-2 text-sm font-medium w-24 border-none text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-blue-600"
+                    className="rounded-full py-1 px-3 mr-2 text-sm font-medium w-24 border-none text-gray-700 leading-tight focus:outline-none ring-2 ring-blue-600"
                     value={color}
                     onChange={(e) => setColor(e.target.value)}
                 >
@@ -51,7 +50,7 @@ function LabelForm({ onSubmit, spaceId }) {
                     ))}
                 </select>
                 <button
-                    type="submit"
+                    onClick={handleSubmit}
                     className="bg-blue-500 hover:bg-blue-600 text-white rounded-full py-1 px-3 focus:outline-none focus:ring-2 focus:ring-blue-600"
                 >
                     Add

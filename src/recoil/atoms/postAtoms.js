@@ -3,6 +3,7 @@ import { atom, useRecoilValue, useSetRecoilState, selectorFamily } from "recoil"
 import axios from "axios";
 import { API_POSTS_CREATE, API_POSTS_GET_ALL, API_POSTS_UPDATE } from "../../api/api";
 import { userAtom } from "./userAtoms";
+import { useNavigate } from "react-router-dom";
 
 export const postAtom = atom({
   key: "posts",
@@ -77,10 +78,13 @@ export function useGetPosts(spaceId) {
 
 export function useAddPost() {
   const setPosts = useSetRecoilState(postAtom);
+  const [isLoading, setIsLoading] = useState(false);
   const [percentCompleted, setPercentCompleted] = useState(0);
+  const navigate = useNavigate()
 
   async function addPost(newPost) {
     try {
+      setIsLoading(true)
       const response = await axios.post(API_POSTS_CREATE, newPost, {
         onUploadProgress: (progressEvent) => {
           const percentCompleted = Math.round(
@@ -93,12 +97,19 @@ export function useAddPost() {
         },
       });
       setPosts((oldPosts) => [...oldPosts, response.data]);
+      setIsLoading(false)
+      const postTitle = response.data.title
+      const modifiedTitle = postTitle.replace(/\s+/g, '_');
+      navigate(`/post/${modifiedTitle}`, {
+        state: response.data,
+    });
     } catch (error) {
+      setIsLoading(true)
       console.error(error);
     }
   }
 
-  return { addPost, percentCompleted };
+  return {isLoading, addPost, percentCompleted };
 }
 
 

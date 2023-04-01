@@ -7,9 +7,8 @@ import { userAtom } from '../../recoil/atoms/userAtoms';
 import TopTabs from '../Tabs/TopTabs';
 import { isAuthenticatedAtom } from '../../recoil/atoms/authAtom';
 import { categories } from '../Cards/CategoryCard';
-import { API_SPACES_CREATE } from '../../api/api';
 import Toast from '../Toast/Toast';
-import axios from 'axios';
+import { useCreateSpace } from '../../recoil/atoms/spaceAtoms';
 
 function LandingGrid1({ handleOpenModal }) {
     const user = useRecoilValue(userAtom);
@@ -20,27 +19,17 @@ function LandingGrid1({ handleOpenModal }) {
     const [category, setCategory] = useState("");
     const [showToast, setShowToast] = useState(false);
     const [toastProps, setToastProps] = useState({ success: false, message: '' });
+    const createSpace = useCreateSpace();
 
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
-            const res = await axios.post(API_SPACES_CREATE, {
+            await createSpace({
                 name,
                 description,
                 creator: user.userDetails._id,
-                category,
-            }, {
-                headers: {
-                    "Content-Type": "application/json",
-                },
-            });
-            if (!res.data) {
-                setShowToast(true);
-                setToastProps({ success: false, message: 'Space could not be created, Try Again!' });
-                throw new Error("Failed to create space");
-            }
-            const space = res.data;
-            console.log(space); // do something with the created space
+                category
+            })
             setShowToast(true);
             setToastProps({ success: true, message: 'Space Created Successfully!' });
         } catch (error) {

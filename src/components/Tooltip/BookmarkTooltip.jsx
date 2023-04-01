@@ -12,7 +12,7 @@ function BookmarkTooltip({ onRequestClose }) {
     const displayedBookmarks = bookmarks.slice(0, 2);
     const handleCommentNavigate = (postTitle, event) => {
         const modifiedTitle = postTitle.replace(/\s+/g, '_');
-        navigate(`/comments/${modifiedTitle}`, {
+        navigate(`/post/${modifiedTitle}`, {
             state: bookmarks.find((post) => post.title === postTitle),
         });
     };
