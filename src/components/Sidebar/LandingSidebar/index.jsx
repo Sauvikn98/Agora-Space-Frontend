@@ -15,7 +15,7 @@ function LandingSidebar({ handleOpenModal, handleOpenTooltip, onRequestClose }) 
 
     useEffect(() => {
         console.log("User state changed: ", user);
-    }, [user]);
+    }, []);
 
     return (
         <div className='hidden lg:block '>

@@ -51,7 +51,7 @@ export function useGetAllSpaces() {
       .catch((error) => {
         console.error(error);
       });
-  }, [setSpaces]);
+  }, []);
 
   return { isLoading };
 }

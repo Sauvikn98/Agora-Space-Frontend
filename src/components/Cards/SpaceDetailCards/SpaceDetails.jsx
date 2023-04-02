@@ -22,7 +22,7 @@ function SpaceDetails({ handleOpenModal }) {
             }
         };
         getAllLabels(space._id);
-    }, [labels]);
+    }, []);
 
 
     return (

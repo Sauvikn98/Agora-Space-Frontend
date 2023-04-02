@@ -198,7 +198,7 @@ function SpaceList({ handleOpenModal }) {
                         {filteredSpaces.map(space => (
                             <div key={space._id} className="transition duration-500 ease-in-out transform hover:-translate-y-1 relative">
                                 <div className="shadow-xl hover:outline outline-offset-2 pb-4 outline-blue-500 bg-white rounded-lg lg:ml-7 mr-5 mb-6 mt-6 lg:mt-6 ml-6 space-y-2">
-                                    <div className='bg-gray-100 border-b-2 p-2 border-gray-200 flex justify-between items-center mr-5 lg:mr-0'>
+                                    <div className='bg-gray-100 border-b-2 p-2 border-gray-200 flex justify-between items-center lg:mr-0'>
                                         <div className='flex justify-center'>
                                             <a href="#" class="relative block">
                                                 <img alt="profile" src="https://avatars.githubusercontent.com/u/46704901?v=4" class="mx-auto object-cover rounded-full h-6 w-6 " />

@@ -7,17 +7,6 @@ function NotificationTooltip({ onRequestClose }) {
     const [notifications, setNotifications] = useRecoilState(notificationsState);
     const [showNotifications, setShowNotifications] = useState(false);
 
-    useEffect(() => {
-        // Listen for the "notification" event and add the new notification to the list
-        spaceSocket.on('joinSpaceNotification', (notification) => {
-            setNotifications([...notifications, notification]);
-        });
-
-        spaceSocket.on('leaveSpaceNotification', (notification) => {
-            setNotifications([...notifications, notification]);
-        });
-    }, [notifications]);
-
     function toggleNotifications() {
         setShowNotifications(!showNotifications);
     }

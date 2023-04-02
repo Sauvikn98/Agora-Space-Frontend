@@ -24,7 +24,7 @@ function Comment() {
       }
     }
     fetchComments();
-  }, [post._id, setComments]);
+  }, []);
 
   function countComments(comments) {
     let count = comments.length;

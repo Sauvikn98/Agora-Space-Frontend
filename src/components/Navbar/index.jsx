@@ -5,11 +5,14 @@ import { isAuthenticatedAtom } from '../../recoil/atoms/authAtom';
 import axios from 'axios';
 import { API_POSTS_SEARCH } from '../../api';
 import { useNavigate } from 'react-router-dom';
+import { useDebounce } from 'use-debounce';
 
 function Navbar({ handleOpenModal }) {
   const [isScrolled, setIsScrolled] = useState(false);
   const isAuthenticated = useRecoilValue(isAuthenticatedAtom);
   const [searchResults, setSearchResults] = useState([]);
+  const [searchText, setSearchText] = useState('');
+  const [debouncedSearchText] = useDebounce(searchText, 400);
   const navigate = useNavigate()
 
   const searchPosts = async (text) => {
@@ -22,8 +25,7 @@ function Navbar({ handleOpenModal }) {
   };
 
   const handleSearchInputChange = (event) => {
-    const text = event.target.value;
-    searchPosts(text);
+    setSearchText(event.target.value);
   };
 
   const handleCommentNavigate = (postTitle, event) => {
@@ -48,6 +50,14 @@ function Navbar({ handleOpenModal }) {
       window.removeEventListener('scroll', handleScroll);
     };
   }, []);
+
+  useEffect(() => {
+    if (debouncedSearchText) {
+      searchPosts(debouncedSearchText);
+    } else {
+      setSearchResults([]);
+    }
+  }, [debouncedSearchText]);
 
   return (
     <nav className={`${isScrolled
