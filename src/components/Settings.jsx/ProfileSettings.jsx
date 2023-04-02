@@ -43,8 +43,7 @@ function ProfileSettings() {
     return (
         <aside className='h-[92.4vh] lg:sticky flex top-[3.52rem] bottom-[2.8rem]'>
             <div className="bg-gray-300 p-6 w-full h-screen">
-                <h1 className="text-2xl font-medium mb-6">Profile Settings</h1>
-                <div className='lg:w-2/6 lg:my-4 p-6 '>
+                <div className='lg:w-2/6 '>
                     <div className={`mb-10 ${!successMessage && ('hidden')}`}>
                         {successMessage &&
                             <div class="max-w-xs" role="alert">
@@ -194,7 +193,7 @@ function ProfileSettings() {
 
                 <button
                     onClick={() => handleSubmit()}
-                    className="ml-5 bg-gray-800 text-white text-sm flex items-center px-6 py-3 transition ease-in duration-200 uppercase rounded-full hover:bg-gray-700 hover:text-white shadow-lg focus:outline-none"
+                    className="mt-8 bg-gray-800 text-white text-sm flex items-center px-6 py-3 transition ease-in duration-200 uppercase rounded-full hover:bg-gray-700 hover:text-white shadow-lg focus:outline-none"
                     disabled={isLoading}
                 >
                     {isLoading ? 'Saving...' : 'Save Changes'}

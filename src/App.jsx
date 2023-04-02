@@ -1,20 +1,20 @@
 import React from 'react';
-import Landing from './pages/Landing'
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { RecoilRoot } from 'recoil';
-import Space from './pages/Space';
-import Post from './pages/Post';
-import Settings from './pages/Settings';
+import LandingPage from './pages/LandingPage';
+import SpacePage from './pages/SpacePage';
+import PostPage from './pages/PostPage';
+import SettingsPage from './pages/SettingsPage';
 
 function App() {
   return (
     <RecoilRoot>
       <BrowserRouter>
         <Routes>
-          <Route path="/" element={<Landing />}></Route>
-          <Route path="/agora/:spaceName" element={<Space />}></Route>
-          <Route path="post/:postTitle" element={<Post />} ></Route>
-          <Route path="/settings" element={<Settings />}></Route>
+          <Route path="/" element={<LandingPage />}></Route>
+          <Route path="/agora/:spaceName" element={<SpacePage />}></Route>
+          <Route path="post/:postTitle" element={<PostPage />} ></Route>
+          <Route path="/settings" element={<SettingsPage />}></Route>
         </Routes>
       </BrowserRouter>
     </RecoilRoot>
