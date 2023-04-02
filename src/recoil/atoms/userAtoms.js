@@ -1,6 +1,6 @@
 import { atom } from 'recoil';
 import { recoilPersist } from 'recoil-persist';
-import { API_USERS_UPDATE } from '../../api/api';
+import { API_USERS_UPDATE } from '../../api';
 
 const persistConfig = {
   key: 'recoil-persist', // the key for the persisted data

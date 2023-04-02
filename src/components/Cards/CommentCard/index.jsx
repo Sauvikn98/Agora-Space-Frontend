@@ -5,7 +5,7 @@ import { useRecoilState, useRecoilValue } from 'recoil';
 import { useLocation } from 'react-router-dom';
 import { commentsState } from '../../../recoil/atoms/commentAtoms';
 import axios from 'axios';
-import { API_COMMENTS_GET_BY_POST } from '../../../api/api';
+import { API_COMMENTS_GET_BY_POST } from '../../../api';
 import { isAuthenticatedAtom } from '../../../recoil/atoms/authAtom';
 
 function Comment() {

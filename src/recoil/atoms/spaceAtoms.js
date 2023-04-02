@@ -5,11 +5,9 @@ import {
   API_SPACES_CREATE,
   API_SPACES_GET_ALL,
   API_SPACES_JOIN_SPACE,
-  API_SPACES_UPDATE,
-  API_SPACES_DELETE,
   API_SPACES_LEAVE_SPACE,
   API_SPACES_BY_ID,
-} from "../../api/api";
+} from "../../api";
 import { userAtom } from "./userAtoms";
 
 export const spaceAtom = atom({

@@ -1,4 +1,4 @@
-import { API_USERS_LOGIN, API_USERS_REGISTER } from "../../api/api";
+import { API_USERS_LOGIN, API_USERS_REGISTER } from "../../api";
 import { atom, } from 'recoil';
 import { recoilPersist } from 'recoil-persist';
 

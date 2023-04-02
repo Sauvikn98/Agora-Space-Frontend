@@ -3,8 +3,8 @@ import Navbar from '../../components/Navbar';
 import Comment from '../../components/Cards/CommentCard';
 import SignInModal from '../../components/Modals/SignInModal';
 import SignUpModal from '../../components/Modals/SignUpModal';
-import RecommendedPosts from '../../components/Cards/PostCard/RecommendedPosts';
-import PostDetails from '../../components/Cards/PostCard/PostDetails';
+import RecommendedPosts from '../../components/Cards/PostDetailCards/RecommendedPosts';
+import PostDetails from '../../components/Cards/PostDetailCards/PostDetails';
 
 function PostPage() {
   const [activeModal, setActiveModal] = useState(null);

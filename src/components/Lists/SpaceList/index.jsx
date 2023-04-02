@@ -7,7 +7,7 @@ import { isAuthenticatedAtom } from '../../../recoil/atoms/authAtom';
 import Toast from '../../Toast';
 import CategoryCard from '../../Cards/CategoryCard';
 import spaceSocket from '../../../utils/Socket';
-import RecentPost from '../../Cards/PostCard/RecentPost';
+import RecentPost from '../../Cards/PostDetailCards/RecentPost';
 
 function SpaceList({ handleOpenModal }) {
     const { isLoading } = useGetAllSpaces();

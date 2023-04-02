@@ -6,7 +6,7 @@ import SignOutModal from "../../components/Modals/SignOutModal";
 import PostModal from "../../components/Modals/PostModal";
 import SpaceList from "../../components/Lists/SpaceList";
 import Comment from "../../components/Cards/CommentCard";
-import RecommendedSpaces from "../../components/Cards/SpaceCard/RecommendedSpaces";
+import RecommendedSpaces from "../../components/Cards/SpaceDetailCards/RecommendedSpaces";
 import LandingSidebar from "../../components/Sidebar/LandingSidebar";
 import NotificationTooltip from "../../components/Tooltip/NotificationTooltip";
 import ProfileTooltip from "../../components/Tooltip/ProfileTooltip";

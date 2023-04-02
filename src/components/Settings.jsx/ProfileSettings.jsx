@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import { useRecoilValue, useSetRecoilState } from 'recoil';
 import { userAtom } from '../../recoil/atoms/userAtoms';
 import axios from 'axios';
-import { API_USERS_UPDATE } from '../../api/api';
+import { API_USERS_UPDATE } from '../../api';
 
 
 function ProfileSettings() {

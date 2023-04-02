@@ -4,7 +4,7 @@ import { userAtom } from '../../../recoil/atoms/userAtoms';
 import { useRecoilValue } from 'recoil';
 import { isAuthenticatedAtom } from '../../../recoil/atoms/authAtom';
 import axios from 'axios';
-import { API_COMMENTS_DELETE } from '../../../api/api';
+import { API_COMMENTS_DELETE } from '../../../api';
 
 function CommentItem({ comment, userName, userId }) {
   const childComments = comment.children || [];

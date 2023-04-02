@@ -4,7 +4,7 @@ import Navbar from '../../components/Navbar'
 import SignUpModal from "../../components/Modals/SignUpModal";
 import SignInModal from "../../components/Modals/SignInModal";
 import PostModal from '../../components/Modals/PostModal';
-import SpaceDetails from '../../components/Cards/SpaceCard/SpaceDetails';
+import SpaceDetails from '../../components/Cards/SpaceDetailCards/SpaceDetails';
 
 
 function SpacePage() {

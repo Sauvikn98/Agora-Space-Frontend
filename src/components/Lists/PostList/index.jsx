@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
 import { currentPostIdState, postAtom, useAddBookmark, useGetPosts } from "../../../recoil/atoms/postAtoms";
-import { API_POSTS_DOWNVOTE, API_POSTS_GET_ALL, API_POSTS_UPVOTE } from "../../../api/api";
+import { API_POSTS_DOWNVOTE, API_POSTS_GET_ALL, API_POSTS_UPVOTE } from "../../../api";
 import { useNavigate } from "react-router-dom";
 import { userAtom } from "../../../recoil/atoms/userAtoms";
 import { isAuthenticatedAtom } from "../../../recoil/atoms/authAtom";

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import { API_SPACES_GET_ALL_MEMBERS } from '../../../api/api';
+import { API_SPACES_GET_ALL_MEMBERS } from '../../../api';
 import spaceSocket from '../../../utils/Socket';
 
 function SpaceMembers({ spaceId }) {
