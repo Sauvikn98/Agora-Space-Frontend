@@ -36,6 +36,7 @@ function SpaceDetails({ handleOpenModal }) {
             <div>
                 <Labels
                     labels={labels}
+                    spaceCreator = {space.creator}
                     spaceId={space._id}
                     onLabelClick={handleLabelClick}
                 />

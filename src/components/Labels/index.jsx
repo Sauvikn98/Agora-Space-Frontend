@@ -1,8 +1,11 @@
 import React from 'react';
 import LabelInput from './LabelInput';
 import LabelItem from './LabelItem';
+import { useRecoilValue } from 'recoil';
+import { userAtom } from '../../recoil/atoms/userAtoms';
 
-function Labels({ labels, onUpdate, onDelete, spaceId, onLabelClick }) {
+function Labels({ labels, spaceId, spaceCreator, onLabelClick }) {
+    const user = useRecoilValue(userAtom)
     return (
         <div className="rounded-b-lg bg-white ml-4 mr-4 mt-4 ">
             <div className='flex items-center ml-4 pt-4'>
@@ -17,16 +20,16 @@ function Labels({ labels, onUpdate, onDelete, spaceId, onLabelClick }) {
                     <div key={label.id} onClick={() => onLabelClick(label.name)} className="w-full sm:w-auto cursor-pointer">
                         <LabelItem
                             label={label}
-                            onUpdate={onUpdate}
-                            onDelete={onDelete}
                             className="my-2"
                         />
                     </div>
                 ))}
             </div>
-            <div className='pb-4 pl-8'>
-                <LabelInput spaceId={spaceId} />
-            </div>
+            {spaceCreator === user.userDetails?._id &&
+                <div className='pb-4 pl-8'>
+                    <LabelInput spaceId={spaceId} />
+                </div>
+            }
         </div>
     );
 }
