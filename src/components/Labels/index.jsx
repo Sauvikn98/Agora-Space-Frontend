@@ -2,7 +2,7 @@ import React from 'react';
 import LabelInput from './LabelInput';
 import LabelItem from './LabelItem';
 
-function Labels({ labels, onUpdate, onDelete, spaceId }) {
+function Labels({ labels, onUpdate, onDelete, spaceId, onLabelClick }) {
     return (
         <div className="rounded-b-lg bg-white ml-4 mr-4 mt-4 ">
             <div className='flex items-center ml-4 pt-4'>
@@ -14,7 +14,7 @@ function Labels({ labels, onUpdate, onDelete, spaceId }) {
             </div>
             <div className='pt-10 pb-6 pl-3 flex flex-wrap'>
                 {labels.map((label) => (
-                    <div key={label.id} className="w-full sm:w-auto">
+                    <div key={label.id} onClick={() => onLabelClick(label.name)} className="w-full sm:w-auto cursor-pointer">
                         <LabelItem
                             label={label}
                             onUpdate={onUpdate}

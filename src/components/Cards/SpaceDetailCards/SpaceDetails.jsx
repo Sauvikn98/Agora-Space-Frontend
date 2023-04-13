@@ -6,9 +6,10 @@ import axios from 'axios';
 import Labels from '../../Labels';
 import SpaceInfo from './SpaceInfo';
 
+
 function SpaceDetails({ handleOpenModal }) {
     const { state: space } = useLocation();
-
+    const [selectedLabel, setSelectedLabel] = useState(null)
     const [labels, setLabels] = useState([]);
 
     useEffect(() => {
@@ -24,14 +25,19 @@ function SpaceDetails({ handleOpenModal }) {
         getAllLabels(space._id);
     }, []);
 
+    const handleLabelClick = (label) => {
+        setSelectedLabel(label);
+    };
+
 
     return (
         <div className="bg-gray-300 w-full min-h-screen grid lg:grid-cols-custom2">
-            <SpaceInfo space={space} handleOpenModal={handleOpenModal} />
+            <SpaceInfo space={space} handleOpenModal={handleOpenModal} selectedLabel={selectedLabel} />
             <div>
                 <Labels
                     labels={labels}
                     spaceId={space._id}
+                    onLabelClick={handleLabelClick}
                 />
                 <RecommendedPosts />
             </div>

@@ -5,14 +5,14 @@ import { isAuthenticatedAtom } from '../../recoil/atoms/authAtom';
 import axios from 'axios';
 import { API_POSTS_SEARCH } from '../../lib/api';
 import { useNavigate } from 'react-router-dom';
-import { useDebounce } from 'use-debounce';
+import { useDebounce } from '../../hooks/useDebounce';
 
 function Navbar({ handleOpenModal }) {
   const [isScrolled, setIsScrolled] = useState(false);
   const isAuthenticated = useRecoilValue(isAuthenticatedAtom);
   const [searchResults, setSearchResults] = useState([]);
   const [searchText, setSearchText] = useState('');
-  const [debouncedSearchText] = useDebounce(searchText, 400);
+  const debouncedSearchText = useDebounce(searchText, 800);
   const navigate = useNavigate()
 
   const searchPosts = async (text) => {

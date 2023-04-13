@@ -1,6 +1,6 @@
 import React from "react";
 import Navbar from "../../components/Navbar";
-import Settings from "../../components/Settings.jsx";
+import Settings from "../../components/Settings";
 
 function SettingsPage() {
     return (

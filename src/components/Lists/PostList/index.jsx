@@ -8,7 +8,7 @@ import { userAtom } from "../../../recoil/atoms/userAtoms";
 import { isAuthenticatedAtom } from "../../../recoil/atoms/authAtom";
 import { timeAgo } from "../../../utils";
 
-function PostList({ spaceId, handleOpenModal }) {
+function PostList({ spaceId, handleOpenModal, selectedLabel }) {
     const [showMenu, setShowMenu] = useState(false);
     const { isLoading } = useGetPosts(spaceId)
     const posts = useRecoilValue(postAtom);
@@ -20,7 +20,7 @@ function PostList({ spaceId, handleOpenModal }) {
     const addBookmark = useAddBookmark();
 
     const postsOfSpace = posts.filter((post) => post.space === spaceId);
-    postsOfSpace.sort((a, b) => b.createdAt - a.createdAt);
+    const postsOfSpaceWithLabel = selectedLabel ? postsOfSpace.filter((post) =>post.label && post.label.name === selectedLabel) : postsOfSpace
 
     function handleUpvote(postId) {
         axios.patch(API_POSTS_UPVOTE(postId), null, {
@@ -73,7 +73,7 @@ function PostList({ spaceId, handleOpenModal }) {
     return (
         <>
             {isLoading ? (
-                <div className="m-8 relative">
+                <div className="m-8 relative space-y-8">
                     <div className="p-5 bg-white rounded-lg flex items-center justify-between space-x-8">
                         <div className="flex-1">
                             <div className="h-4 w-1/2 bg-gray-300 rounded"></div>
@@ -101,12 +101,12 @@ function PostList({ spaceId, handleOpenModal }) {
                 </div>
             ) : (
                 <div className="h-full">
-                    {postsOfSpace.length === 0 && (
+                    {postsOfSpaceWithLabel.length === 0 && (
                         <div className='flex items-center lg:absolute mb-20 lg:mb-0 lg:mt-0 mt-20 bottom-40 left-80 justify-center'>
                             <h1 className="font-bold animate-bounce">No Posts Available, Create a new Post</h1>
                         </div>
                     )}
-                    {postsOfSpace.map(post => (
+                    {postsOfSpaceWithLabel.map(post => (
                         <div key={post._id} className="transition duration-500 ease-in-out transform hover:-translate-y-1 relative">
                             <div className="hover:outline outline-offset-2 pb-4 outline-blue-500 bg-white rounded-lg lg:ml-7 mr-5 mb-6 mt-6 lg:mt-0 ml-6 space-y-2">
 

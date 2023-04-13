@@ -1,6 +1,6 @@
 import React, {useRef, useState} from 'react'
 import { API_SPACES_UPLOAD_COVER_PHOTO } from '../../../lib/api';
-import SpaceSettings from '../../Settings.jsx/SpaceSettings';
+import SpaceSettings from '../../Settings/SpaceSettings';
 import SpaceTabs from '../../Tabs/SpaceTabs';
 import SpaceMembers from './SpaceMembers';
 import axios from 'axios';
@@ -8,7 +8,7 @@ import { useRecoilValue } from 'recoil';
 import { userAtom } from '../../../recoil/atoms/userAtoms';
 import PostList from '../../Lists/PostList';
 
-function SpaceInfo({space, handleOpenModal}) {
+function SpaceInfo({space, handleOpenModal, selectedLabel}) {
     const [currentTab, setCurrentTab] = useState('Posts');
     const fileInputRef = useRef(null);
     const user = useRecoilValue(userAtom)
@@ -91,7 +91,7 @@ function SpaceInfo({space, handleOpenModal}) {
             </div>
             {currentTab === 'Posts' && (
                 <div className="pt-10 border-t border-gray-100">
-                    <PostList spaceId={space._id} handleOpenModal={handleOpenModal} />
+                    <PostList spaceId={space._id} handleOpenModal={handleOpenModal} selectedLabel={selectedLabel}/>
                 </div>
             )}
             {currentTab === 'Members' && (

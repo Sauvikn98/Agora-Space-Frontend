@@ -1,5 +1,4 @@
 import React from 'react'
-import ProfileSettings from '../../Settings.jsx/ProfileSettings'
 
 function SettingsSidebar() {
     return (

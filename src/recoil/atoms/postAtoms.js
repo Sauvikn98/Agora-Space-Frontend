@@ -15,6 +15,11 @@ export const currentPostIdState = atom({
   default: null,
 });
 
+export const currentLabel = atom({
+  key: 'currentLabel',
+  default: [{}],
+});
+
 export const bookmarksState = atom({
   key: 'bookmarksState',
   default: [],
