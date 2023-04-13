@@ -32,7 +32,9 @@ function PostPage() {
         <div className="grid grid-cols-1 md:grid-cols-custom2 gap-8">
           <div>
             <PostDetails />
-            <Comment />
+            <div id='comments'>
+              <Comment />
+            </div>
           </div>
           <RecommendedPosts />
         </div>

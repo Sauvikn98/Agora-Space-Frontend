@@ -4,7 +4,7 @@ import classNames from "classnames";
 import { isAuthenticatedAtom, signUp } from '../../../recoil/atoms/authAtom';
 import { userAtom } from '../../../recoil/atoms/userAtoms';
 import Toast from '../../Toast';
-import spaceSocket from '../../../utils/Socket';
+import { socket } from '../../../utils';
 
 function SignUpModal({ onRequestClose }) {
     const [userName, setUserName] = useState('');
@@ -48,7 +48,7 @@ function SignUpModal({ onRequestClose }) {
                 setIsLoading(false);
                 setTimeout(() => onRequestClose(), 2000)
                 spaceSocket.auth = { token: success.token }
-                spaceSocket.connect();
+                socket.connect();
             }
             else {
                 setUser({ token: null, userDetails: null });

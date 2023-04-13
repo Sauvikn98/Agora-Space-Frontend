@@ -6,7 +6,7 @@ import { userAtom } from '../../../recoil/atoms/userAtoms';
 import { isAuthenticatedAtom } from '../../../recoil/atoms/authAtom';
 import Toast from '../../Toast';
 import CategoryCard from '../../Cards/CategoryCard';
-import spaceSocket from '../../../utils/Socket';
+import {socket} from '../../../utils';
 import RecentPost from '../../Cards/PostDetailCards/RecentPost';
 
 function SpaceList({ handleOpenModal }) {
@@ -57,7 +57,7 @@ function SpaceList({ handleOpenModal }) {
                     }
                 }
             };
-            spaceSocket.emit('joinSpace', { spaceId, notification });
+            socket.emit('joinSpace', { spaceId, notification });
         } else {
             setShowToast(true);
             setToastProps({ success: false, message: 'Failed to Join Space, Try Again !' });
@@ -84,7 +84,7 @@ function SpaceList({ handleOpenModal }) {
                     }
                 }
             };
-            spaceSocket.emit('leaveSpace', { spaceId, notification });
+            socket.emit('leaveSpace', { spaceId, notification });
         } else {
             console.error(`Failed to leave space: ${response.data.error}`);
             setShowToast(true);
@@ -201,9 +201,9 @@ function SpaceList({ handleOpenModal }) {
                                     <div className='bg-gray-100 border-b-2 p-2 border-gray-200 flex justify-between items-center lg:mr-0'>
                                         <div className='flex justify-center'>
                                             <a href="#" class="relative block">
-                                                <img alt="profile" src="https://avatars.githubusercontent.com/u/46704901?v=4" class="mx-auto object-cover rounded-full h-6 w-6 " />
+                                                <img alt="Space" src={`https://api.dicebear.com/6.x/initials/svg?seed=${space.name}`} class="mx-auto object-cover rounded-full h-6 w-6 " />
                                             </a>
-                                            <h3 onClick={() => handleNavigate(space.name)} className="hover:underline text-sm font-bold text-gray-700 ml-2"><span className='text-indigo-700'>agora/</span>{space.name}</h3>
+                                            <h3 onClick={() => handleNavigate(space.name)} className="hover:underline cursor-pointer text-sm font-bold text-gray-700 ml-2"><span className='text-indigo-700'>agora/</span>{space.name}</h3>
                                         </div>
                                         {space.creator === user.userDetails?._id ? (
                                             <></>

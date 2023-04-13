@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { API_SPACES_CREATE_LABEL } from '../../api';
+import { API_SPACES_CREATE_LABEL } from '../../lib/api';
 import axios from 'axios';
 
 const COLORS = [

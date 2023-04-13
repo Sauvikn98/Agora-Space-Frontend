@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { atom, useRecoilValue, useSetRecoilState, selectorFamily } from "recoil";
 import axios from "axios";
-import { API_POSTS_CREATE, API_POSTS_GET_ALL, API_POSTS_UPDATE } from "../../api";
+import { API_POSTS_CREATE, API_POSTS_GET_ALL, API_POSTS_UPDATE } from "../../lib/api";
 import { userAtom } from "./userAtoms";
 import { useNavigate } from "react-router-dom";
 

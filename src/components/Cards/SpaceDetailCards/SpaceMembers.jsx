@@ -1,11 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import { API_SPACES_GET_ALL_MEMBERS } from '../../../api';
-import spaceSocket from '../../../utils/Socket';
+import { API_SPACES_GET_ALL_MEMBERS } from '../../../lib/api';
+import {socket} from '../../../utils';
+import { useRecoilValue } from 'recoil';
+import { userAtom } from '../../../recoil/atoms/userAtoms';
 
 function SpaceMembers({ spaceId }) {
     const [members, setMembers] = useState([]);
     const [isOnline, setIsOnline] = useState(false)
+    const user = useRecoilValue(userAtom)
 
     useEffect(() => {
         const fetchSpaceMembers = async (spaceId) => {
@@ -20,15 +23,11 @@ function SpaceMembers({ spaceId }) {
     }, []);
 
     useEffect(() => {
-        spaceSocket.on('online', (userId) => {
-            console.log(userId)
-            setMembers((member) => {
-                if (member._id === userId) {
-                    setIsOnline(true)
-                }
-            });
-        });
-
+        if (user.userDetails.online === true) {
+            setIsOnline(true)
+        } else {
+            setIsOnline(false)
+        }
     }, []);
 
     return (
@@ -46,7 +45,7 @@ function SpaceMembers({ spaceId }) {
                                 <p className="text-lg font-medium">{member.userName}</p>
                                 <p className="text-gray-500">{member.email}</p>
                                 <div className="flex items-center mt-2">
-                                    {isOnline ? (
+                                    {user.userDetails.online ? (
                                         <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 text-green-500 mr-1" viewBox="0 0 20 20" fill="currentColor">
                                             <circle cx="10" cy="10" r="6" />
                                         </svg>
@@ -55,7 +54,7 @@ function SpaceMembers({ spaceId }) {
                                             <circle cx="10" cy="10" r="6" />
                                         </svg>
                                     )}
-                                    <p className="text-gray-500 text-sm">{isOnline ? 'Online' : 'Offline'}</p>
+                                    <p className="text-gray-500 text-sm">{user.userDetails.online ? 'Online' : 'Offline'}</p>
                                 </div>
                             </div>
                         </div>

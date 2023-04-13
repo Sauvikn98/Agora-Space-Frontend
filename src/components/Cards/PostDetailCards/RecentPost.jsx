@@ -2,22 +2,25 @@ import React, { useState } from "react";
 import axios from "axios";
 import { useRecoilValue, useSetRecoilState } from "recoil";
 import { currentPostIdState, postAtom, useAddBookmark, useGetPosts } from "../../../recoil/atoms/postAtoms";
-import { API_POSTS_DOWNVOTE, API_POSTS_UPVOTE } from "../../../api";
+import { API_POSTS_DOWNVOTE, API_POSTS_UPVOTE } from "../../../lib/api";
 import { Link, useNavigate } from "react-router-dom";
 import { isAuthenticatedAtom } from "../../../recoil/atoms/authAtom";
 import { userAtom } from "../../../recoil/atoms/userAtoms";
+import Toast from "../../Toast";
+import { timeAgo } from "../../../utils";
 
 function RecentPost({ spaceId, handleOpenModal }) {
     useGetPosts(spaceId)
     const posts = useRecoilValue(postAtom);
     const navigate = useNavigate();
-    const [votes, setVotes] = useState(0);
     const isAuthenticated = useRecoilValue(isAuthenticatedAtom)
     const user = useRecoilValue(userAtom)
     const [showMenu, setShowMenu] = useState(false);
     const setCurrentPostId = useSetRecoilState(currentPostIdState);
     const addBookmark = useAddBookmark();
     const [shareLink, setShareLink] = useState('');
+    const [isUpvoted, setIsUpvoted] = useState(false);
+    const [isDownvoted, setIsDownvoted] = useState(false);
 
     const handleShareLink = (postTitle, event) => {
         const modifiedTitle = postTitle.replace(/\s+/g, '_');
@@ -27,17 +30,21 @@ function RecentPost({ spaceId, handleOpenModal }) {
         setShareLink(shareUrl);
         navigator.clipboard.writeText(shareUrl);
     };
+    
     function handleUpvote(postId) {
         axios.patch(API_POSTS_UPVOTE(postId), null, {
             headers: {
                 Authorization: `Bearer ${user.token}`,
             },
         })
-            .then(response => {
-                setVotes(prevVotes => ({
-                    ...prevVotes,
-                    [postId]: response.data.votes,
-                }));
+            .then((response) => {
+                const message = response.data.message;
+                if (message === "Post upvoted") {
+                    setIsUpvoted(true);
+                    setIsDownvoted(false);
+                } else if (message === "Post upvote removed") {
+                    setIsUpvoted(false);
+                }
             })
             .catch(error => {
                 console.error(error);
@@ -51,10 +58,8 @@ function RecentPost({ spaceId, handleOpenModal }) {
             },
         })
             .then(response => {
-                setVotes(prevVotes => ({
-                    ...prevVotes,
-                    [postId]: response.data.votes,
-                }));
+                setIsUpvoted(false);
+                setIsDownvoted(true);
             })
             .catch(error => {
                 console.error(error);
@@ -71,31 +76,12 @@ function RecentPost({ spaceId, handleOpenModal }) {
 
     const latestPosts = Object.values(spaces);
 
-    const handleCommentNavigate = (postTitle, event) => {
+    const handleCommentNavigate = (postTitle) => {
         const modifiedTitle = postTitle.replace(/\s+/g, '_');
         navigate(`/post/${modifiedTitle}`, {
             state: latestPosts.find((post) => post.title === postTitle),
         });
     };
-
-    const timeAgo = (timestamp) => {
-        const now = new Date();
-        const seconds = Math.floor((now - timestamp) / 1000);
-        if (seconds < 60) {
-            return 'just now';
-        }
-        const minutes = Math.floor(seconds / 60);
-        if (minutes < 60) {
-            return `${minutes} ${minutes === 1 ? 'minute' : 'minutes'} ago`;
-        }
-        const hours = Math.floor(minutes / 60);
-        if (hours < 24) {
-            return `${hours} ${hours === 1 ? 'hour' : 'hours'} ago`;
-        }
-        const days = Math.floor(hours / 24);
-        return `${days} ${days === 1 ? 'day' : 'days'} ago`;
-    }
-
 
     const handleMenuClick = () => {
         setShowMenu(!showMenu);
@@ -194,7 +180,7 @@ function RecentPost({ spaceId, handleOpenModal }) {
                         </div>
                         <div className="flex items-center justify-between mt-6">
                             <div className="flex items-center space-x-4">
-                                <Link to={{ pathname: `commentss/${post.title.replace(/\s+/g, '_')}`, state: post }}>
+                                <Link>
                                     <div className="flex items-center justify-center ">
                                         <button className="text-gray-500">
                                             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" className="w-6 h-6">
@@ -226,15 +212,15 @@ function RecentPost({ spaceId, handleOpenModal }) {
                         {isAuthenticated ? (
                             <div className='flex'>
                                 <div className="mt-[45px] absolute inset-y-0 w-10 right-5 flex flex-col justify-start items-center bg-gray-100 border-l-2 rounded-r-lg">
-                                    <button className="text-gray-900 mt-2" onClick={() => handleUpvote(post._id)}>
-                                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-6 h-6">
-                                            <path fill-rule="evenodd" d="M11.47 7.72a.75.75 0 011.06 0l7.5 7.5a.75.75 0 11-1.06 1.06L12 9.31l-6.97 6.97a.75.75 0 01-1.06-1.06l7.5-7.5z" />
+                                    <button className={`${isUpvoted ? 'text-green-500' : 'text-gray-400'} mt-2`} onClick={() => handleUpvote(post._id)}>
+                                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-5 h-5">
+                                            <path fill-rule="evenodd" d="M11.47 7.72a.75.75 0 011.06 0l7.5 7.5a.75.75 0 11-1.06 1.06L12 9.31l-6.97 6.97a.75.75 0 01-1.06-1.06l7.5-7.5z" clip-rule="evenodd" stroke="currentColor" stroke-width="3" />
                                         </svg>
                                     </button>
                                     <p className="text-center text-gray-900">{post.upvotes.length - post.downvotes.length}</p>
-                                    <button className="text-gray-900" onClick={() => handleDownvote(post._id)}>
-                                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-6 h-6">
-                                            <path fill-rule="evenodd" d="M12.53 16.28a.75.75 0 01-1.06 0l-7.5-7.5a.75.75 0 011.06-1.06L12 14.69l6.97-6.97a.75.75 0 111.06 1.06l-7.5 7.5z" clip-rule="evenodd" />
+                                    <button className={`${isDownvoted ? 'text-red-500' : 'text-gray-400'}`} onClick={() => handleDownvote(post._id)}>
+                                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-5 h-5">
+                                            <path fill-rule="evenodd" d="M12.53 16.28a.75.75 0 01-1.06 0l-7.5-7.5a.75.75 0 011.06-1.06L12 14.69l6.97-6.97a.75.75 0 111.06 1.06l-7.5 7.5z" clip-rule="evenodd" stroke="currentColor" stroke-width="3" />
                                         </svg>
                                     </button>
                                 </div>

@@ -1,5 +1,5 @@
 import React, {useRef, useState} from 'react'
-import { API_SPACES_UPLOAD_COVER_PHOTO } from '../../../api';
+import { API_SPACES_UPLOAD_COVER_PHOTO } from '../../../lib/api';
 import SpaceSettings from '../../Settings.jsx/SpaceSettings';
 import SpaceTabs from '../../Tabs/SpaceTabs';
 import SpaceMembers from './SpaceMembers';

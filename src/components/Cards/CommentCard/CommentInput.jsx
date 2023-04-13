@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useLocation } from 'react-router-dom';
 import { useRecoilState, useRecoilValue } from 'recoil';
-import { API_COMMENTS_CREATE } from '../../../api';
+import { API_COMMENTS_CREATE } from '../../../lib/api';
 import { newCommentState } from '../../../recoil/atoms/commentAtoms';
 import { userAtom } from '../../../recoil/atoms/userAtoms';
 import axios from 'axios';

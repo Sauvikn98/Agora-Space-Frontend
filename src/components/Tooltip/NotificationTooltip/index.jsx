@@ -1,11 +1,19 @@
 import React, { useEffect, useState } from 'react'
 import { useRecoilState } from 'recoil';
 import { notificationsState } from '../../../recoil/atoms/notificationAtom';
-import spaceSocket from '../../../utils/Socket';
+import {socket} from '../../../utils';
 
 function NotificationTooltip({ onRequestClose }) {
     const [notifications, setNotifications] = useRecoilState(notificationsState);
     const [showNotifications, setShowNotifications] = useState(false);
+
+
+    // Listen for new member events
+    socket.on('newMember', (user) => {
+        // Display a notification to the user
+        const notification = `User ${user.userId} has joined the space`;
+        console.log(notification)
+    });
 
     function toggleNotifications() {
         setShowNotifications(!showNotifications);
@@ -33,22 +41,7 @@ function NotificationTooltip({ onRequestClose }) {
                         </span>
                     </div>
                     <div class="ml-3 text-sm font-normal">
-                        <div>
-                            <button onClick={toggleNotifications}>
-                                <span>Notifications</span>
-                                {notifications.length > 0 && <span>{notifications.length}</span>}
-                            </button>
-                            {showNotifications && (
-                                <div>
-                                    <ul>
-                                        {notifications.map((notification, index) => (
-                                            <li key={index}>{notification.message}</li>
-                                        ))}
-                                    </ul>
-                                    <button onClick={markNotificationsAsRead}>Mark as read</button>
-                                </div>
-                            )}
-                        </div>
+                      
                         <span class="text-xs font-medium text-blue-600 dark:text-blue-500">a few seconds ago</span>
                     </div>
                 </div>

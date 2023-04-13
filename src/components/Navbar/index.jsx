@@ -3,7 +3,7 @@ import logo from "../../assets/logo.png"
 import { useRecoilValue } from 'recoil';
 import { isAuthenticatedAtom } from '../../recoil/atoms/authAtom';
 import axios from 'axios';
-import { API_POSTS_SEARCH } from '../../api';
+import { API_POSTS_SEARCH } from '../../lib/api';
 import { useNavigate } from 'react-router-dom';
 import { useDebounce } from 'use-debounce';
 

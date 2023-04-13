@@ -7,7 +7,7 @@ import {
   API_SPACES_JOIN_SPACE,
   API_SPACES_LEAVE_SPACE,
   API_SPACES_BY_ID,
-} from "../../api";
+} from "../../lib/api";
 import { userAtom } from "./userAtoms";
 
 export const spaceAtom = atom({

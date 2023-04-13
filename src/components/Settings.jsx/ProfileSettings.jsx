@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import { useRecoilValue, useSetRecoilState } from 'recoil';
 import { userAtom } from '../../recoil/atoms/userAtoms';
 import axios from 'axios';
-import { API_USERS_UPDATE } from '../../api';
+import { API_USERS_UPDATE } from '../../lib/api';
 
 
 function ProfileSettings() {
@@ -39,10 +39,18 @@ function ProfileSettings() {
         setIsLoading(false);
     };
 
+    const handleOutsideClick = (event) => {
+        if (event.target === event.currentTarget) {
+            handleSubmit()
+            setShowEmailInput(false)
+            setShowUsernameInput(false)
+            setShowPasswordInput(false)
+        }
+    };
 
     return (
-        <aside className='h-[92.4vh] lg:sticky flex top-[3.52rem] bottom-[2.8rem]'>
-            <div className="bg-gray-300 p-6 w-full h-screen">
+        <aside className=''>
+            <div className="pt-10 w-full h-screen"  onClick={handleOutsideClick}>
                 <div className='lg:w-2/6 '>
                     <div className={`mb-10 ${!successMessage && ('hidden')}`}>
                         {successMessage &&
@@ -80,7 +88,7 @@ function ProfileSettings() {
                     </div>
 
                     <div class="flex justify-between items-center mb-6">
-                        <label className="block text-gray-700 font-bold mr-4" htmlFor="username">
+                        <label className="block text-sm text-gray-700 font-bold mr-4" htmlFor="username">
                             Change Avatar
                         </label>
                         <a href="#" class="hover:scale-150 hover:z-10 transform ease-in-out transition duration-500">
@@ -89,12 +97,12 @@ function ProfileSettings() {
                     </div>
                     <div className="flex items-center justify-between ">
                         <div>
-                            <label className="block text-gray-700 font-bold mr-4" htmlFor="username">
+                            <label className="block text-sm text-gray-700 font-bold mr-4" htmlFor="username">
                                 Username
                             </label>
                             {!showUsernameInput ? (
                                 <div className='mt-2'>
-                                    <h1>{user.userDetails.userName}</h1>
+                                    <h1 className='text-sm'>{user.userDetails.userName}</h1>
                                 </div>
                             ) : (
                                 <></>
@@ -103,7 +111,7 @@ function ProfileSettings() {
                         </div>
                         {!showUsernameInput && (
                             <button
-                                className="text-gray-500 hover:text-blue-500 focus:outline-none focus:text-blue-500"
+                                className="text-sm text-gray-500 hover:text-blue-500 focus:outline-none focus:text-blue-500"
                                 onClick={() => setShowUsernameInput(true)}
                             >
                                 Edit
@@ -126,12 +134,12 @@ function ProfileSettings() {
 
                     <div className="mt-8 flex items-center justify-between">
                         <div>
-                            <label className="block text-gray-700 font-bold mr-4" htmlFor="username">
+                            <label className="block text-sm text-gray-700 font-bold mr-4" htmlFor="username">
                                 Email
                             </label>
                             {!showEmailInput ? (
                                 <div className='mt-2'>
-                                    <h1>{user.userDetails.email}</h1>
+                                    <h1 className='text-sm'>{user.userDetails.email}</h1>
                                 </div>
                             ) : (
                                 <></>
@@ -140,7 +148,7 @@ function ProfileSettings() {
                         </div>
                         {!showEmailInput && (
                             <button
-                                className="text-gray-500 hover:text-blue-500 focus:outline-none focus:text-blue-500"
+                                className="text-sm text-gray-500 hover:text-blue-500 focus:outline-none focus:text-blue-500"
                                 onClick={() => setShowEmailInput(true)}
                             >
                                 Edit
@@ -162,12 +170,12 @@ function ProfileSettings() {
                     )}
 
                     <div className="mt-8 flex items-center justify-between">
-                        <label className="block text-gray-700 font-bold mr-4" htmlFor="password">
+                        <label className="block text-sm text-gray-700 font-bold mr-4" htmlFor="password">
                             Change Password
                         </label>
                         {!showPasswordInput && (
                             <button
-                                className="text-gray-500 hover:text-blue-500 focus:outline-none focus:text-blue-500"
+                                className="text-sm text-gray-500 hover:text-blue-500 focus:outline-none focus:text-blue-500"
                                 onClick={() => setShowPasswordInput(true)}
                             >
                                 Edit
@@ -190,14 +198,6 @@ function ProfileSettings() {
                     )}
 
                 </div>
-
-                <button
-                    onClick={() => handleSubmit()}
-                    className="mt-8 bg-gray-800 text-white text-sm flex items-center px-6 py-3 transition ease-in duration-200 uppercase rounded-full hover:bg-gray-700 hover:text-white shadow-lg focus:outline-none"
-                    disabled={isLoading}
-                >
-                    {isLoading ? 'Saving...' : 'Save Changes'}
-                </button>
 
             </div>
 

@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import landingImage from "../../assets/vector-image.svg"
 import { Reveal } from 'react-awesome-reveal';
-import { fadeInDownShorter, fadeInLeft } from '../../utils/keyframes';
+import { fadeInDownShorter, fadeInLeft } from '../../utils';
 import { useRecoilValue } from 'recoil';
 import { userAtom } from '../../recoil/atoms/userAtoms';
 import { isAuthenticatedAtom } from '../../recoil/atoms/authAtom';

@@ -2,10 +2,11 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
 import { currentPostIdState, postAtom, useAddBookmark, useGetPosts } from "../../../recoil/atoms/postAtoms";
-import { API_POSTS_DOWNVOTE, API_POSTS_GET_ALL, API_POSTS_UPVOTE } from "../../../api";
+import { API_POSTS_DOWNVOTE, API_POSTS_GET_ALL, API_POSTS_UPVOTE } from "../../../lib/api";
 import { useNavigate } from "react-router-dom";
 import { userAtom } from "../../../recoil/atoms/userAtoms";
 import { isAuthenticatedAtom } from "../../../recoil/atoms/authAtom";
+import { timeAgo } from "../../../utils";
 
 function PostList({ spaceId, handleOpenModal }) {
     const [showMenu, setShowMenu] = useState(false);
@@ -60,25 +61,6 @@ function PostList({ spaceId, handleOpenModal }) {
             state: postsOfSpace.find((post) => post.title === postTitle),
         });
     };
-
-
-    const timeAgo = (timestamp) => {
-        const now = new Date();
-        const seconds = Math.floor((now - timestamp) / 1000);
-        if (seconds < 60) {
-            return 'just now';
-        }
-        const minutes = Math.floor(seconds / 60);
-        if (minutes < 60) {
-            return `${minutes} ${minutes === 1 ? 'minute' : 'minutes'} ago`;
-        }
-        const hours = Math.floor(minutes / 60);
-        if (hours < 24) {
-            return `${hours} ${hours === 1 ? 'hour' : 'hours'} ago`;
-        }
-        const days = Math.floor(hours / 24);
-        return `${days} ${days === 1 ? 'day' : 'days'} ago`;
-    }
 
     const handleMenuClick = () => {
         setShowMenu(!showMenu);

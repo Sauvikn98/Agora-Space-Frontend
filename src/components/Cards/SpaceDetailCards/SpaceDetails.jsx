@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useRef } from 'react'
 import { useLocation } from "react-router-dom";
-import { API_SPACES_GET_ALL_LABELS } from '../../../api';
+import { API_SPACES_GET_ALL_LABELS } from '../../../lib/api';
 import RecommendedPosts from '../PostDetailCards/RecommendedPosts';
 import axios from 'axios';
 import Labels from '../../Labels';
