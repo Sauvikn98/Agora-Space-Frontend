@@ -7,6 +7,8 @@ export const API_USERS_BY_ID = `${API_BASE_URL}/users/:userId`;
 export const API_USERS_BOOKMARKS = (userId) => `${API_BASE_URL}/users/${userId}/bookmarks`;
 export const API_USERS_UPDATE = `${API_BASE_URL}/user`;
 export const API_USERS_DELETE = `${API_BASE_URL}/users/:userId`;
+export const API_USERS_GET_ALL_BOOKMARKS = `${API_BASE_URL}/users/bookmarks`;
+export const API_USERS_ADD_BOOKMARK = (postId) => `${API_BASE_URL}/users/bookmark/${postId}`;
 
 
 // post api

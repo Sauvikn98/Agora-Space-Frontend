@@ -1,4 +1,4 @@
-import React, {useRef, useState} from 'react'
+import React, { useRef, useState } from 'react'
 import { API_SPACES_UPLOAD_COVER_PHOTO } from '../../../lib/api';
 import SpaceSettings from '../../Settings/SpaceSettings';
 import SpaceTabs from '../../Tabs/SpaceTabs';
@@ -8,7 +8,7 @@ import { useRecoilValue } from 'recoil';
 import { userAtom } from '../../../recoil/atoms/userAtoms';
 import PostList from '../../Lists/PostList';
 
-function SpaceInfo({space, handleOpenModal, selectedLabel}) {
+function SpaceInfo({ space, handleOpenModal, selectedLabel }) {
     const [currentTab, setCurrentTab] = useState('Posts');
     const fileInputRef = useRef(null);
     const user = useRecoilValue(userAtom)
@@ -69,11 +69,21 @@ function SpaceInfo({space, handleOpenModal, selectedLabel}) {
 
             <div className="flex justify-between bg-white pt-6 pl-6 pr-6 pb-2">
                 <div>
-                    <h2 className=" text-2xl font-semibold text-gray-900">
-                        {space.name}
-                    </h2>
-                    <p className="mt-2 text-gray-600">{space.description}</p>
-                    <div className='flex mt-7'>
+                    <div className='flex justify-center items-center'>
+                        <div className="object-cover w-20 h-20 rounded-full cursor-pointer">
+                            <img
+                                src={`https://avatars.dicebear.com/api/adventurer/${user.userDetails?._id}.svg`}
+                                alt="user avatar"
+                            />
+                        </div>
+                        <div>
+                            <h2 className=" text-2xl font-semibold text-gray-900">
+                                {space.name}
+                            </h2>
+                            <p className="mt-2 text-gray-600">{space.description}</p>
+                        </div>
+                    </div>
+                    <div className='flex mt-7 pl-3'>
                         <SpaceTabs
                             tabs={['Posts', 'Members', 'Settings']}
                             currentTab={currentTab}
@@ -90,8 +100,8 @@ function SpaceInfo({space, handleOpenModal, selectedLabel}) {
                 </div>
             </div>
             {currentTab === 'Posts' && (
-                <div className="pt-10 border-t border-gray-100">
-                    <PostList spaceId={space._id} handleOpenModal={handleOpenModal} selectedLabel={selectedLabel}/>
+                <div className=" pt-10 border-t border-gray-100">
+                    <PostList spaceId={space._id} handleOpenModal={handleOpenModal} selectedLabel={selectedLabel} />
                 </div>
             )}
             {currentTab === 'Members' && (

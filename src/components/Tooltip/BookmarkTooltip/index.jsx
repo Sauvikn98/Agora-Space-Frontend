@@ -1,12 +1,32 @@
 import React, { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom';
 import { useRecoilValue } from 'recoil';
-import { bookmarksState } from '../../../recoil/atoms/postAtoms';
+import axios from 'axios';
+import { userAtom } from '../../../recoil/atoms/userAtoms';
+import { API_USERS_GET_ALL_BOOKMARKS } from '../../../lib/api';
 
 function BookmarkTooltip({ onRequestClose }) {
-    const bookmarks = useRecoilValue(bookmarksState);
+    const user = useRecoilValue(userAtom);
     const [showAll, setShowAll] = useState(false);
     const navigate = useNavigate();
+    const [bookmarks, setBookmarks] = useState([]);
+
+    useEffect(() => {
+        async function fetchBookmarks() {
+            try {
+                const response = await axios.post(API_USERS_GET_ALL_BOOKMARKS, null, {
+                    headers: {
+                        'Authorization': `Bearer ${user.token}`
+                    }
+                });
+                console.log(response.data);
+                setBookmarks(response.data) // Post bookmarked successfully
+            } catch (error) {
+                console.error(error);
+            }
+        }
+        fetchBookmarks();
+    }, []);
 
     // Slice the bookmarks array to show only the first two bookmarks
     const displayedBookmarks = bookmarks.slice(0, 2);
