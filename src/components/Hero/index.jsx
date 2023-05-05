@@ -45,7 +45,7 @@ function Hero({ handleOpenModal }) {
     };
 
     return (
-        <div className='h-[92.4vh] sticky flex top-[3.52rem] bottom-[3.1rem] w-full'>
+        <div className='h-[94vh] sticky flex top-[3.52rem] bottom-[3.1rem] w-full'>
             {isAuthenticated ? (
                 <div className="w-full bg-gradient-to-r bg-[radial-gradient(ellipse_at_bottom_left,_var(--tw-gradient-stops))] from-indigo-900 via-indigo-400 to-indigo-900 dark:bg-gray-900 dark:border-gray-700">
                     <div className="">

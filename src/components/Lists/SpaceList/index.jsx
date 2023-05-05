@@ -29,6 +29,11 @@ function SpaceList({ handleOpenModal }) {
         setIsOpen(!isOpen);
     };
 
+    const handleHot = () => {
+        const hotFiltered  = spaces.filter(space => space.posts.length >= 5);
+        setFilteredSpaces(hotFiltered);
+    }
+
     const handleNavigate = (spaceName) => {
         const modifiedSpaceName = spaceName.replace(/\s/g, '');
         navigate(`/agora/${modifiedSpaceName}`, { state: spaces.find(space => space.name === spaceName) });
@@ -44,20 +49,6 @@ function SpaceList({ handleOpenModal }) {
             setShowToast(true);
             setToastProps({ success: true, message: 'Successfully joined Space!' });
             setTimeout(() => setShowToast(false), 5000);
-            const notification = {
-                userId: user.userDetails._id,
-                notificationType: `New Member of space`,
-                seen: false,
-                intent: {
-                    action: "/space",
-                    parameters: {
-                        memberName: user.userDetails.userName,
-                        spaceId: spaceId,
-                        receivers: members(spaceId)
-                    }
-                }
-            };
-            socket.emit('joinSpace', { spaceId, notification });
         } else {
             setShowToast(true);
             setToastProps({ success: false, message: 'Failed to Join Space, Try Again !' });
@@ -71,20 +62,6 @@ function SpaceList({ handleOpenModal }) {
             setShowToast(true);
             setToastProps({ success: true, message: 'Successfully Left the Space !' });
             setTimeout(() => setShowToast(false), 5000);
-            const notification = {
-                userId: user.userDetails._id,
-                notificationType: `Member Left Space`,
-                seen: false,
-                intent: {
-                    action: "/space",
-                    parameters: {
-                        memberName: user.userDetails.userName,
-                        spaceId: spaceId,
-                        receivers: members(spaceId).filter((memberId) => memberId !== user.userDetails._id)
-                    }
-                }
-            };
-            socket.emit('leaveSpace', { spaceId, notification });
         } else {
             console.error(`Failed to leave space: ${response.data.error}`);
             setShowToast(true);
@@ -130,7 +107,7 @@ function SpaceList({ handleOpenModal }) {
                     <div className=" flex  ml-8 lg:ml-7">
                         <button
                             className="rounded-lg font-bold bg-white text-gray-900 flex items-center px-4 py-1  transition ease-in duration-200  hover:bg-gray-800 hover:text-white shadow-lg focus:outline-none"
-                            onClick={handleClick}
+                            onClick={handleHot}
                         >
                             <div className='flex justify-center items-center'>
                                 <h1 className='mr-1'>Hot</h1>

@@ -6,7 +6,7 @@ import { userAtom } from '../../../recoil/atoms/userAtoms';
 import Toast from '../../Toast';
 import {socket} from '../../../utils';
 
-function SignInModal({ onRequestClose }) {
+function SignInModal({ onRequestClose, handleOpenModal }) {
     const [userName, setUserName] = useState('');
     const [password, setPassword] = useState('');
     const [isLoading, setIsLoading] = useState(false);
@@ -144,7 +144,7 @@ function SignInModal({ onRequestClose }) {
                         </button>
                         <p className="mt-4 text-sm text-gray-900">
                             Don't Have An Account?{' '}
-                            <span className="underline cursor-pointer">Sign Up</span>
+                            <button onClick={()=>handleOpenModal('signup')} className="underline cursor-pointer">Sign Up</button>
                         </p>
                     </div>
 

@@ -1,7 +1,7 @@
 import { useState } from "react";
 import classNames from "classnames";
 
-const LabelItem = ({ label, onDelete }) => {
+const LabelItem = ({ label }) => {
     const [isEditing, setIsEditing] = useState(false);
     const [name, setName] = useState(label.name);
     const [color, setColor] = useState(label.color);
@@ -19,11 +19,8 @@ const LabelItem = ({ label, onDelete }) => {
     return (
         <div
             className={classNames(
-                "rounded-full inline-flex items-center py-1 px-3 mr-2 mb-2 text-sm font-medium",
+                `rounded-full inline-flex items-center py-1 px-3 mr-2 mb-2 text-sm font-medium hover:bg-gray-500`,
                 color,
-                {
-                    "bg-opacity-50": isEditing,
-                }
             )}
         >
             {isEditing ? (

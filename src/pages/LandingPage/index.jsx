@@ -49,8 +49,8 @@ const LandingPage = () => {
 
       {isModalOpen && (
         <div className="backdrop-blur-lg backdrop-brightness-50 fixed top-0 left-0 w-full h-full z-50 flex justify-center items-center">
-          {activeModal === 'signin' && <SignInModal onRequestClose={handleCloseModal} />}
-          {activeModal === 'signup' && <SignUpModal onRequestClose={handleCloseModal} />}
+          {activeModal === 'signin' && <SignInModal onRequestClose={handleCloseModal} handleOpenModal={handleOpenModal}/>}
+          {activeModal === 'signup' && <SignUpModal onRequestClose={handleCloseModal} handleOpenModal={handleOpenModal}/>}
           {activeModal === 'signout' && <SignOutModal onRequestClose={handleCloseModal} />}
           {activeModal === 'post' && <PostModal onRequestClose={handleCloseModal} />}
           {activeModal === 'comment' && <Comment onRequestClose={handleCloseModal} />}
