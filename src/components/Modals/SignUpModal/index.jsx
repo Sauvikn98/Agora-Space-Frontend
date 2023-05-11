@@ -5,8 +5,11 @@ import { isAuthenticatedAtom, signUp } from '../../../recoil/atoms/authAtom';
 import { userAtom } from '../../../recoil/atoms/userAtoms';
 import Toast from '../../Toast';
 import { socket } from '../../../utils';
+import zxcvbn from "zxcvbn";
 
 function SignUpModal({ onRequestClose, handleOpenModal }) {
+    const [strength, setStrength] = useState(0);
+    const [requirements, setRequirements] = useState([]);
     const [userName, setUserName] = useState('');
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
@@ -16,6 +19,22 @@ function SignUpModal({ onRequestClose, handleOpenModal }) {
     const [errors, setErrors] = useState({});
     const [showToast, setShowToast] = useState(false);
     const [toastProps, setToastProps] = useState({ success: false, message: '' });
+
+    const estimatePasswordStrength = (password) => {
+        const passwordStrength = zxcvbn(password);
+        setStrength(passwordStrength.score);
+        setRequirements(passwordStrength.feedback.suggestions);
+    };
+
+    const renderRequirements = () => {
+        return (
+          <ul className="mt-2 text-sm text-gray-500">
+            {requirements.map((requirement, index) => (
+              <li key={index}>{requirement}</li>
+            ))}
+          </ul>
+        );
+      };
 
     const handleSignUp = async (event) => {
         event.preventDefault();
@@ -32,7 +51,7 @@ function SignUpModal({ onRequestClose, handleOpenModal }) {
             newErrors.password = "Password is required";
         } else if (password.length < 8) {
             newErrors.password = "Password must be at least 8 characters long";
-        }
+        } 
         setErrors(newErrors);
 
         // Submit the form if there are no errors
@@ -43,22 +62,27 @@ function SignUpModal({ onRequestClose, handleOpenModal }) {
                 setUser({ token: success.token, userDetails: success.user });
                 setIsAuthenticated(true);
                 setShowToast(true);
-                setToastProps({ success: true, message: 'Sign Up Successfull !' });
+                setToastProps({ success: true, message: 'Sign Up Successful!' });
                 setTimeout(() => setShowToast(false), 5000);
                 setIsLoading(false);
-                setTimeout(() => onRequestClose(), 2000)
-                spaceSocket.auth = { token: success.token }
+                setTimeout(() => onRequestClose(), 2000);
+                spaceSocket.auth = { token: success.token };
                 socket.connect();
-            }
-            else {
+            } else {
                 setUser({ token: null, userDetails: null });
                 setIsAuthenticated(false);
                 setShowToast(true);
-                setToastProps({ success: false, message: 'Sign Up Failed, Try Again !' });
+                setToastProps({ success: false, message: 'Sign Up Failed, Try Again!' });
                 setIsLoading(false);
                 setTimeout(() => setShowToast(false), 5000);
             }
         }
+    };
+
+    const isStrongPassword = (password) => {
+        // You can remove this function since we're now using the zxcvbn library for password strength estimation
+        // If you want to keep the function for custom checks, modify it as needed
+        return true;
     };
 
     const handleOutsideClick = (event) => {
@@ -96,11 +120,11 @@ function SignUpModal({ onRequestClose, handleOpenModal }) {
                             />
                             {errors.userName && (
                                 <>
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" fill="currentColor" className="absolute text-red-500 right-2 bottom-4" viewBox="0 0 1792 1792">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" fill="currentColor" className="absolute text-red-500 right-2 bottom-10" viewBox="0 0 1792 1792">
                                         <path d="M1024 1375v-190q0-14-9.5-23.5t-22.5-9.5h-192q-13 0-22.5 9.5t-9.5 23.5v190q0 14 9.5 23.5t22.5 9.5h192q13 0 22.5-9.5t9.5-23.5zm-2-374l18-459q0-12-10-19-13-11-24-11h-220q-11 0-24 11-10 7-10 21l17 457q0 10 10 16.5t24 6.5h185q14 0 23.5-6.5t10.5-16.5zm-14-934l768 1408q35 63-2 126-17 29-46.5 46t-63.5 17h-1536q-34 0-63.5-17t-46.5-46q-37-63-2-126l768-1408q17-31 47-49t65-18 65 18 47 49z">
                                         </path>
                                     </svg>
-                                    <span className="absolute text-sm text-red-500 -top-6">
+                                    <span className=" text-sm text-red-500 -top-6">
                                         {errors.userName}
                                     </span>
                                 </>
@@ -120,11 +144,11 @@ function SignUpModal({ onRequestClose, handleOpenModal }) {
                             />
                             {errors.email && (
                                 <>
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" fill="currentColor" className="absolute text-red-500 right-2 bottom-4" viewBox="0 0 1792 1792">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" fill="currentColor" className="absolute text-red-500 right-2 bottom-10" viewBox="0 0 1792 1792">
                                         <path d="M1024 1375v-190q0-14-9.5-23.5t-22.5-9.5h-192q-13 0-22.5 9.5t-9.5 23.5v190q0 14 9.5 23.5t22.5 9.5h192q13 0 22.5-9.5t9.5-23.5zm-2-374l18-459q0-12-10-19-13-11-24-11h-220q-11 0-24 11-10 7-10 21l17 457q0 10 10 16.5t24 6.5h185q14 0 23.5-6.5t10.5-16.5zm-14-934l768 1408q35 63-2 126-17 29-46.5 46t-63.5 17h-1536q-34 0-63.5-17t-46.5-46q-37-63-2-126l768-1408q17-31 47-49t65-18 65 18 47 49z">
                                         </path>
                                     </svg>
-                                    <span className="absolute text-sm text-red-500 -top-6">
+                                    <span className=" text-sm text-red-500">
                                         {errors.email}
                                     </span>
                                 </>
@@ -133,7 +157,7 @@ function SignUpModal({ onRequestClose, handleOpenModal }) {
                         </div>
                         <div className="relative">
                             <input
-                                type="password" value={password} onChange={(event) => setPassword(event.target.value)}
+                                type="password" value={password} onChange={(event) => { setPassword(event.target.value); estimatePasswordStrength(event.target.value); }}
                                 placeholder="Password"
                                 className={classNames(
                                     "block text-sm py-3 px-3 rounded-lg w-full border placeholder-gray-500 border-gray-300 outline-none",
@@ -142,15 +166,47 @@ function SignUpModal({ onRequestClose, handleOpenModal }) {
                                     }
                                 )}
                             />
-                            {errors.password && (
+                           
+                            <div className="h-2 mt-2 bg-gray-300 rounded-full">
+                                <div
+                                    className={`h-full rounded-full ${strength === 0
+                                            ? "bg-gray-300"
+                                            : strength === 1
+                                                ? "bg-red-500"
+                                                : strength === 2
+                                                    ? "bg-yellow-500"
+                                                    : strength === 3
+                                                        ? "bg-yellow-400"
+                                                        : "bg-green-500"
+                                        }`}
+                                    style={{
+                                        width:
+                                            strength === 0
+                                                ? "0%"
+                                                : strength === 1
+                                                    ? "20%"
+                                                    : strength === 2
+                                                        ? "40%"
+                                                        : strength === 3
+                                                            ? "60%"
+                                                            : "100%",
+                                    }}
+                                ></div>
+                            </div>
+                            
+                            {errors.password ? (
                                 <>
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" fill="currentColor" className="absolute text-red-500 right-2 bottom-4" viewBox="0 0 1792 1792">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" fill="currentColor" className="absolute text-red-500 right-2 bottom-14" viewBox="0 0 1792 1792">
                                         <path d="M1024 1375v-190q0-14-9.5-23.5t-22.5-9.5h-192q-13 0-22.5 9.5t-9.5 23.5v190q0 14 9.5 23.5t22.5 9.5h192q13 0 22.5-9.5t9.5-23.5zm-2-374l18-459q0-12-10-19-13-11-24-11h-220q-11 0-24 11-10 7-10 21l17 457q0 10 10 16.5t24 6.5h185q14 0 23.5-6.5t10.5-16.5zm-14-934l768 1408q35 63-2 126-17 29-46.5 46t-63.5 17h-1536q-34 0-63.5-17t-46.5-46q-37-63-2-126l768-1408q17-31 47-49t65-18 65 18 47 49z">
                                         </path>
                                     </svg>
-                                    <span className="absolute text-sm text-red-500 -top-6">
+                                    <span className="text-sm text-red-500 -top-6">
                                         {errors.password}
                                     </span>
+                                </>
+                            ): (
+                                <>
+                                {requirements.length > 0 && renderRequirements()}
                                 </>
                             )}
                         </div>
@@ -173,7 +229,7 @@ function SignUpModal({ onRequestClose, handleOpenModal }) {
                         </button>
                         <p className="mt-4 text-sm text-gray-900">
                             Already Have An Account?{' '}
-                            <button onClick={()=> handleOpenModal('signin')} className="underline cursor-pointer">Sign In</button>
+                            <button onClick={() => handleOpenModal('signin')} className="underline cursor-pointer">Sign In</button>
                         </p>
                     </div>
                 </div>
