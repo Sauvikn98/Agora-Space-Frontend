@@ -47,7 +47,7 @@ function Hero({ handleOpenModal }) {
     return (
         <div className='h-[94vh] sticky flex top-[3.52rem] bottom-[3.1rem] w-full'>
             {isAuthenticated ? (
-                <div className="w-full bg-gradient-to-r bg-[radial-gradient(ellipse_at_bottom_left,_var(--tw-gradient-stops))] from-indigo-900 via-indigo-400 to-indigo-900 dark:bg-gray-900 dark:border-gray-700">
+                <div className="w-full bg-gradient-to-r from-blue-900 to-blue-800 dark:bg-gray-900 dark:border-gray-700">
                     <div className="">
                         <HeroTabs
                             tabs={['Create a Post', 'Create a Space']}
@@ -115,7 +115,7 @@ function Hero({ handleOpenModal }) {
                     )}
                 </div>
             ) : (
-                <div className=" bg-gradient-to-r bg-[radial-gradient(ellipse_at_bottom_left,_var(--tw-gradient-stops))] from-indigo-900 via-indigo-400 to-indigo-900 dark:bg-gray-900 dark:border-gray-700">
+                <div className="bg-gradient-to-r from-blue-900 to-blue-800 dark:bg-gray-900 dark:border-gray-700">
                     <img
                         src={landingImage}
                         className=" mt-8 md:mr-6 object-contain h-60 w-72"
