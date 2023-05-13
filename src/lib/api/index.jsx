@@ -6,7 +6,7 @@ export const API_USERS_BY_NAME = `${API_BASE_URL}/users/:userName`;
 export const API_USERS_BY_ID = `${API_BASE_URL}/users/:userId`;
 export const API_USERS_BOOKMARKS = (userId) => `${API_BASE_URL}/users/${userId}/bookmarks`;
 export const API_USERS_UPDATE = `${API_BASE_URL}/user`;
-export const API_USERS_DELETE = `${API_BASE_URL}/users/:userId`;
+export const API_USERS_DELETE =  (userId) => `${API_BASE_URL}/users/${userId}`;
 
 
 // post api
@@ -41,3 +41,8 @@ export const API_COMMENTS_CREATE = `${API_BASE_URL}/comments`;
 export const API_COMMENTS_GET_BY_POST = (postId) => `${API_BASE_URL}/comments/${postId}`;
 export const API_COMMENTS_UPDATE = (commentId) => `${API_BASE_URL}/comments/${commentId}`;
 export const API_COMMENTS_DELETE = (commentId) => `${API_BASE_URL}/comments/${commentId}`;
+
+
+// refresh token api
+export const API_REFRESH_TOKEN_DELETE = `${API_BASE_URL}/logout-all-sessions`
+export const API_REFRESH_ACCESS_TOKEN = `${API_BASE_URL}/refresh-access-token`

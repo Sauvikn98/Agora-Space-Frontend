@@ -53,23 +53,22 @@ function SignUpModal({ onRequestClose, handleOpenModal }) {
             newErrors.password = "Password must be at least 8 characters long";
         } 
         setErrors(newErrors);
-
-        // Submit the form if there are no errors
+        
         if (Object.keys(newErrors).length === 0) {
             setIsLoading(true);
             const success = await signUp(userName, email, password);
+            console.log(success)
             if (success) {
-                setUser({ token: success.token, userDetails: success.user });
+                setUser({ accessToken: success.accessToken, refreshToken: success.refreshToken, userDetails: success.user });
                 setIsAuthenticated(true);
                 setShowToast(true);
                 setToastProps({ success: true, message: 'Sign Up Successful!' });
                 setTimeout(() => setShowToast(false), 5000);
                 setIsLoading(false);
                 setTimeout(() => onRequestClose(), 2000);
-                spaceSocket.auth = { token: success.token };
-                socket.connect();
+               
             } else {
-                setUser({ token: null, userDetails: null });
+                setUser({ accessToken: null, refreshToken: null ,userDetails: null });
                 setIsAuthenticated(false);
                 setShowToast(true);
                 setToastProps({ success: false, message: 'Sign Up Failed, Try Again!' });
@@ -77,12 +76,6 @@ function SignUpModal({ onRequestClose, handleOpenModal }) {
                 setTimeout(() => setShowToast(false), 5000);
             }
         }
-    };
-
-    const isStrongPassword = (password) => {
-        // You can remove this function since we're now using the zxcvbn library for password strength estimation
-        // If you want to keep the function for custom checks, modify it as needed
-        return true;
     };
 
     const handleOutsideClick = (event) => {

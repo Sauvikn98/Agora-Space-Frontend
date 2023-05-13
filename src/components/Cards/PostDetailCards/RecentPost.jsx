@@ -109,14 +109,14 @@ function RecentPost({ spaceId, handleOpenModal }) {
                             <div className="flex items-center justify-between">
                                 <div className="flex items-center space-x-4">
                                     <img
-                                        src={`https://avatars.dicebear.com/api/adventurer/${post.author._id}.svg`}
+                                        src={`https://avatars.dicebear.com/api/adventurer/${post.author?._id}.svg`}
                                         alt="user avatar"
                                         className="w-14 h-14 rounded-full"
                                     />
                                     <div>
                                         <div className="flex justify-between">
-                                            <h5 className="text-[12px] text-gray-600 mb-1">{`posted by @${post.author.userName} - ${timeAgo(new Date(post.createdAt))}`}</h5>
-                                            {isAuthenticated && user.userDetails._id === post.author._id && (
+                                            <h5 className="text-[12px] text-gray-600 mb-1">{`posted by @${post.author?.userName} - ${timeAgo(new Date(post.createdAt))}`}</h5>
+                                            {isAuthenticated && user.userDetails._id === post.author?._id && (
                                                 <div className="absolute  right-20 top-14">
                                                     <button className="text-gray-500 text-xs sm:text-sm focus:outline-none" onClick={handleMenuClick}>
                                                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">

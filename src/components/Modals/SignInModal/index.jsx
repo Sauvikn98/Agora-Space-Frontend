@@ -33,7 +33,7 @@ function SignInModal({ onRequestClose, handleOpenModal }) {
             setIsLoading(true);
             const success = await signIn(userName, password);
             if (success) {
-                setUser({ token: success.token, userDetails: success.user });
+                setUser({ accessToken: success.accessToken, refreshToken: success.refreshToken, userDetails: success.user });
                 setIsAuthenticated(true);
                 setShowToast(true);
                 setToastProps({ success: true, message: 'Sign In Successfull !' });
@@ -44,7 +44,7 @@ function SignInModal({ onRequestClose, handleOpenModal }) {
                 socket.connect();
             }
             else {
-                setUser({ token: null, userDetails: null });
+                setUser({ accessToken: null, refreshToken: null ,userDetails: null });
                 setIsAuthenticated(false);
                 setShowToast(true);
                 setToastProps({ success: false, message: 'Sign In Failed, Try Again !' });

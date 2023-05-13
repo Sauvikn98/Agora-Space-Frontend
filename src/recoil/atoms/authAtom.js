@@ -25,8 +25,8 @@ export const signIn = async (userName, password) => {
     });
 
     if (response.ok) {
-        const { token, user } = await response.json();
-        return { token, user };
+        const { accessToken, refreshToken, user } = await response.json();
+        return { accessToken, refreshToken, user };
     }
 
     return false;
@@ -43,8 +43,8 @@ export const signUp = async (userName, email, password) => {
     });
 
     if (response.ok) {
-        const { token, user } = await response.json();
-        return { token, user };
+        const { accessToken, refreshToken, user } = await response.json();
+        return { accessToken, refreshToken, user };
     }
     return false;
 };

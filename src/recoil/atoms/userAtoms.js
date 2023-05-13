@@ -1,6 +1,7 @@
-import { atom } from 'recoil';
+import { atom, useRecoilValue, useSetRecoilState } from 'recoil';
 import { recoilPersist } from 'recoil-persist';
-import { API_USERS_UPDATE } from '../../lib/api';
+import { API_REFRESH_ACCESS_TOKEN, API_USERS_UPDATE } from '../../lib/api';
+import axios from 'axios';
 
 const persistConfig = {
   key: 'recoil-persist', // the key for the persisted data
@@ -12,11 +13,33 @@ const { persistAtom } = recoilPersist(persistConfig)
 export const userAtom = atom({
   key: 'user',
   default: {
-    token: null,
+    accessToken: null,
+    refreshToken: null,
     userDetails: null,
   },
   effects_UNSTABLE: [persistAtom]
 });
+
+
+
+export const refreshToken = async (refreshToken) => {
+  const user = useRecoilValue(userAtom);
+  const setAcessToken = useSetRecoilState(user.accessToken);
+
+  try {
+    const response = await axios.post(API_REFRESH_ACCESS_TOKEN, { refreshToken });
+    const { accessToken } = response.data;
+
+    // Store the new access token
+    setAcessToken((oldAccessToken) => [...oldAccessToken, response.data]);
+
+    // Return or handle the new access token as needed
+    return accessToken;
+  } catch (error) {
+    // Handle error response
+    console.error(error);
+  }
+};
 
 
 export const updateUser = async (user) => {

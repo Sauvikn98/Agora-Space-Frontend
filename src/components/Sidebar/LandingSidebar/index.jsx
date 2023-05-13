@@ -63,7 +63,7 @@ function LandingSidebar({ handleOpenModal, handleOpenTooltip, onRequestClose }) 
                             <div className="relative" onMouseEnter={() => handleOpenTooltip('profileTooltip')} onMouseLeave={() => onRequestClose()}>
                                 <div className="object-cover w-10 h-10 rounded-full cursor-pointer">
                                     <img
-                                        src={`https://avatars.dicebear.com/api/adventurer/${user.userDetails._id}.svg`}
+                                        src={user.userDetails.avatar}
                                         alt="user avatar"
                                     />
                                     <span className="bottom-0 left-7 absolute  w-3.5 h-3.5 bg-green-400 border-2 border-white dark:border-gray-800 rounded-full"></span>
