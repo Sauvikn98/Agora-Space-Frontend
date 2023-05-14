@@ -1,19 +1,21 @@
 import React, { useEffect, useState } from 'react'
 import { useRecoilState } from 'recoil';
 import { notificationsState } from '../../../recoil/atoms/notificationAtom';
-import {socket} from '../../../utils';
+import { socket } from '../../../utils';
+import { useNavigate } from 'react-router-dom';
 
-function NotificationTooltip({ onRequestClose }) {
+function NotificationTooltip({ onRequestClose, onSeeMore }) {
     const [notifications, setNotifications] = useRecoilState(notificationsState);
     const [showNotifications, setShowNotifications] = useState(false);
+    const navigate = useNavigate()
 
+      socket.on('newMember', (data) => { 
+        console.log(data.msg);
+      });
 
-    // Listen for new member events
-    socket.on('newMember', (user) => {
-        // Display a notification to the user
-        const notification = `User ${user.userId} has joined the space`;
-        console.log(notification)
-    });
+      socket.on('memberLeft', (data) => { 
+        console.log(data.msg);
+      });
 
     function toggleNotifications() {
         setShowNotifications(!showNotifications);
@@ -22,6 +24,11 @@ function NotificationTooltip({ onRequestClose }) {
     function markNotificationsAsRead() {
         setNotifications([]);
     }
+
+    const handleNavigate = () => {
+        navigate("/notifications")
+    }
+
     return (
         <>
             <div id="toast-notification" class=" w-full max-w-xs p-4 text-gray-900 bg-white rounded-r-lg shadow dark:bg-gray-800 dark:text-gray-300" role="alert">
@@ -41,7 +48,7 @@ function NotificationTooltip({ onRequestClose }) {
                         </span>
                     </div>
                     <div class="ml-3 text-sm font-normal">
-                      
+
                         <span class="text-xs font-medium text-blue-600 dark:text-blue-500">a few seconds ago</span>
                     </div>
                 </div>
@@ -50,6 +57,12 @@ function NotificationTooltip({ onRequestClose }) {
                         <h1 class="text-sm font-normal">No New Notifications</h1>
                     </div>
                 </div>
+                <button
+                    className="text-blue-500 mt-4 underline"
+                    onClick={() => handleNavigate()}
+                >
+                    See More
+                </button>
             </div>
         </>
     )

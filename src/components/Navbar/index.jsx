@@ -35,6 +35,10 @@ function Navbar({ handleOpenModal }) {
     });
   };
 
+  const handleNavigateHome = () => {
+    navigate('/')
+  }
+
   useEffect(() => {
     const handleScroll = () => {
       const isTop = window.scrollY < 100;
@@ -65,12 +69,12 @@ function Navbar({ handleOpenModal }) {
       : 'bg-slate-100'
       } transition-all duration-500 ease-in-out fixed sticky top-0 z-50 shadow-lg backdrop-filter backdrop-blur-lg backdrop-saturate-150`}>
       <div className="container mx-auto px-4 py-1 flex justify-between items-center">
-        <a className={`${isScrolled
+        <button className={`${isScrolled
           ? 'font-bold text-white lg:text-2xl'
           : 'font-bold lg:text-2xl'
-          }`} href="#">
+          }`} onClick={()=> handleNavigateHome()}>
           <img class="w-auto mr-6 h-12 lg:ml-2" src={logo} alt="" />
-        </a>
+        </button>
         <div className='lg:w-2/6'>
           <label htmlFor="default-search" className="text-sm font-medium text-gray-900 sr-only dark:text-white">Search</label>
           <div className="relative">

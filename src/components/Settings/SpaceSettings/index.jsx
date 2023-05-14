@@ -1,20 +1,18 @@
 import React, { useState } from 'react'
 import { useRecoilValue, useSetRecoilState } from 'recoil';
-import { userAtom } from '../../recoil/atoms/userAtoms';
+import { userAtom } from '../../../recoil/atoms/userAtoms';
 import axios from 'axios';
-import { API_USERS_UPDATE } from '../../lib/api';
+import { API_SPACES_UPDATE } from '../../../lib/api';
 
 
-function ProfileSettings() {
+function SpaceSettings({ name, description }) {
     const [showUsernameInput, setShowUsernameInput] = useState(false);
     const [showEmailInput, setShowEmailInput] = useState(false);
     const [showPasswordInput, setShowPasswordInput] = useState(false);
     const user = useRecoilValue(userAtom)
     const setUserData = useSetRecoilState(userAtom);
     const [formData, setFormData] = useState({
-        email: user.userDetails.email,
-        userName: user.userDetails.userName,
-        password: '',
+
     });
     const [isLoading, setIsLoading] = useState(false);
     const [successMessage, setSuccessMessage] = useState('');
@@ -23,7 +21,7 @@ function ProfileSettings() {
     const handleSubmit = async () => {
         setIsLoading(true);
         try {
-            const response = await axios.patch(API_USERS_UPDATE, formData, {
+            const response = await axios.patch(API_SPACES_UPDATE, formData, {
                 headers: { Authorization: `Bearer ${user.token}` },
             });
             setUserData((prev) => ({
@@ -38,20 +36,10 @@ function ProfileSettings() {
         }
         setIsLoading(false);
     };
-
-    const handleOutsideClick = (event) => {
-        if (event.target === event.currentTarget) {
-            handleSubmit()
-            setShowEmailInput(false)
-            setShowUsernameInput(false)
-            setShowPasswordInput(false)
-        }
-    };
-
     return (
-        <aside className=''>
-            <div className="pt-10 w-full h-screen"  onClick={handleOutsideClick}>
-                <div className='lg:w-2/6 '>
+        <aside className='h-[92.4vh] lg:sticky flex top-[3.52rem] bottom-[2.8rem]'>
+            <div className="bg-white p-6 w-full h-screen">
+                <div className='lg:w-2/3 lg:my-4 p-6 '>
                     <div className={`mb-10 ${!successMessage && ('hidden')}`}>
                         {successMessage &&
                             <div class="max-w-xs" role="alert">
@@ -87,22 +75,14 @@ function ProfileSettings() {
                         }
                     </div>
 
-                    <div class="flex justify-between items-center mb-6">
-                        <label className="block text-sm text-gray-700 font-bold mr-4" htmlFor="username">
-                            Change Avatar
-                        </label>
-                        <a href="#" class="hover:scale-150 hover:z-10 transform ease-in-out transition duration-500">
-                            <img class="inline-block h-20 w-20 rounded-full object-cover ring-2 ring-indigo-500" src={`https://avatars.dicebear.com/api/adventurer/${user.userDetails._id}.svg`} alt="Guy" />
-                        </a>
-                    </div>
                     <div className="flex items-center justify-between ">
                         <div>
-                            <label className="block text-sm text-gray-700 font-bold mr-4" htmlFor="username">
-                                Username
+                            <label className="block text-gray-700 font-bold mr-4" htmlFor="username">
+                                Space Name
                             </label>
                             {!showUsernameInput ? (
-                                <div className='mt-2'>
-                                    <h1 className='text-sm'>{user.userDetails.userName}</h1>
+                                <div className='mr-4 mt-2'>
+                                    <h1>{name}</h1>
                                 </div>
                             ) : (
                                 <></>
@@ -111,7 +91,7 @@ function ProfileSettings() {
                         </div>
                         {!showUsernameInput && (
                             <button
-                                className="text-sm text-gray-500 hover:text-blue-500 focus:outline-none focus:text-blue-500"
+                                className="text-gray-500 hover:text-blue-500 focus:outline-none focus:text-blue-500"
                                 onClick={() => setShowUsernameInput(true)}
                             >
                                 Edit
@@ -134,12 +114,12 @@ function ProfileSettings() {
 
                     <div className="mt-8 flex items-center justify-between">
                         <div>
-                            <label className="block text-sm text-gray-700 font-bold mr-4" htmlFor="username">
-                                Email
+                            <label className="block text-gray-700 font-bold mr-4" htmlFor="username">
+                                Space Description
                             </label>
                             {!showEmailInput ? (
-                                <div className='mt-2'>
-                                    <h1 className='text-sm'>{user.userDetails.email}</h1>
+                                <div className='mr-4 mt-2'>
+                                    <h1>{description}</h1>
                                 </div>
                             ) : (
                                 <></>
@@ -148,7 +128,7 @@ function ProfileSettings() {
                         </div>
                         {!showEmailInput && (
                             <button
-                                className="text-sm text-gray-500 hover:text-blue-500 focus:outline-none focus:text-blue-500"
+                                className="text-gray-500 hover:text-blue-500 focus:outline-none focus:text-blue-500"
                                 onClick={() => setShowEmailInput(true)}
                             >
                                 Edit
@@ -170,12 +150,12 @@ function ProfileSettings() {
                     )}
 
                     <div className="mt-8 flex items-center justify-between">
-                        <label className="block text-sm text-gray-700 font-bold mr-4" htmlFor="password">
+                        <label className="block text-gray-700 font-bold mr-4" htmlFor="password">
                             Change Password
                         </label>
                         {!showPasswordInput && (
                             <button
-                                className="text-sm text-gray-500 hover:text-blue-500 focus:outline-none focus:text-blue-500"
+                                className="text-gray-500 hover:text-blue-500 focus:outline-none focus:text-blue-500"
                                 onClick={() => setShowPasswordInput(true)}
                             >
                                 Edit
@@ -199,10 +179,18 @@ function ProfileSettings() {
 
                 </div>
 
+                <button
+                    onClick={() => handleSubmit()}
+                    className="ml-5 bg-gray-800 text-white text-sm flex items-center px-6 py-3 transition ease-in duration-200 uppercase rounded-full hover:bg-gray-700 hover:text-white shadow-lg focus:outline-none"
+                    disabled={isLoading}
+                >
+                    {isLoading ? 'Saving...' : 'Save Changes'}
+                </button>
+
             </div>
 
         </aside>
     )
 }
 
-export default ProfileSettings
+export default SpaceSettings

@@ -1,7 +1,7 @@
 import { keyframes } from '@emotion/react';
 import { io } from 'socket.io-client'
 
-export const socket = io('http://127.0.0.1:5000');
+export const socket = io('http://127.0.0.1:5000', {autoConnect: true});
 
 export const fadeInUp = keyframes`
 0% {
@@ -99,7 +99,7 @@ export const slideInDown = keyframes`{
 
 export const timeAgo = (timestamp) => {
     const now = new Date();
-    const seconds = Math.floor((now - timestamp) / 1000);
+    const seconds = Math.floor((  - timestamp) / 1000);
     if (seconds < 60) {
         return 'just now';
     }

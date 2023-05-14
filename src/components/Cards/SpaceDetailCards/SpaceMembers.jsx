@@ -23,11 +23,23 @@ function SpaceMembers({ spaceId }) {
     }, []);
 
     useEffect(() => {
-        if (user.userDetails.online === true) {
-            setIsOnline(true)
-        } else {
-            setIsOnline(false)
-        }
+        socket.on('online', ({ userId }) => {
+            setMembers((prevMembers) => {
+                const updatedMembers = prevMembers.map((member) =>
+                    member._id === userId ? { ...member, online: true } : member
+                );
+                return updatedMembers;
+            });
+        });
+
+        socket.on('offline', ({ userId }) => {
+            setMembers((prevMembers) => {
+                const updatedMembers = prevMembers.map((member) =>
+                    member._id === userId ? { ...member, online: false } : member
+                );
+                return updatedMembers;
+            });
+        });
     }, []);
 
     return (
@@ -45,7 +57,7 @@ function SpaceMembers({ spaceId }) {
                                 <p className="text-lg font-medium">{member.userName}</p>
                                 <p className="text-gray-500">{member.email}</p>
                                 <div className="flex items-center mt-2">
-                                    {user.userDetails.online ? (
+                                    {member.online ? (
                                         <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 text-green-500 mr-1" viewBox="0 0 20 20" fill="currentColor">
                                             <circle cx="10" cy="10" r="6" />
                                         </svg>
@@ -54,7 +66,7 @@ function SpaceMembers({ spaceId }) {
                                             <circle cx="10" cy="10" r="6" />
                                         </svg>
                                     )}
-                                    <p className="text-gray-500 text-sm">{user.userDetails.online ? 'Online' : 'Offline'}</p>
+                                    <p className="text-gray-500 text-sm">{member.online ? 'Online' : 'Offline'}</p>
                                 </div>
                             </div>
                         </div>

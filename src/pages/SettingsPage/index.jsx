@@ -1,12 +1,12 @@
 import React from "react";
 import Navbar from "../../components/Navbar";
-import Settings from "../../components/Settings";
+import UserSettings from "../../components/Settings/UserSettings";
 
 function SettingsPage() {
     return (
         <>
             <Navbar />
-            <Settings/>
+            <UserSettings/>
         </>
     );
 }

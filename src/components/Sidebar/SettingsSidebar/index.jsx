@@ -1,6 +1,7 @@
 import React from 'react'
+import { Link } from 'react-router-dom'
 
-function SettingsSidebar() {
+function SettingsSidebar({handleActivePage, activePage}) {
     return (
         <div class=" mx-auto">
             <div class="sticky top-0 inset-x-0 z-20 bg-white border-y px-4 sm:px-6 md:px-8 lg:hidden dark:bg-slate-900 dark:border-gray-700">
@@ -23,8 +24,16 @@ function SettingsSidebar() {
                 <nav id="sidebar-nav" class="relative space-y-10">
                     <h5 class="mb-3 text-sm font-semibold text-slate-900 dark:text-slate-200">Navbar Links</h5>
                     <ul class="ml-0.5 space-y-2 border-l-2 border-slate-100 dark:border-slate-800" data-hs-scrollspy="#scrollview">
-                        <li><a class="block py-1 pl-4 -ml-px border-l-2 border-transparent text-sm text-slate-700 hover:border-indigo-500 hover:text-indigo-500 dark:text-slate-400 dark:hover:text-slate-300 hs-scrollspy-active:font-medium hs-scrollspy-active:text-blue-600 dark:hs-scrollspy-active:text-blue-400 active" href="#first">Account</a></li>
-                        <li><a class="block py-1 pl-4 -ml-px border-l-2 border-transparent text-sm text-slate-700 hover:border-indigo-500 hover:text-indigo-500 dark:text-slate-400 dark:hover:text-slate-300 hs-scrollspy-active:font-medium hs-scrollspy-active:text-blue-600 dark:hs-scrollspy-active:text-blue-400" href="#second">Profile</a></li>
+                        <li onClick={()=> handleActivePage('account')}>
+                            <Link to="/settings/account">
+                                <h2 class={`block py-1 pl-4 -ml-px border-l-2 text-sm text-slate-700 ${activePage === 'account' ? 'border-indigo-500 text-indigo-500' : ''} hover:border-indigo-500 hover:text-indigo-500 dark:text-slate-400 dark:hover:text-slate-300 hs-scrollspy-active:font-medium hs-scrollspy-active:text-blue-600 dark:hs-scrollspy-active:text-blue-400 active`}>Account</h2>
+                            </Link>
+                        </li>
+                        <li onClick={() => handleActivePage('profile')}>
+                            <Link to="/settings/profile">
+                                <h2 class={`block py-1 pl-4 -ml-px border-l-2 text-sm text-slate-700 ${activePage === 'profile' ? 'border-indigo-500 text-indigo-500' : ''} hover:border-indigo-500 hover:text-indigo-500 dark:text-slate-400 dark:hover:text-slate-300 hs-scrollspy-active:font-medium hs-scrollspy-active:text-blue-600 dark:hs-scrollspy-active:text-blue-400 active`}>Profile</h2>
+                            </Link>
+                        </li>
                         <li><a class="block py-1 pl-4 -ml-px border-l-2 border-transparent text-sm text-slate-700 hover:border-indigo-500 hover:text-indigo-500 dark:text-slate-400 dark:hover:text-slate-300 hs-scrollspy-active:font-medium hs-scrollspy-active:text-blue-600 dark:hs-scrollspy-active:text-blue-400" href="#third">Safety and Privacy</a></li>
                         <li><a class="block py-1 pl-4 -ml-px border-l-2 border-transparent text-sm text-slate-700 hover:border-indigo-500 hover:text-indigo-500 dark:text-slate-400 dark:hover:text-slate-300 hs-scrollspy-active:font-medium hs-scrollspy-active:text-blue-600 dark:hs-scrollspy-active:text-blue-400" href="#fourth">Feed Settings</a></li>
                         <li><a class="block py-1 pl-4 -ml-px border-l-2 border-transparent text-sm text-slate-700 hover:border-indigo-500 hover:text-indigo-500 dark:text-slate-400 dark:hover:text-slate-300 hs-scrollspy-active:font-medium hs-scrollspy-active:text-blue-600 dark:hs-scrollspy-active:text-blue-400" href="#fifth">Emails</a></li>

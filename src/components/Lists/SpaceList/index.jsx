@@ -38,26 +38,14 @@ function SpaceList({ handleOpenModal }) {
         setFilteredSpaces(spaces);
     }, [spaces]);
 
-    const handleJoinSpace = async (spaceId) => {
+    const handleJoinSpace = async (spaceId, space) => {
         const success = await joinSpace(spaceId);
         if (success) {
             setShowToast(true);
             setToastProps({ success: true, message: 'Successfully joined Space!' });
             setTimeout(() => setShowToast(false), 5000);
-            const notification = {
-                userId: user.userDetails._id,
-                notificationType: `New Member of space`,
-                seen: false,
-                intent: {
-                    action: "/space",
-                    parameters: {
-                        memberName: user.userDetails.userName,
-                        spaceId: spaceId,
-                        receivers: members(spaceId)
-                    }
-                }
-            };
-            socket.emit('joinSpace', { spaceId, notification });
+            socket.emit("joinSpaceChannel", space);
+            socket.emit("joinedSpace", user.userDetails._id);
         } else {
             setShowToast(true);
             setToastProps({ success: false, message: 'Failed to Join Space, Try Again !' });
@@ -71,20 +59,7 @@ function SpaceList({ handleOpenModal }) {
             setShowToast(true);
             setToastProps({ success: true, message: 'Successfully Left the Space !' });
             setTimeout(() => setShowToast(false), 5000);
-            const notification = {
-                userId: user.userDetails._id,
-                notificationType: `Member Left Space`,
-                seen: false,
-                intent: {
-                    action: "/space",
-                    parameters: {
-                        memberName: user.userDetails.userName,
-                        spaceId: spaceId,
-                        receivers: members(spaceId).filter((memberId) => memberId !== user.userDetails._id)
-                    }
-                }
-            };
-            socket.emit('leaveSpace', { spaceId, notification });
+            socket.emit("leftSpace", user.userDetails._id);
         } else {
             console.error(`Failed to leave space: ${response.data.error}`);
             setShowToast(true);
@@ -102,7 +77,7 @@ function SpaceList({ handleOpenModal }) {
 
     const members = (spaceId) => {
         const space = spaces.find((space) => space._id === spaceId);
-        return space.members.map((memberId) => memberId);
+        return space.members;
     };
 
     const handleCategorySelect = (selectedCategory) => {
@@ -219,7 +194,7 @@ function SpaceList({ handleOpenModal }) {
                                                         {isHovering[space._id] ? "Leave" : "Joined"}
                                                     </button>
                                                 ) : (
-                                                    <button onClick={() => handleJoinSpace(space._id)} className='inline-flex text-sm bg-indigo-700 text-white items-center px-3 py-1 transition ease-in duration-200 rounded-md hover:bg-gray-700 hover:text-white shadow-lg focus:outline-none mr-4 lg:mr-10'>
+                                                    <button onClick={() => handleJoinSpace(space._id, space)} className='inline-flex text-sm bg-indigo-700 text-white items-center px-3 py-1 transition ease-in duration-200 rounded-md hover:bg-gray-700 hover:text-white shadow-lg focus:outline-none mr-4 lg:mr-10'>
                                                         Join Space
                                                     </button>
                                                 )}

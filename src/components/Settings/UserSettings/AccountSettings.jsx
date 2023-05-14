@@ -1,4 +1,5 @@
 import React from 'react'
+import { GoogleLogin, googleLogout } from '@react-oauth/google'
 
 function AccountSettings() {
     return (
@@ -57,7 +58,10 @@ function AccountSettings() {
                         </div>
                         <div>
                             <div>
-                                <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-full focus:outline-none focus:shadow-outline">Connect Google Account</button>
+                                <GoogleLogin
+                                onSuccess={(response) => console.log(response)}
+                                onError={()=>console.log('Error')}
+                                />
                             </div>
                         </div>
                     </div>

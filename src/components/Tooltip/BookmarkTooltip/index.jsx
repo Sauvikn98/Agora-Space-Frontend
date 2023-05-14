@@ -5,9 +5,8 @@ import axios from 'axios';
 import { userAtom } from '../../../recoil/atoms/userAtoms';
 import { API_USERS_GET_ALL_BOOKMARKS } from '../../../lib/api';
 
-function BookmarkTooltip({ onRequestClose }) {
+function BookmarkTooltip({ onRequestClose, onSeeMore }) {
     const user = useRecoilValue(userAtom);
-    const [showAll, setShowAll] = useState(false);
     const navigate = useNavigate();
     const [bookmarks, setBookmarks] = useState([]);
 
@@ -58,26 +57,16 @@ function BookmarkTooltip({ onRequestClose }) {
                     ))}
 
                     {bookmarks.length > 0 ? (
-                        !showAll && bookmarks.length > 2 ? (
+                        bookmarks.length > 2 ? (
                             <button
                                 className="pl-4 text-blue-500 mb-4 underline"
-                                onClick={() => setShowAll(true)}
+                                onClick={() => onSeeMore()}
                             >
                                 See More
                             </button>
                         ) : null
                     ) : (
                         <h2 className='pl-4 mb-4 text-sm font-semibold text-blue-600 dark:text-white'>No Bookmark Available</h2>
-                    )}
-                    {showAll && (
-                        <div>
-                            {bookmarks.slice(2).map(bookmark => (
-                                <div key={bookmark._id} onClick={() => handleCommentNavigate(bookmark.title)} className=" mb-4 pl-4 pb-2 pt-2 pr-2 hover:bg-indigo-600 hover:text-white cursor-pointer">
-                                    <h2 className="font-bold">{bookmark.title}</h2>
-                                    <p className="">{bookmark.content}</p>
-                                </div>
-                            ))}
-                        </div>
                     )}
                 </div>
             </div>
