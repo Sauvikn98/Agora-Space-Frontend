@@ -36,6 +36,16 @@ function SignUpModal({ onRequestClose, handleOpenModal }) {
         );
       };
 
+      const avatarOptions = [];
+
+      for (let i = 1; i <= 200; i++) {
+        const avatarUrl = `https://avatars.dicebear.com/api/adventurer/${i}.svg`;
+        avatarOptions.push(avatarUrl);
+      }
+      
+      const randomAvatarIndex = Math.floor(Math.random() * avatarOptions.length);
+      const avatar = avatarOptions[randomAvatarIndex];  
+
     const handleSignUp = async (event) => {
         event.preventDefault();
 
@@ -56,7 +66,7 @@ function SignUpModal({ onRequestClose, handleOpenModal }) {
         
         if (Object.keys(newErrors).length === 0) {
             setIsLoading(true);
-            const success = await signUp(userName, email, password);
+            const success = await signUp(userName, email, password, avatar);
             console.log(success)
             if (success) {
                 setUser({ accessToken: success.accessToken, refreshToken: success.refreshToken, userDetails: success.user });

@@ -49,6 +49,7 @@ function SpaceList({ handleOpenModal }) {
             setShowToast(true);
             setToastProps({ success: true, message: 'Successfully joined Space!' });
             setTimeout(() => setShowToast(false), 5000);
+            socket.emit('joinSpaceChannel', spaceId)
         } else {
             setShowToast(true);
             setToastProps({ success: false, message: 'Failed to Join Space, Try Again !' });
@@ -62,6 +63,7 @@ function SpaceList({ handleOpenModal }) {
             setShowToast(true);
             setToastProps({ success: true, message: 'Successfully Left the Space !' });
             setTimeout(() => setShowToast(false), 5000);
+            socket.emit('leaveSpaceChannel', spaceId)
         } else {
             console.error(`Failed to leave space: ${response.data.error}`);
             setShowToast(true);

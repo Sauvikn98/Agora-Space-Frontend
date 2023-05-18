@@ -5,7 +5,7 @@ import { currentPostIdState, postAtom, useAddBookmark, useGetPosts } from "../..
 import { API_POSTS_DOWNVOTE, API_POSTS_UPVOTE } from "../../../lib/api";
 import { Link, useNavigate } from "react-router-dom";
 import { isAuthenticatedAtom } from "../../../recoil/atoms/authAtom";
-import { userAtom } from "../../../recoil/atoms/userAtoms";
+import { addBookmark, userAtom } from "../../../recoil/atoms/userAtoms";
 import Toast from "../../Toast";
 import { timeAgo } from "../../../utils";
 
@@ -17,7 +17,6 @@ function RecentPost({ spaceId, handleOpenModal }) {
     const user = useRecoilValue(userAtom)
     const [showMenu, setShowMenu] = useState(false);
     const setCurrentPostId = useSetRecoilState(currentPostIdState);
-    const addBookmark = useAddBookmark();
     const [shareLink, setShareLink] = useState('');
     const [isUpvoted, setIsUpvoted] = useState(false);
     const [isDownvoted, setIsDownvoted] = useState(false);
@@ -91,6 +90,9 @@ function RecentPost({ spaceId, handleOpenModal }) {
         setCurrentPostId(post);
     };
 
+    const handleBookmarkClick = (postId) => {
+        addBookmark(user, postId);
+      };
 
     return (
         <div>
@@ -191,7 +193,7 @@ function RecentPost({ spaceId, handleOpenModal }) {
                                     </div>
                                 </Link>
                                 <div className="flex items-center justify-center ">
-                                    <button onClick={() => addBookmark(post)} className="text-gray-500">
+                                    <button onClick={() => handleBookmarkClick(post._id) } className="text-gray-500">
                                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" className="w-6 h-6">
                                             <path stroke-linecap="round" stroke-linejoin="round" d="M17.593 3.322c1.1.128 1.907 1.077 1.907 2.185V21L12 17.25 4.5 21V5.507c0-1.108.806-2.057 1.907-2.185a48.507 48.507 0 0111.186 0z" />
                                         </svg>

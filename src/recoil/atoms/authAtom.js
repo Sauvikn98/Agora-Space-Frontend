@@ -33,10 +33,10 @@ export const signIn = async (userName, password) => {
 };
 
 
-export const signUp = async (userName, email, password) => {
+export const signUp = async (userName, email, password, avatar) => {
     const response = await fetch(API_USERS_REGISTER, {
         method: 'POST',
-        body: JSON.stringify({ userName, email, password }),
+        body: JSON.stringify({ userName, email, password, avatar }),
         headers: {
             'Content-Type': 'application/json',
         },

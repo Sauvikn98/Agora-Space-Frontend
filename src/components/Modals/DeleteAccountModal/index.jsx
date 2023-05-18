@@ -17,12 +17,12 @@ function DeleteAccountModal({ onRequestClose }) {
     const handleDeleteAccount = async (userId) => {
         try {
             // Make a request to the server to logout from all sessions
-            await axios.delete(API_USERS_DELETE(userId), null, {
+            await axios.post(API_USERS_DELETE(userId), null, {
                 headers: {
                     Authorization: `Bearer ${user.accessToken}`,
                 },
             });
-
+            localStorage.removeItem('recoil-persist')
             // Clear the user state to log out the user
             setUserData({ accessToken: null, refreshToken: null, userDetails: null });
             navigate('/');

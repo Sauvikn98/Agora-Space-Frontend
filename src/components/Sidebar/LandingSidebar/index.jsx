@@ -21,6 +21,8 @@ function LandingSidebar({ handleOpenModal, handleOpenTooltip, onRequestClose }) 
         console.log("User state changed: ", user);
     }, []);
 
+    let hasNotification = false;
+
     return (
         <div className='hidden lg:block '>
             <aside className='h-[94vh] sticky flex top-[3.52rem] bottom-[3.1rem]'>

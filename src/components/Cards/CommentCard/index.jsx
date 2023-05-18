@@ -1,30 +1,14 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import CommentInput from './CommentInput';
 import CommentItem from './CommentItem';
-import { useRecoilState, useRecoilValue } from 'recoil';
-import { useLocation } from 'react-router-dom';
-import { commentsState } from '../../../recoil/atoms/commentAtoms';
-import axios from 'axios';
-import { API_COMMENTS_GET_BY_POST } from '../../../lib/api';
+import { useRecoilValue } from 'recoil';
+import { commentsState, useGetAllComments } from '../../../recoil/atoms/commentAtoms';
 import { isAuthenticatedAtom } from '../../../recoil/atoms/authAtom';
 
 function Comment() {
-  const { state: post } = useLocation();
-  const [comments, setComments] = useRecoilState(commentsState);
+  const { isLoading } = useGetAllComments();
+  const comments = useRecoilValue(commentsState);
   const isAuthenticated = useRecoilValue(isAuthenticatedAtom);
-
-  useEffect(() => {
-    async function fetchComments() {
-      try {
-        const response = await axios.get(API_COMMENTS_GET_BY_POST(post._id));
-        setComments(response.data);
-        console.log(response.data);
-      } catch (error) {
-        console.error(error);
-      }
-    }
-    fetchComments();
-  }, []);
 
   function countComments(comments) {
     let count = comments.length;
@@ -52,18 +36,32 @@ function Comment() {
 
         )}
 
-        <div className="comment-container">
-          {comments.map((comment) => (
-            <CommentItem
-              key={comment._id}
-              comment={comment}
-              userName={comment.author.userName}
-              userId={comment.author._id}
-            />
-          ))}
-        </div>
+        {isLoading ? (
+          <div className="fixed inset-0 flex items-center justify-center">
+            <div
+              className="inline-block h-8 w-8 animate-spin rounded-full border-4 border-solid border-current border-r-transparent align-[-0.125em] motion-reduce:animate-[spin_1.5s_linear_infinite]"
+              role="status">
+              <span
+                className="absolute h-px w-px overflow-hidden whitespace-nowrap border-0 !p-0 ![clip:rect(0,0,0,0)]"
+              >Loading...</span
+              >
+            </div>
+          </div>
+        ) : (
+          <div className="comment-container">
+            {comments.map((comment) => (
+              <CommentItem
+                key={comment._id}
+                comment={comment}
+                userName={comment.author.userName}
+                userId={comment.author._id}
+              />
+            ))}
+          </div>
+        )}
+
       </div>
-    </div>
+    </div >
   );
 }
 

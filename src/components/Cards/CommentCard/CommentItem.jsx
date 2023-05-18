@@ -3,8 +3,8 @@ import CommentInput from './CommentInput';
 import { userAtom } from '../../../recoil/atoms/userAtoms';
 import { useRecoilValue } from 'recoil';
 import { isAuthenticatedAtom } from '../../../recoil/atoms/authAtom';
-import axios from 'axios';
-import { API_COMMENTS_DELETE } from '../../../lib/api';
+import { timeAgo } from "../../../utils";
+import { handleDeleteComment } from '../../../utils/commentUtils';
 
 function CommentItem({ comment, userName, userId }) {
   const childComments = comment.children || [];
@@ -14,20 +14,6 @@ function CommentItem({ comment, userName, userId }) {
   const isAuthenticated = useRecoilValue(isAuthenticatedAtom)
 
   
-  const handleDeleteComment = async (commentId) => {
-    try {
-      await axios.delete(API_COMMENTS_DELETE(commentId), {
-        headers: {
-          Authorization: `Bearer ${user.token}`,
-        },
-      });
-      // TODO: handle comment deletion on UI
-    } catch (error) {
-      console.error(error);
-      // TODO: handle error on UI
-    }
-  };
-
   const handleReplyClick = () => {
     setShowReplyInput(!showReplyInput);
   };
@@ -36,23 +22,6 @@ function CommentItem({ comment, userName, userId }) {
     setShowMenu(!showMenu);
   };
 
-  const timeAgo = (timestamp) => {
-    const now = new Date();
-    const seconds = Math.floor((now - timestamp) / 1000);
-    if (seconds < 60) {
-      return 'just now';
-    }
-    const minutes = Math.floor(seconds / 60);
-    if (minutes < 60) {
-      return `${minutes} ${minutes === 1 ? 'minute' : 'minutes'} ago`;
-    }
-    const hours = Math.floor(minutes / 60);
-    if (hours < 24) {
-      return `${hours} ${hours === 1 ? 'hour' : 'hours'} ago`;
-    }
-    const days = Math.floor(hours / 24);
-    return `${days} ${days === 1 ? 'day' : 'days'} ago`;
-  }
 
   return (
     <div className="pl-4 pt-6 relative ">
@@ -88,7 +57,7 @@ function CommentItem({ comment, userName, userId }) {
               <button
                 className="block w-full text-left px-4 py-2 text-sm text-red-500 hover:bg-gray-100 dark:hover:bg-gray-700 focus:outline-none"
                 onClick={() => {
-                  handleDeleteComment(comment._id)
+                  handleDeleteComment(comment._id, user)
                   setShowMenu(false);
                 }}
               >

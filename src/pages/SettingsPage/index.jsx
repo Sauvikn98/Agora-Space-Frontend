@@ -60,11 +60,12 @@ function SettingsPage() {
     const handleSubmit = async () => {
         try {
             const response = await axios.put(API_USERS_UPDATE, formData, {
-                headers: { Authorization: `Bearer ${user.token}` },
+                headers: { Authorization: `Bearer ${user.accessToken}` },
             });
             setUserData((prev) => ({
                 ...prev,
                 bio: response.data,
+                avatar: response.data
             }));
             setShowToast(true);
             setToastProps({ success: true, message: 'Profile Updated Successfully!' });
