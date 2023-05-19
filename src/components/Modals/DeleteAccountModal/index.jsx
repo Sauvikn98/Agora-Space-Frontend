@@ -2,44 +2,19 @@ import React from 'react'
 import { useRecoilValue, useSetRecoilState } from 'recoil';
 import { userAtom } from '../../../recoil/atoms/userAtoms';
 import { useNavigate } from 'react-router-dom';
-import { isAuthenticatedAtom } from '../../../recoil/atoms/authAtom';
-import {socket} from '../../../utils';
-import { API_REFRESH_TOKEN_DELETE, API_USERS_DELETE } from '../../../lib/api';
-import axios from 'axios';
-
+import { handleDeleteAccount } from '../../../utils/userUtils';
 
 function DeleteAccountModal({ onRequestClose }) {
-    const setisAuthenticated = useSetRecoilState(isAuthenticatedAtom);
-    const user = useRecoilValue(userAtom)
-    const setUserData = useSetRecoilState(userAtom)
+    const user = useRecoilValue(userAtom);
+    const setUserData = useSetRecoilState(userAtom);
     const navigate = useNavigate();
-
-    const handleDeleteAccount = async (userId) => {
-        try {
-            // Make a request to the server to logout from all sessions
-            await axios.post(API_USERS_DELETE(userId), null, {
-                headers: {
-                    Authorization: `Bearer ${user.accessToken}`,
-                },
-            });
-            localStorage.removeItem('recoil-persist')
-            // Clear the user state to log out the user
-            setUserData({ accessToken: null, refreshToken: null, userDetails: null });
-            navigate('/');
-            window.location.reload();
-        } catch (error) {
-            // Handle error response
-            console.error(error);
-        }
-    };
-
     const handleOutsideClick = (event) => {
         if (event.target === event.currentTarget) {
             onRequestClose();
         }
     };
     return (
-        <div class="py-12 px-12 m-auto bg-white shadow-xl rounded-2xl dark:bg-gray-800">
+        <div class="py-12 px-12 m-auto bg-white shadow-xl rounded-2xl dark:bg-gray-800" onClick={handleOutsideClick}>
             <div class="min-h-full h-full w-full flex justify-center items-center text-center">
                 <div class="flex flex-col justify-between h-full">
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" width="40" height="40" class="w-12 h-12 m-auto mt-4 text-red-500" fill="none">
@@ -55,7 +30,7 @@ function DeleteAccountModal({ onRequestClose }) {
                         All of your Account related data and activities will be deleted
                     </p>
                     <div class="flex items-center justify-between w-full gap-4 mt-8">
-                        <button onClick={()=>handleDeleteAccount(user.userDetails._id)} type="button" class="py-2 px-4  bg-red-600 hover:bg-red-700 focus:ring-red-500 focus:ring-offset-red-200 text-white w-full transition ease-in duration-200 text-center text-base font-semibold shadow-md focus:outline-none focus:ring-2 focus:ring-offset-2  rounded-lg ">
+                        <button onClick={()=>handleDeleteAccount(user.userDetails._id, user.accessToken, setUserData, navigate)} type="button" class="py-2 px-4  bg-red-600 hover:bg-red-700 focus:ring-red-500 focus:ring-offset-red-200 text-white w-full transition ease-in duration-200 text-center text-base font-semibold shadow-md focus:outline-none focus:ring-2 focus:ring-offset-2  rounded-lg ">
                             Yes
                         </button>
                         <button onClick={onRequestClose} type="button" class="py-2 px-4  bg-white hover:bg-gray-100 focus:ring-red-500 focus:ring-offset-red-200 text-red-500 w-full transition ease-in duration-200 text-center text-base font-semibold shadow-md focus:outline-none focus:ring-2 focus:ring-offset-2  rounded-lg ">
