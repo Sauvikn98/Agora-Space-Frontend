@@ -22,7 +22,7 @@ function SpaceInfo({space, handleOpenModal, selectedLabel}) {
         try {
             const response = await axios.post(API_SPACES_UPLOAD_COVER_PHOTO(space._id), formData, {
                 headers: {
-                    Authorization: `Bearer ${user.token}`
+                    Authorization: `Bearer ${user.accessToken}`
                 }
             });
             console.log(response.data);
