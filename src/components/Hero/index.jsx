@@ -36,7 +36,6 @@ function Hero({ handleOpenModal }) {
             console.error(error);
             setShowToast(true);
             setToastProps({ success: false, message: 'Space could not be created, Try Again!' });
-            // show error message to user
         }
     };
 

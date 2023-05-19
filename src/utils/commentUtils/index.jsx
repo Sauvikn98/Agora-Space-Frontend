@@ -1,8 +1,7 @@
 import axios from "axios";
 import { API_COMMENTS_DELETE } from "../../lib/api";
 
-
-// handle New Comment on Submit
+/******************* Function to Create a New Comment *******************************/
 export const handleNewComment = async (
     user,
     commentBody,
@@ -41,7 +40,7 @@ export const handleNewComment = async (
     }
   };
   
-  
+/******************* Function to Delete a Comment *******************************/
   export const handleDeleteComment = async (commentId, user) => {
     try {
       await axios.delete(API_COMMENTS_DELETE(commentId), {

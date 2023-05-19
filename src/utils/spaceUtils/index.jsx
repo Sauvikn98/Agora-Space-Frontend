@@ -1,5 +1,6 @@
 import axios from "axios";
-import { API_SPACES_GET_ALL_LABELS, API_SPACES_GET_ALL_MEMBERS, API_SPACES_UPLOAD_COVER_PHOTO } from "../../lib/api";
+import { API_SPACES_CREATE_LABEL, API_SPACES_GET_ALL_LABELS, API_SPACES_GET_ALL_MEMBERS, API_SPACES_UPLOAD_COVER_PHOTO } from "../../lib/api";
+import { COLORS } from "../../components/Labels/LabelInput";
 
 /******************* Function to Get All Space Labels *******************************/
 export const getAllLabels = async (spaceId, setLabels) => {
@@ -11,6 +12,16 @@ export const getAllLabels = async (spaceId, setLabels) => {
         return null;
     }
 };
+
+export const createLabel = async (spaceId, newLabel, setName, setColor) => {
+    try {
+        await axios.post(API_SPACES_CREATE_LABEL(spaceId), newLabel);
+        setName("");
+        setColor(COLORS[0]);
+    } catch (err) {
+        console.error(err);
+    }
+}
 
 /******************* Function to Upload Space Cover Photo *******************************/
 export const handleSpaceCoverPhoto = async (file, spaceId, accessToken) => {
