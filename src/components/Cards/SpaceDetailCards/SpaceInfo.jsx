@@ -7,38 +7,20 @@ import axios from 'axios';
 import { useRecoilValue } from 'recoil';
 import { userAtom } from '../../../recoil/atoms/userAtoms';
 import PostList from '../../Lists/PostList';
+import { handleSpaceCoverPhoto } from '../../../utils/spaceUtils';
 
 function SpaceInfo({space, handleOpenModal, selectedLabel}) {
     const [currentTab, setCurrentTab] = useState('Posts');
     const fileInputRef = useRef(null);
     const user = useRecoilValue(userAtom)
 
-    const handleImageUpload = async (file) => {
-        if (!file) return;
-
-        const formData = new FormData();
-        formData.append('coverPhoto', file);
-
-        try {
-            const response = await axios.post(API_SPACES_UPLOAD_COVER_PHOTO(space._id), formData, {
-                headers: {
-                    Authorization: `Bearer ${user.accessToken}`
-                }
-            });
-            console.log(response.data);
-            console.log(response)
-        } catch (error) {
-            console.error(error);
-        }
-    };
-
     const handleImageClick = () => {
         fileInputRef.current.click();
-    };
+    };    
 
     const handleFileInputChange = () => {
         const file = fileInputRef.current.files[0];
-        handleImageUpload(file);
+        handleSpaceCoverPhoto(file, space._id, user.accessToken);
     };
 
     return (

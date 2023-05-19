@@ -1,10 +1,9 @@
-import React, { useEffect, useState, useRef } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useLocation } from "react-router-dom";
-import { API_SPACES_GET_ALL_LABELS } from '../../../lib/api';
 import RecommendedPosts from '../PostDetailCards/RecommendedPosts';
-import axios from 'axios';
 import Labels from '../../Labels';
 import SpaceInfo from './SpaceInfo';
+import { getAllLabels } from '../../../utils/spaceUtils';
 
 
 function SpaceDetails({ handleOpenModal }) {
@@ -13,22 +12,12 @@ function SpaceDetails({ handleOpenModal }) {
     const [labels, setLabels] = useState([]);
 
     useEffect(() => {
-        const getAllLabels = async (spaceId) => {
-            try {
-                const response = await axios.get(API_SPACES_GET_ALL_LABELS(spaceId));
-                setLabels(response.data)
-            } catch (error) {
-                console.error(error);
-                return null;
-            }
-        };
-        getAllLabels(space._id);
+        getAllLabels(space._id, setLabels);
     }, []);
 
     const handleLabelClick = (label) => {
         setSelectedLabel(label);
     };
-
 
     return (
         <div className="bg-gray-300 w-full min-h-screen grid lg:grid-cols-custom2">

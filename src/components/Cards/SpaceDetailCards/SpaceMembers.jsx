@@ -1,33 +1,14 @@
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
-import { API_SPACES_GET_ALL_MEMBERS } from '../../../lib/api';
-import {socket} from '../../../utils';
 import { useRecoilValue } from 'recoil';
 import { userAtom } from '../../../recoil/atoms/userAtoms';
+import { fetchSpaceMembers } from '../../../utils/spaceUtils';
 
 function SpaceMembers({ spaceId }) {
     const [members, setMembers] = useState([]);
-    const [isOnline, setIsOnline] = useState(false)
-    const user = useRecoilValue(userAtom)
+    const user = useRecoilValue(userAtom);
 
     useEffect(() => {
-        const fetchSpaceMembers = async (spaceId) => {
-            try {
-                const response = await axios.get(API_SPACES_GET_ALL_MEMBERS(spaceId));
-                setMembers(response.data);
-            } catch (error) {
-                console.error(error);
-            }
-        };
-        fetchSpaceMembers(spaceId);
-    }, []);
-
-    useEffect(() => {
-        if (user.userDetails.online === true) {
-            setIsOnline(true)
-        } else {
-            setIsOnline(false)
-        }
+        fetchSpaceMembers(spaceId, setMembers);
     }, []);
 
     return (
@@ -45,7 +26,7 @@ function SpaceMembers({ spaceId }) {
                                 <p className="text-lg font-medium">{member.userName}</p>
                                 <p className="text-gray-500">{member.email}</p>
                                 <div className="flex items-center mt-2">
-                                    {user.userDetails.online ? (
+                                    {/* user.userDetails.online ? (
                                         <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 text-green-500 mr-1" viewBox="0 0 20 20" fill="currentColor">
                                             <circle cx="10" cy="10" r="6" />
                                         </svg>
@@ -53,7 +34,7 @@ function SpaceMembers({ spaceId }) {
                                         <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 text-gray-500 mr-1" viewBox="0 0 20 20" fill="currentColor">
                                             <circle cx="10" cy="10" r="6" />
                                         </svg>
-                                    )}
+                                    )*/}
                                     <p className="text-gray-500 text-sm">{user.userDetails.online ? 'Online' : 'Offline'}</p>
                                 </div>
                             </div>
