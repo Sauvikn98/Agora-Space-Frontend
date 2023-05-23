@@ -131,6 +131,12 @@ function SpaceList({ handleOpenModal }) {
                                                 <img alt="Space" src={`https://api.dicebear.com/6.x/initials/svg?seed=${space.name}`} class="mx-auto object-cover rounded-full h-6 w-6 " />
                                             </a>
                                             <h3 onClick={() => handleNavigate(space.name, navigate, spaces)} className="hover:underline cursor-pointer text-sm font-bold text-gray-700 ml-2"><span className='text-indigo-700'>agora/</span>{space.name}</h3>
+                                            <div className='w-64 ml-4'>
+                                                {space.category.map(cat => (
+                                                    <span class="bg-red-500 text-white text-xs font-medium mr-2 px-2.5 py-0.5 rounded-full dark:bg-blue-900 dark:text-blue-300">#{cat}</span>
+                                                ))}
+                                            </div>
+
                                         </div>
                                         {space.creator === user.userDetails?._id ? (
                                             <></>
@@ -146,7 +152,7 @@ function SpaceList({ handleOpenModal }) {
                                                         {isHovering[space._id] ? "Leave" : "Joined"}
                                                     </button>
                                                 ) : (
-                                                    <button onClick={() => handleJoinSpace(space._id, setShowToast, setToastProps, joinSpace)} className='inline-flex text-sm bg-indigo-700 text-white items-center px-3 py-1 transition ease-in duration-200 rounded-md hover:bg-gray-700 hover:text-white shadow-lg focus:outline-none mr-4 lg:mr-10'>
+                                                    <button onClick={() => handleJoinSpace(space._id, setShowToast, setToastProps, joinSpace)} className='inline-flex text-sm bg-blue-800 text-white items-center px-3 py-1 transition ease-in duration-200 rounded-md hover:bg-gray-700 hover:text-white shadow-lg focus:outline-none mr-4 lg:mr-10'>
                                                         Join Space
                                                     </button>
                                                 )}

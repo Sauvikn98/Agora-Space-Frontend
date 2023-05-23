@@ -1,6 +1,7 @@
 import axios from "axios";
 import { API_SPACES_CREATE_LABEL, API_SPACES_GET_ALL_LABELS, API_SPACES_GET_ALL_MEMBERS, API_SPACES_UPLOAD_COVER_PHOTO } from "../../lib/api";
 import { COLORS } from "../../components/Labels/LabelInput";
+import { socket } from "..";
 
 /******************* Function to Get All Space Labels *******************************/
 export const getAllLabels = async (spaceId, setLabels) => {
@@ -67,6 +68,7 @@ export const handleJoinSpace = async (spaceId, setShowToast, setToastProps, join
         setShowToast(true);
         setToastProps({ success: true, message: 'Successfully joined Space!' });
         setTimeout(() => setShowToast(false), 5000);
+        socket.emit('joinSpaceChannel', spaceId)
     } else {
         setShowToast(true);
         setToastProps({ success: false, message: 'Failed to Join Space, Try Again !' });

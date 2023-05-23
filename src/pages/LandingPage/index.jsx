@@ -46,7 +46,6 @@ const LandingPage = () => {
   return (
     <>
       <Navbar handleOpenModal={handleOpenModal} />
-
       {isModalOpen && (
         <div className="backdrop-blur-lg backdrop-brightness-50 fixed top-0 left-0 w-full h-full z-50 flex justify-center items-center">
           {activeModal === 'signin' && <SignInModal onRequestClose={handleCloseModal} handleOpenModal={handleOpenModal}/>}

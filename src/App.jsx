@@ -7,6 +7,7 @@ import PostPage from './pages/PostPage';
 import SettingsPage from './pages/SettingsPage';
 import { isAuthenticatedAtom } from './recoil/atoms/authAtom';
 import NotificationPage from './pages/NotificationPage';
+import Error404 from './pages/Error404';
 
 // Higher-order component (HOC) for protecting routes
 const ProtectedRoute = ({ path, element: Component }) => {
@@ -33,6 +34,7 @@ function App() {
             element={<ProtectedRoute element={SettingsPage} />}
           />
           <Route path="notifications" element={<NotificationPage />}></Route>
+          <Route path="*" element={<Error404/>} />
         </Routes>
       </BrowserRouter>
     </RecoilRoot>

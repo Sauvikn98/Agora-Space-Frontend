@@ -5,7 +5,6 @@ import Labels from '../../Labels';
 import SpaceInfo from './SpaceInfo';
 import { getAllLabels } from '../../../utils/spaceUtils';
 
-
 function SpaceDetails({ handleOpenModal }) {
     const { state: space } = useLocation();
     const [selectedLabel, setSelectedLabel] = useState(null)

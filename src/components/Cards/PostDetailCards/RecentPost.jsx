@@ -129,7 +129,6 @@ function RecentPost({ spaceId, handleOpenModal }) {
                         </div>
                         <div className="flex items-center justify-between mt-6">
                             <div className="flex items-center space-x-4">
-                                <Link>
                                     <div className="flex items-center justify-center ">
                                         <button className="text-gray-500">
                                             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" className="w-6 h-6">
@@ -138,7 +137,6 @@ function RecentPost({ spaceId, handleOpenModal }) {
                                         </button>
                                         <p className="text-gray-500 ml-1">{post.comments.length} Comments</p>
                                     </div>
-                                </Link>
                                 <div className="flex items-center justify-center ">
                                     <button onClick={() => handleBookmarkClick(post._id) } className="text-gray-500">
                                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" className="w-6 h-6">
