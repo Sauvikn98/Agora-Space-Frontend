@@ -7,7 +7,7 @@ import Toast from '../../Toast';
 import { socket } from '../../../utils';
 import zxcvbn from "zxcvbn";
 
-function SignUpModal({ onRequestClose, handleOpenModal }) {
+function SignUpModal({ onRequestClose, handleOpenModal, setToastProps, setShowToast }) {
     const [strength, setStrength] = useState(0);
     const [requirements, setRequirements] = useState([]);
     const [userName, setUserName] = useState('');
@@ -17,8 +17,6 @@ function SignUpModal({ onRequestClose, handleOpenModal }) {
     const setIsAuthenticated = useSetRecoilState(isAuthenticatedAtom)
     const [isLoading, setIsLoading] = useState(false);
     const [errors, setErrors] = useState({});
-    const [showToast, setShowToast] = useState(false);
-    const [toastProps, setToastProps] = useState({ success: false, message: '' });
 
     const estimatePasswordStrength = (password) => {
         const passwordStrength = zxcvbn(password);
@@ -28,23 +26,23 @@ function SignUpModal({ onRequestClose, handleOpenModal }) {
 
     const renderRequirements = () => {
         return (
-          <ul className="mt-2 text-sm text-gray-500">
-            {requirements.map((requirement, index) => (
-              <li key={index}>{requirement}</li>
-            ))}
-          </ul>
+            <ul className="mt-2 text-sm text-gray-500">
+                {requirements.map((requirement, index) => (
+                    <li key={index}>{requirement}</li>
+                ))}
+            </ul>
         );
-      };
+    };
 
-      const avatarOptions = [];
+    const avatarOptions = [];
 
-      for (let i = 1; i <= 200; i++) {
+    for (let i = 1; i <= 200; i++) {
         const avatarUrl = `https://avatars.dicebear.com/api/adventurer/${i}.svg`;
         avatarOptions.push(avatarUrl);
-      }
-      
-      const randomAvatarIndex = Math.floor(Math.random() * avatarOptions.length);
-      const avatar = avatarOptions[randomAvatarIndex];  
+    }
+
+    const randomAvatarIndex = Math.floor(Math.random() * avatarOptions.length);
+    const avatar = avatarOptions[randomAvatarIndex];
 
     const handleSignUp = async (event) => {
         event.preventDefault();
@@ -61,9 +59,9 @@ function SignUpModal({ onRequestClose, handleOpenModal }) {
             newErrors.password = "Password is required";
         } else if (password.length < 8) {
             newErrors.password = "Password must be at least 8 characters long";
-        } 
+        }
         setErrors(newErrors);
-        
+
         if (Object.keys(newErrors).length === 0) {
             setIsLoading(true);
             const success = await signUp(userName, email, password, avatar);
@@ -73,17 +71,16 @@ function SignUpModal({ onRequestClose, handleOpenModal }) {
                 setIsAuthenticated(true);
                 setShowToast(true);
                 setToastProps({ success: true, message: 'Sign Up Successful!' });
-                setTimeout(() => setShowToast(false), 5000);
+
                 setIsLoading(false);
-                setTimeout(() => onRequestClose(), 2000);
-               
+                onRequestClose();
+
             } else {
-                setUser({ accessToken: null, refreshToken: null ,userDetails: null });
+                setUser({ accessToken: null, refreshToken: null, userDetails: null });
                 setIsAuthenticated(false);
                 setShowToast(true);
                 setToastProps({ success: false, message: 'Sign Up Failed, Try Again!' });
                 setIsLoading(false);
-                setTimeout(() => setShowToast(false), 5000);
             }
         }
     };
@@ -169,18 +166,18 @@ function SignUpModal({ onRequestClose, handleOpenModal }) {
                                     }
                                 )}
                             />
-                           
+
                             <div className="h-2 mt-2 bg-gray-300 rounded-full">
                                 <div
                                     className={`h-full rounded-full ${strength === 0
-                                            ? "bg-gray-300"
-                                            : strength === 1
-                                                ? "bg-red-500"
-                                                : strength === 2
-                                                    ? "bg-yellow-500"
-                                                    : strength === 3
-                                                        ? "bg-yellow-400"
-                                                        : "bg-green-500"
+                                        ? "bg-gray-300"
+                                        : strength === 1
+                                            ? "bg-red-500"
+                                            : strength === 2
+                                                ? "bg-yellow-500"
+                                                : strength === 3
+                                                    ? "bg-yellow-400"
+                                                    : "bg-green-500"
                                         }`}
                                     style={{
                                         width:
@@ -196,7 +193,7 @@ function SignUpModal({ onRequestClose, handleOpenModal }) {
                                     }}
                                 ></div>
                             </div>
-                            
+
                             {errors.password ? (
                                 <>
                                     <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" fill="currentColor" className="absolute text-red-500 right-2 bottom-14" viewBox="0 0 1792 1792">
@@ -207,9 +204,9 @@ function SignUpModal({ onRequestClose, handleOpenModal }) {
                                         {errors.password}
                                     </span>
                                 </>
-                            ): (
+                            ) : (
                                 <>
-                                {requirements.length > 0 && renderRequirements()}
+                                    {requirements.length > 0 && renderRequirements()}
                                 </>
                             )}
                         </div>
@@ -236,13 +233,6 @@ function SignUpModal({ onRequestClose, handleOpenModal }) {
                         </p>
                     </div>
                 </div>
-                {showToast && (
-                    <div className="fixed inset-0 z-50 flex items-end justify-center px-4 py-6 pointer-events-none sm:p-6 sm:items-start sm:justify-end">
-                        <div className="max-w-sm w-full bg-white shadow-lg rounded-lg pointer-events-auto">
-                            <Toast success={toastProps.success} message={toastProps.message} showToast={showToast} setShowToast={setShowToast} />
-                        </div>
-                    </div>
-                )}
             </div>
         </div>
     )

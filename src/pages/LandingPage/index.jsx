@@ -18,6 +18,7 @@ import { useRecoilValue } from "recoil";
 import { isAuthenticatedAtom } from "../../recoil/atoms/authAtom";
 import KnowAgora from "../../components/Cards/KnowAgora";
 import DidYouKnow from "../../components/Cards/DidYouKnow";
+import Toast from "../../components/Toast";
 
 const LandingPage = () => {
   const [activeModal, setActiveModal] = useState(null);
@@ -25,7 +26,10 @@ const LandingPage = () => {
   const [activeTooltip, setActiveTooltip] = useState(null);
   const [isTooltipOpen, setIsTooltipOpen] = useState(false);
   const navigate = useNavigate();
-  const isAuthenticated = useRecoilValue(isAuthenticatedAtom)
+  const isAuthenticated = useRecoilValue(isAuthenticatedAtom);
+  const [showToast, setShowToast] = useState(false);
+  const [toastProps, setToastProps] = useState({ success: false, message: '' });
+
 
   const handleOpenModal = (modal) => {
     setActiveModal(modal);
@@ -53,8 +57,8 @@ const LandingPage = () => {
       <Navbar handleOpenModal={handleOpenModal} />
       {isModalOpen && (
         <div className="backdrop-blur-lg backdrop-brightness-50 fixed top-0 left-0 w-full h-full z-50 flex justify-center items-center">
-          {activeModal === 'signin' && <SignInModal onRequestClose={handleCloseModal} handleOpenModal={handleOpenModal} />}
-          {activeModal === 'signup' && <SignUpModal onRequestClose={handleCloseModal} handleOpenModal={handleOpenModal} />}
+          {activeModal === 'signin' && <SignInModal onRequestClose={handleCloseModal} handleOpenModal={handleOpenModal} setToastProps={setToastProps} setShowToast={setShowToast}/>}
+          {activeModal === 'signup' && <SignUpModal onRequestClose={handleCloseModal} handleOpenModal={handleOpenModal} setToastProps={setToastProps} setShowToast={setShowToast}/>}
           {activeModal === 'signout' && <SignOutModal onRequestClose={handleCloseModal} />}
           {activeModal === 'post' && <PostModal onRequestClose={handleCloseModal} />}
           {activeModal === 'comment' && <Comment onRequestClose={handleCloseModal} />}
@@ -95,6 +99,13 @@ const LandingPage = () => {
         )}
 
       </div>
+      {showToast && (
+        <div className="fixed inset-0 z-50 flex items-end justify-center px-4 py-6 pointer-events-none sm:p-6 sm:items-start sm:justify-end">
+          <div className="max-w-sm w-full bg-white shadow-lg rounded-lg pointer-events-auto">
+            <Toast success={toastProps.success} message={toastProps.message} showToast={showToast} setShowToast={setShowToast} />
+          </div>
+        </div>
+      )}
     </>
   );
 };

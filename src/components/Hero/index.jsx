@@ -46,7 +46,7 @@ function Hero({ handleOpenModal }) {
     return (
         <div className='h-[94.2vh] sticky flex top-[3.52rem] bottom-[3.1rem] w-full'>
             {isAuthenticated ? (
-                <div className="w-full bg-gradient-to-b from-blue-900 to-blue-700 dark:bg-gray-900 dark:border-gray-700">
+                <div className="w-full bg-gradient-to-b from-blue-800 to-blue-500 dark:bg-gray-900 dark:border-gray-700">
                     <div className="">
                         <HeroTabs
                             tabs={['Create a Post', 'Create a Space']}

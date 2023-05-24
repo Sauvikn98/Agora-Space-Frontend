@@ -6,15 +6,13 @@ import { userAtom } from '../../../recoil/atoms/userAtoms';
 import Toast from '../../Toast';
 import { socket } from '../../../utils';
 
-function SignInModal({ onRequestClose, handleOpenModal }) {
+function SignInModal({ onRequestClose, handleOpenModal, setToastProps, setShowToast }) {
     const [userName, setUserName] = useState('');
     const [password, setPassword] = useState('');
     const [isLoading, setIsLoading] = useState(false);
     const [errors, setErrors] = useState({})
     const setIsAuthenticated = useSetRecoilState(isAuthenticatedAtom);
     const setUser = useSetRecoilState(userAtom)
-    const [showToast, setShowToast] = useState(false);
-    const [toastProps, setToastProps] = useState({ success: false, message: '' });
 
     const handleSignIn = async (event) => {
         event.preventDefault();
@@ -37,13 +35,13 @@ function SignInModal({ onRequestClose, handleOpenModal }) {
                 setIsAuthenticated(true);
                 setShowToast(true);
                 setToastProps({ success: true, message: 'Sign In Successfull !' });
-                setTimeout(() => setShowToast(false), 5000);
+                
                 setIsLoading(false);
-                setTimeout(() => onRequestClose(), 2000);
+               
                 socket.auth = { token: success.accessToken }
                 socket.connect();
                 socket.emit('checkMembership', { spaceId: 'your-space-id', userId: success.user._id });
-
+                onRequestClose();
             }
             else {
                 setUser({ accessToken: null, refreshToken: null, userDetails: null });
@@ -51,10 +49,8 @@ function SignInModal({ onRequestClose, handleOpenModal }) {
                 setShowToast(true);
                 setToastProps({ success: false, message: 'Sign In Failed, Try Again !' });
                 setIsLoading(false);
-                setTimeout(() => setShowToast(false), 5000);
+                onRequestClose();
             }
-
-            console.log(showToast)
         }
     };
 
@@ -151,13 +147,7 @@ function SignInModal({ onRequestClose, handleOpenModal }) {
                     </div>
 
                 </div>
-                {showToast && (
-                    <div className="fixed inset-0 z-50 flex items-end justify-center px-4 py-6 pointer-events-none sm:p-6 sm:items-start sm:justify-end">
-                        <div className="max-w-sm w-full bg-white shadow-lg rounded-lg pointer-events-auto">
-                            <Toast success={toastProps.success} message={toastProps.message} showToast={showToast} setShowToast={setShowToast} />
-                        </div>
-                    </div>
-                )}
+                
             </div>
         </div>
     )
