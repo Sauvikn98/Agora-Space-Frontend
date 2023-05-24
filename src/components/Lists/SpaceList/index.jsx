@@ -152,7 +152,7 @@ function SpaceList({ handleOpenModal }) {
                                                         {isHovering[space._id] ? "Leave" : "Joined"}
                                                     </button>
                                                 ) : (
-                                                    <button onClick={() => handleJoinSpace(space._id, setShowToast, setToastProps, joinSpace)} className='inline-flex text-sm bg-blue-800 text-white items-center px-3 py-1 transition ease-in duration-200 rounded-md hover:bg-gray-700 hover:text-white shadow-lg focus:outline-none mr-4 lg:mr-10'>
+                                                    <button onClick={() => handleJoinSpace(space._id, setShowToast, setToastProps, joinSpace)} className='inline-flex text-sm bg-gradient-to-b from-blue-600 to-blue-700 text-white items-center px-3 py-1 transition ease-in duration-200 rounded-md hover:bg-gray-700 hover:text-white shadow-lg focus:outline-none mr-4 lg:mr-10'>
                                                         Join Space
                                                     </button>
                                                 )}

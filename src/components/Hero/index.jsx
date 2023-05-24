@@ -44,9 +44,9 @@ function Hero({ handleOpenModal }) {
     };
 
     return (
-        <div className='h-[94vh] sticky flex top-[3.52rem] bottom-[3.1rem] w-full'>
+        <div className='h-[94.2vh] sticky flex top-[3.52rem] bottom-[3.1rem] w-full'>
             {isAuthenticated ? (
-                <div className="w-full bg-gradient-to-r from-blue-900 to-blue-800 dark:bg-gray-900 dark:border-gray-700">
+                <div className="w-full bg-gradient-to-b from-blue-900 to-blue-700 dark:bg-gray-900 dark:border-gray-700">
                     <div className="">
                         <HeroTabs
                             tabs={['Create a Post', 'Create a Space']}
@@ -114,29 +114,38 @@ function Hero({ handleOpenModal }) {
                     )}
                 </div>
             ) : (
-                <div className="bg-gradient-to-r from-blue-900 to-blue-800 dark:bg-gray-900 dark:border-gray-700">
-                    <img
-                        src={landingImage}
-                        className=" mt-8 md:mr-6 object-contain h-60 w-72"
-                        alt="landing"
-                    />
-                    <div className="p-6 ">
+                <section class="bg-gradient-to-r from-blue-500 to-blue-800 dark:bg-gray-900">
+                    <div class="py-8 px-6 mx-auto max-w-screen-xl text-center lg:py-16 yyy">
+                        <a href="#" class="inline-flex justify-between items-center py-1 px-1 pr-4 mb-7 text-sm text-gray-700 bg-gray-100 rounded-full dark:bg-gray-800 dark:text-white hover:bg-gray-200 dark:hover:bg-gray-700" role="alert">
+                            <span class="text-xs bg-violet-600 rounded-full text-white px-4 py-1.5 mr-3">New</span> <span class="text-sm font-medium">Agora Space is out! See what's new</span>
+                            <svg class="ml-2 w-5 h-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd"></path></svg>
+                        </a>
+                        <div class="mb-4 ">
                         <Reveal keyframes={fadeInLeft} duration={800} delay={200}>
-                            <h2 className="text-4xl font-bold text-white text-left">
+                            <h2 className="mb-4 text-4xl font-extrabold tracking-tight leading-none text-white md:text-5xl lg:text-6xl dark:text-white">
                                 Discover, Learn & Discuss
                             </h2>
+                            
                         </Reveal>
-                        <Reveal keyframes={fadeInLeft} duration={800} delay={200}>
-                            <h3 className="mt-4 text-2xl text-gray-200 text-left">
-                                Empower your mind, ignite your passion through discussion.
-                            </h3>
-                        </Reveal>
-
-                        <Reveal keyframes={fadeInDownShorter} duration={1000} delay={400}>
-                            <button onClick={() => handleOpenModal('signup')} className="font-bold bg-white mt-8 text-gray-900 flex items-center px-8 py-3  transition ease-in duration-200 uppercase rounded-full hover:bg-gray-800 hover:text-white shadow-lg focus:outline-none">Get Started</button>
-                        </Reveal>
+                        </div>
+                        <img
+                        src={landingImage}
+                        className=" mt-8 md:mr-6 object-contain h-60 w-72 mb-10"
+                        alt="landing"
+                    />
+                        <div class="flex flex-col mb-8 lg:mb-16 space-y-4 sm:flex-row sm:justify-center sm:space-y-0 sm:space-x-4">
+                            <a href="#" class="inline-flex justify-center items-center py-3 px-5 text-base font-medium text-center text-white rounded-lg bg-primary-700 hover:bg-primary-800 focus:ring-4 focus:ring-primary-300 dark:focus:ring-primary-900">
+                                Learn more
+                                <svg class="ml-2 -mr-1 w-5 h-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M10.293 3.293a1 1 0 011.414 0l6 6a1 1 0 010 1.414l-6 6a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-4.293-4.293a1 1 0 010-1.414z" clip-rule="evenodd"></path></svg>
+                            </a>
+                            <a href="#" class="inline-flex justify-center items-center py-3 px-5 text-base font-medium text-center text-gray-900 rounded-lg border border-gray-300 hover:bg-gray-100 bg-white focus:ring-4 focus:ring-gray-100 dark:text-white dark:border-gray-700 dark:hover:bg-gray-700 dark:focus:ring-gray-800">
+                                <svg class="mr-2 -ml-1 w-5 h-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path d="M2 6a2 2 0 012-2h6a2 2 0 012 2v8a2 2 0 01-2 2H4a2 2 0 01-2-2V6zM14.553 7.106A1 1 0 0014 8v4a1 1 0 00.553.894l2 1A1 1 0 0018 13V7a1 1 0 00-1.447-.894l-2 1z"></path></svg>
+                                Watch video
+                            </a>
+                        </div>
+                        
                     </div>
-                </div>
+                </section>
             )}
 
             {showToast && (

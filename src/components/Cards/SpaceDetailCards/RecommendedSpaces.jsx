@@ -41,7 +41,7 @@ const RecommendedSpaces = () => {
                             </div>
                             <div>
                                 <div className='flex justify-center items-center'>
-                                    <button className='text-sm bg-blue-700 text-white items-center px-[33%] py-1 transition ease-in duration-200 rounded-md hover:bg-gray-700 hover:text-white shadow-lg focus:outline-none'>
+                                    <button className='text-sm bg-gradient-to-b from-blue-600 to-blue-700 text-white items-center px-[33%] py-1 transition ease-in duration-200 rounded-md hover:bg-gray-700 hover:text-white shadow-lg focus:outline-none'>
                                         Join Space
                                     </button>
                                 </div>

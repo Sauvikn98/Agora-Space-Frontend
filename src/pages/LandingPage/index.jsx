@@ -14,6 +14,10 @@ import { useNavigate } from "react-router-dom";
 import BookmarkTooltip from "../../components/Tooltip/BookmarkTooltip";
 import Hero from "../../components/Hero";
 import VoteValidation from "../../components/Modals/ValidationModal/VoteValidationModal";
+import { useRecoilValue } from "recoil";
+import { isAuthenticatedAtom } from "../../recoil/atoms/authAtom";
+import KnowAgora from "../../components/Cards/KnowAgora";
+import DidYouKnow from "../../components/Cards/DidYouKnow";
 
 const LandingPage = () => {
   const [activeModal, setActiveModal] = useState(null);
@@ -21,6 +25,7 @@ const LandingPage = () => {
   const [activeTooltip, setActiveTooltip] = useState(null);
   const [isTooltipOpen, setIsTooltipOpen] = useState(false);
   const navigate = useNavigate();
+  const isAuthenticated = useRecoilValue(isAuthenticatedAtom)
 
   const handleOpenModal = (modal) => {
     setActiveModal(modal);
@@ -48,8 +53,8 @@ const LandingPage = () => {
       <Navbar handleOpenModal={handleOpenModal} />
       {isModalOpen && (
         <div className="backdrop-blur-lg backdrop-brightness-50 fixed top-0 left-0 w-full h-full z-50 flex justify-center items-center">
-          {activeModal === 'signin' && <SignInModal onRequestClose={handleCloseModal} handleOpenModal={handleOpenModal}/>}
-          {activeModal === 'signup' && <SignUpModal onRequestClose={handleCloseModal} handleOpenModal={handleOpenModal}/>}
+          {activeModal === 'signin' && <SignInModal onRequestClose={handleCloseModal} handleOpenModal={handleOpenModal} />}
+          {activeModal === 'signup' && <SignUpModal onRequestClose={handleCloseModal} handleOpenModal={handleOpenModal} />}
           {activeModal === 'signout' && <SignOutModal onRequestClose={handleCloseModal} />}
           {activeModal === 'post' && <PostModal onRequestClose={handleCloseModal} />}
           {activeModal === 'comment' && <Comment onRequestClose={handleCloseModal} />}
@@ -79,7 +84,16 @@ const LandingPage = () => {
           </div>
         </div>
         <SpaceList handleOpenModal={handleOpenModal} />
-        <RecommendedSpaces />
+        {isAuthenticated ? (
+          <RecommendedSpaces />
+        ) : (
+          <div className="space-y-8">
+            <KnowAgora />
+            <DidYouKnow />
+          </div>
+
+        )}
+
       </div>
     </>
   );

@@ -4,7 +4,7 @@ import classNames from 'classnames';
 import { isAuthenticatedAtom, signIn } from '../../../recoil/atoms/authAtom';
 import { userAtom } from '../../../recoil/atoms/userAtoms';
 import Toast from '../../Toast';
-import {socket} from '../../../utils';
+import { socket } from '../../../utils';
 
 function SignInModal({ onRequestClose, handleOpenModal }) {
     const [userName, setUserName] = useState('');
@@ -40,11 +40,13 @@ function SignInModal({ onRequestClose, handleOpenModal }) {
                 setTimeout(() => setShowToast(false), 5000);
                 setIsLoading(false);
                 setTimeout(() => onRequestClose(), 2000);
-                socket.auth = { token: success.token }
+                socket.auth = { token: success.accessToken }
                 socket.connect();
+                socket.emit('checkMembership', { spaceId: 'your-space-id', userId: success.user._id });
+
             }
             else {
-                setUser({ accessToken: null, refreshToken: null ,userDetails: null });
+                setUser({ accessToken: null, refreshToken: null, userDetails: null });
                 setIsAuthenticated(false);
                 setShowToast(true);
                 setToastProps({ success: false, message: 'Sign In Failed, Try Again !' });
@@ -144,7 +146,7 @@ function SignInModal({ onRequestClose, handleOpenModal }) {
                         </button>
                         <p className="mt-4 text-sm text-gray-900">
                             Don't Have An Account?{' '}
-                            <button onClick={()=>handleOpenModal('signup')} className="underline cursor-pointer">Sign Up</button>
+                            <button onClick={() => handleOpenModal('signup')} className="underline cursor-pointer">Sign Up</button>
                         </p>
                     </div>
 

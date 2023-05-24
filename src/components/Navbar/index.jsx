@@ -159,10 +159,10 @@ function Navbar({ handleOpenModal }) {
             <div className="hidden lg:block">
               <ul className="inline-flex items-center">
                 <li><button onClick={() => handleOpenModal('signin')} className={`${isScrolled
-                  ? 'uppercase border-2 border-blue-800 rounded-lg px-6 py-1 text-gray-100 ml-4'
-                  : 'uppercase border-2 border-blue-800 rounded-lg px-6 py-1 text-gray-900 ml-4'
+                  ? 'uppercase border-2 border-blue-600 rounded-lg px-6 py-1 text-gray-100 ml-4'
+                  : 'uppercase border-2 border-blue-600 rounded-lg px-6 py-1 text-gray-900 ml-4'
                   }`}>Sign In</button></li>
-                <li><button onClick={() => handleOpenModal('signup')} className="border-2 border-blue-800 uppercase bg-blue-800 rounded-lg px-6 py-1 text-white ml-6">Sign Up</button></li>
+                <li><button onClick={() => handleOpenModal('signup')} className="border-2 border-blue-600 uppercase bg-gradient-to-b from-blue-600 to-blue-700 rounded-lg px-6 py-1 text-white ml-6">Sign Up</button></li>
               </ul>
             </div>
           )}
