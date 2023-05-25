@@ -89,7 +89,7 @@ function Navbar({ handleOpenModal }) {
                 <div class="absolute inline-flex items-center justify-center w-6 h-6 text-xs font-bold text-white bg-red-500 border-2 border-white rounded-full -top-2 -right-2 dark:border-gray-900">20</div>
               </button>
               {showNotifications && (
-                <div className="h-96 transform -translate-x-1/3 z-100 w-2/5 lg:w-[18.7%] absolute  w-full max-w-xs p-4 text-gray-900 bg-white rounded-lg shadow dark:bg-gray-800 dark:text-gray-300">
+                <div className="space-y-8 h-96 transform -translate-x-1/3 z-100 w-2/5 lg:w-[18.7%] absolute  w-full max-w-xs p-4 text-gray-900 bg-white rounded-lg shadow dark:bg-gray-800 dark:text-gray-300">
                   <div class="flex items-center mb-3">
                     <span class="mb-1 text-sm font-semibold text-gray-900 dark:text-white">New notifications</span>
                     <button onClick={()=> setShowNotifications(!showNotifications)} type="button" class="ml-auto -mx-1.5 -my-1.5 bg-white text-gray-400 hover:text-gray-900 rounded-lg focus:ring-2 focus:ring-gray-300 p-1.5 hover:bg-gray-100 inline-flex h-8 w-8 dark:text-gray-500 dark:hover:text-white dark:bg-gray-800 dark:hover:bg-gray-700" data-dismiss-target="#toast-notification" aria-label="Close">
@@ -100,7 +100,7 @@ function Navbar({ handleOpenModal }) {
                  
                     <div class="flex items-center">
                     <div class="relative inline-block shrink-0">
-                      <img class="w-12 h-12 rounded-full" src="/docs/images/people/profile-picture-3.jpg" alt="Jese Leos image" />
+                      <img class="w-12 h-12 rounded-full" src="https://source.unsplash.com/100x100/?portrait" alt="Jese Leos image" />
                       <span class="absolute bottom-0 right-0 inline-flex items-center justify-center w-6 h-6 bg-blue-600 rounded-full">
                         <svg aria-hidden="true" class="w-4 h-4 text-white" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M18 13V5a2 2 0 00-2-2H4a2 2 0 00-2 2v8a2 2 0 002 2h3l3 3 3-3h3a2 2 0 002-2zM5 7a1 1 0 011-1h8a1 1 0 110 2H6a1 1 0 01-1-1zm1 3a1 1 0 100 2h3a1 1 0 100-2H6z" clip-rule="evenodd"></path></svg>
                         <span class="sr-only">Message icon</span>
@@ -108,10 +108,42 @@ function Navbar({ handleOpenModal }) {
                     </div>
                     <div class="ml-3 text-sm font-normal">
                       <div class="text-sm font-semibold text-gray-900 dark:text-white">Bonnie Green</div>
-                      <div class="text-sm font-normal">Commented</div>
+                      <div class="text-sm font-normal">Commented on your post</div>
                       <span class="text-xs font-medium text-blue-600 dark:text-blue-500">a few seconds ago</span>
                     </div>
                   </div>
+
+                  <div class="flex items-center">
+                    <div class="relative inline-block shrink-0">
+                      <img class="w-12 h-12 rounded-full" src="https://source.unsplash.com/100x100/?portrait" alt="Jese Leos image" />
+                      <span class="absolute bottom-0 right-0 inline-flex items-center justify-center w-6 h-6 bg-blue-600 rounded-full">
+                        <svg aria-hidden="true" class="w-4 h-4 text-white" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M18 13V5a2 2 0 00-2-2H4a2 2 0 00-2 2v8a2 2 0 002 2h3l3 3 3-3h3a2 2 0 002-2zM5 7a1 1 0 011-1h8a1 1 0 110 2H6a1 1 0 01-1-1zm1 3a1 1 0 100 2h3a1 1 0 100-2H6z" clip-rule="evenodd"></path></svg>
+                        <span class="sr-only">Message icon</span>
+                      </span>
+                    </div>
+                    <div class="ml-3 text-sm font-normal">
+                      <div class="text-sm font-semibold text-gray-900 dark:text-white">Aloha</div>
+                      <div class="text-sm font-normal">created a new post</div>
+                      <span class="text-xs font-medium text-blue-600 dark:text-blue-500">a few seconds ago</span>
+                    </div>
+                  </div>
+
+                  <div class="flex items-center">
+                    <div class="relative inline-block shrink-0">
+                      <img class="w-12 h-12 rounded-full" src="https://source.unsplash.com/100x100/?portrait" alt="Jese Leos image" />
+                      <span class="absolute bottom-0 right-0 inline-flex items-center justify-center w-6 h-6 bg-blue-600 rounded-full">
+                        <svg aria-hidden="true" class="w-4 h-4 text-white" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M18 13V5a2 2 0 00-2-2H4a2 2 0 00-2 2v8a2 2 0 002 2h3l3 3 3-3h3a2 2 0 002-2zM5 7a1 1 0 011-1h8a1 1 0 110 2H6a1 1 0 01-1-1zm1 3a1 1 0 100 2h3a1 1 0 100-2H6z" clip-rule="evenodd"></path></svg>
+                        <span class="sr-only">Message icon</span>
+                      </span>
+                    </div>
+                    <div class="ml-3 text-sm font-normal">
+                      <div class="text-sm font-semibold text-gray-900 dark:text-white">David</div>
+                      <div class="text-sm font-normal">upvoted your post</div>
+                      <span class="text-xs font-medium text-blue-600 dark:text-blue-500">a few seconds ago</span>
+                    </div>
+                  </div>
+
+                  
              
                   
                 </div>

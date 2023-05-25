@@ -1,13 +1,32 @@
-import React from 'react';
+import React, {useState,useEffect} from 'react';
 import { spaceAtom, useGetAllSpaces } from '../../../recoil/atoms/spaceAtoms';
 import { useRecoilValue } from 'recoil';
 import { handleNavigate } from '../../../utils/spaceUtils';
 import { useNavigate } from 'react-router-dom';
+import { API_SPACES_RECOMMENDED } from '../../../lib/api';
+import { userAtom } from '../../../recoil/atoms/userAtoms';
+import axios from 'axios';
 
 const RecommendedSpaces = () => {
     const { isLoading } = useGetAllSpaces();
     const spaces = useRecoilValue(spaceAtom);
+    const user = useRecoilValue(userAtom)
     const navigate = useNavigate();
+    const [recommendedSpaces, setRecommendedSpaces] = useState([]);
+
+    useEffect(() => {
+        // Function to fetch recommended spaces using axios
+        const fetchRecommendedSpaces = async (userId) => {
+            try {
+                const response = await axios.get(API_SPACES_RECOMMENDED(userId)); // Replace with your actual API endpoint
+                setRecommendedSpaces(response.data);
+            } catch (error) {
+                console.error('Error fetching recommended spaces:', error);
+            }
+        };
+
+        fetchRecommendedSpaces(user.userDetails._id);
+    }, []);
 
     return (
         <div className='ml-7 lg:ml-2 mr-7 lg:mr-4'>
@@ -25,7 +44,7 @@ const RecommendedSpaces = () => {
             ) : (
                 <div className='col-span-1 mt-4'>
                     <h2 className="text-xl font-bold mb-4 ">Recommended Spaces </h2>
-                    {spaces.map(space => (
+                    {recommendedSpaces.map(space => (
                         <div onClick={() => handleNavigate(space.name, navigate, spaces)} className="shadow-xl hover:outline outline-offset-2 outline-blue-500 transition duration-500 ease-in-out transform hover:-translate-y-1 relative bg-white mt-8 max-w-xs rounded-md shadow-md dark:bg-gray-900 dark:text-gray-100">
                             {space.coverPhoto ? (
                                 <img src={space.coverPhoto} alt="" className="object-cover object-center w-full rounded-t-md h-36 dark:bg-gray-500" />

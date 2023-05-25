@@ -34,7 +34,7 @@ export const API_SPACES_UPDATE_LABEL = (spaceId, labelId) => `${API_BASE_URL}/sp
 export const API_SPACES_DELETE_LABEL = (spaceId, labelId) => `${API_BASE_URL}/spaces/${spaceId}/labels/${labelId}`
 export const API_SPACES_UPDATE = `${API_BASE_URL}/spaces`;
 export const API_SPACES_DELETE = `${API_BASE_URL}/spaces/:spaceId`;
-
+export const API_SPACES_RECOMMENDED = (userId) => `${API_BASE_URL}/spaces/space-recommendations/${userId}`
 
 // comment api
 export const API_COMMENTS_CREATE = `${API_BASE_URL}/comments`;

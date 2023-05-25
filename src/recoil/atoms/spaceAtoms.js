@@ -49,6 +49,7 @@ export function useGetAllSpaces() {
       .then((response) => {
         setSpaces(response.data);
         setIsLoading(false);
+        console.log(response)
       })
       .catch((error) => {
         console.error(error);
