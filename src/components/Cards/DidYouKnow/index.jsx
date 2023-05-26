@@ -26,7 +26,7 @@ function DidYouKnow() {
     console.log(facts)
     return (
         <div>
-            <section class="bg-white dark:bg-gray-900">
+            <section class="rounded-lg shadow  bg-white dark:bg-gray-900">
                 <div class="py-8 px-4 mx-auto max-w-screen-xl lg:py-10 lg:px-6">
                     <div class="max-w-screen-lg text-gray-500 sm:text-lg dark:text-gray-400">
                     <h2 class="mb-4 text-4xl tracking-tight font-bold text-gray-900 dark:text-white">Did you Know? </h2>

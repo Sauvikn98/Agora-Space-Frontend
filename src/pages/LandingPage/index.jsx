@@ -19,6 +19,8 @@ import { isAuthenticatedAtom } from "../../recoil/atoms/authAtom";
 import KnowAgora from "../../components/Cards/KnowAgora";
 import DidYouKnow from "../../components/Cards/DidYouKnow";
 import Toast from "../../components/Toast";
+import Footer from "../../components/Cards/Footer";
+import VideoModal from "../../components/Modals/VideoModal";
 
 const LandingPage = () => {
   const [activeModal, setActiveModal] = useState(null);
@@ -63,6 +65,7 @@ const LandingPage = () => {
           {activeModal === 'post' && <PostModal onRequestClose={handleCloseModal} />}
           {activeModal === 'comment' && <Comment onRequestClose={handleCloseModal} />}
           {activeModal === 'votes validation' && <VoteValidation onRequestClose={handleCloseModal} />}
+          {activeModal === 'video' && <VideoModal onRequestClose={handleCloseModal} />}
         </div>
       )}
 
@@ -93,7 +96,7 @@ const LandingPage = () => {
         ) : (
           <div className="space-y-8">
             <KnowAgora />
-            <DidYouKnow />
+            <Footer/>
           </div>
 
         )}

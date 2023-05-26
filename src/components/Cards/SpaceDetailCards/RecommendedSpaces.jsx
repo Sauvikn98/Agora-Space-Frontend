@@ -1,4 +1,4 @@
-import React, {useState,useEffect} from 'react';
+import React, { useState, useEffect } from 'react';
 import { spaceAtom, useGetAllSpaces } from '../../../recoil/atoms/spaceAtoms';
 import { useRecoilValue } from 'recoil';
 import { handleNavigate } from '../../../utils/spaceUtils';
@@ -6,6 +6,8 @@ import { useNavigate } from 'react-router-dom';
 import { API_SPACES_RECOMMENDED } from '../../../lib/api';
 import { userAtom } from '../../../recoil/atoms/userAtoms';
 import axios from 'axios';
+import DidYouKnow from '../DidYouKnow';
+import Footer from '../Footer';
 
 const RecommendedSpaces = () => {
     const { isLoading } = useGetAllSpaces();
@@ -43,37 +45,48 @@ const RecommendedSpaces = () => {
                 </div>
             ) : (
                 <div className='col-span-1 mt-4'>
-                    <h2 className="text-xl font-bold mb-4 ">Recommended Spaces </h2>
-                    {recommendedSpaces.map(space => (
-                        <div onClick={() => handleNavigate(space.name, navigate, spaces)} className="shadow-xl hover:outline outline-offset-2 outline-blue-500 transition duration-500 ease-in-out transform hover:-translate-y-1 relative bg-white mt-8 max-w-xs rounded-md shadow-md dark:bg-gray-900 dark:text-gray-100">
-                            {space.coverPhoto ? (
-                                <img src={space.coverPhoto} alt="" className="object-cover object-center w-full rounded-t-md h-36 dark:bg-gray-500" />
-                            ) : (
-                                <img src="https://images.pexels.com/photos/160107/pexels-photo-160107.jpeg?auto=compress&cs=tinysrgb&w=1600" alt="" className="object-cover object-center w-full rounded-t-md h-36 dark:bg-gray-500" />
-                            )}
-                            <div className="flex flex-col justify-between pt-3 pl-5 pb-5 space-y-8">
-                                <div className="space-y-2">
-                                    <h2 className="text-md font-semibold">{space.name}</h2>
-                                    <p className="dark:text-gray-100 text-sm">{space.description}</p>
-                                </div>
+                    {recommendedSpaces.length > 0 ? (
+                        <>
+                            <h2 className="text-xl font-bold mb-4 ">Recommended Spaces </h2>
+                            {recommendedSpaces.map(space => (
+                                <div onClick={() => handleNavigate(space.name, navigate, spaces)} className="shadow-xl hover:outline outline-offset-2 outline-blue-500 transition duration-500 ease-in-out transform hover:-translate-y-1 relative bg-white mt-8 max-w-xs rounded-md shadow-md dark:bg-gray-900 dark:text-gray-100">
+                                    {space.coverPhoto ? (
+                                        <img src={space.coverPhoto} alt="" className="object-cover object-center w-full rounded-t-md h-36 dark:bg-gray-500" />
+                                    ) : (
+                                        <img src="https://images.pexels.com/photos/160107/pexels-photo-160107.jpeg?auto=compress&cs=tinysrgb&w=1600" alt="" className="object-cover object-center w-full rounded-t-md h-36 dark:bg-gray-500" />
+                                    )}
+                                    <div className="flex flex-col justify-between pt-3 pl-5 pb-5 space-y-8">
+                                        <div className="space-y-2">
+                                            <h2 className="text-md font-semibold">{space.name}</h2>
+                                            <p className="dark:text-gray-100 text-sm">{space.description}</p>
+                                        </div>
 
-                            </div>
-                            <div>
-                                <div className='flex justify-center items-center'>
-                                    <button className='text-sm bg-gradient-to-b from-blue-600 to-blue-700 text-white items-center px-[33%] py-1 transition ease-in duration-200 rounded-md hover:bg-gray-700 hover:text-white shadow-lg focus:outline-none'>
-                                        Join Space
-                                    </button>
-                                </div>
+                                    </div>
+                                    <div>
+                                        <div className='flex justify-center items-center'>
+                                            <button className='text-sm bg-gradient-to-b from-blue-600 to-blue-700 text-white items-center px-[33%] py-1 transition ease-in duration-200 rounded-md hover:bg-gray-700 hover:text-white shadow-lg focus:outline-none'>
+                                                Join Space
+                                            </button>
+                                        </div>
 
-                                <div className='p-4'>
-                                    {space.category.map(cat => (
-                                        <span class="bg-red-500 text-white text-xs font-medium mr-2 px-2.5 py-0.5 rounded-full dark:bg-blue-900 dark:text-blue-300">#{cat}</span>
-                                    ))}
-                                </div>
-                            </div>
+                                        <div className='p-4'>
+                                            {space.category.map(cat => (
+                                                <span class="bg-red-500 text-white text-xs font-medium mr-2 px-2.5 py-0.5 rounded-full dark:bg-blue-900 dark:text-blue-300">#{cat}</span>
+                                            ))}
+                                        </div>
+                                    </div>
 
+                                </div>
+                            ))}
+                            <Footer/>
+                        </>
+                    ): (
+                        <div>
+                        <DidYouKnow/>
+                        <Footer/>
                         </div>
-                    ))}
+                    )}
+
                 </div>
             )}
         </div>
