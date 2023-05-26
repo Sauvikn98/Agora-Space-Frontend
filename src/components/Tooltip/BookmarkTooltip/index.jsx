@@ -28,7 +28,6 @@ function BookmarkTooltip({ onRequestClose, onSeeMore }) {
     }, []);
 
     // Slice the bookmarks array to show only the first two bookmarks
-    const displayedBookmarks = bookmarks.slice(0, 2);
     const handleCommentNavigate = (postTitle, event) => {
         const modifiedTitle = postTitle.replace(/\s+/g, '_');
         navigate(`/post/${modifiedTitle}`, {
@@ -49,7 +48,7 @@ function BookmarkTooltip({ onRequestClose, onSeeMore }) {
                     </button>
                 </div>
                 <div>
-                    {displayedBookmarks.map(bookmark => (
+                    {bookmarks.map(bookmark => (
                         <div key={bookmark._id} onClick={() => handleCommentNavigate(bookmark.title)} className="mb-4 pl-4 pb-2 pt-2 pr-2 hover:bg-indigo-600 hover:text-white cursor-pointer">
                             <h2 className="font-bold">{bookmark.title}</h2>
                             <p className="">{bookmark.content}</p>

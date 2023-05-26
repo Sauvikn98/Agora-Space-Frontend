@@ -1,41 +1,110 @@
-import React from 'react';
-import { postAtom, useGetPosts } from '../../../recoil/atoms/postAtoms';
-import { useRecoilValue } from 'recoil';
+import React,{useState} from 'react';
+import { currentPostIdState, postAtom, useGetPosts } from '../../../recoil/atoms/postAtoms';
+import { useRecoilValue, useSetRecoilState } from 'recoil';
+import { handlePostNavigate } from '../../../utils/postUtils';
+import { timeAgo } from '../../../utils';
+import { isAuthenticatedAtom } from '../../../recoil/atoms/authAtom';
+import { userAtom } from '../../../recoil/atoms/userAtoms';
+import { useNavigate } from 'react-router-dom';
 
 const RecommendedPosts = () => {
     const isLoading = useGetPosts();
     const posts = useRecoilValue(postAtom);
+    const setCurrentPostId = useSetRecoilState(currentPostIdState);
+    const [showMenu, setShowMenu] = useState(false);
+    const isAuthenticated = useRecoilValue(isAuthenticatedAtom);
+    const user = useRecoilValue(userAtom);
+    const navigate = useNavigate();
+
+
+    const handlePostClick = (post) => {
+        setCurrentPostId(post);
+    };
+
+    const handleMenuClick = () => {
+        setShowMenu(!showMenu);
+    };
+
+
     return (
         <div className='hidden lg:block ml-4 mr-4'>
             <h2 className="text-xl font-bold mt-6 ">Recommended Posts </h2>
 
             {posts.slice(0, 4).map(post => (
                 <div className="col-span-1 bg-white mt-6 flex flex-col p-6 space-y-6 overflow-hidden rounded-lg shadow-md dark:bg-gray-900 dark:text-gray-100">
-                    <div className="flex space-x-4 space-y-4">
-                        <img alt="" src="https://source.unsplash.com/100x100/?portrait" className="object-cover w-12 h-12 rounded-full shadow dark:bg-gray-500" />
-                        <div className="flex flex-col space-y-1">
-                            <a rel="noopener noreferrer" href="#" className="text-sm font-semibold">{post.author.userName}</a>
-                            <span className="text-xs dark:text-gray-400">4 hours ago</span>
-                        </div>
-                    </div>
                     <div>
-                        <h2 className="mb-1 text-xl font-semibold">{post.title}</h2>
-                        <p className="text-sm dark:text-gray-400 mb-6">{post.content}</p>
-                        {post.multimedia && (
-                            <>
-                                {post.multimedia && post.multimedia.includes('.mp4', '.mpeg', '.quicktime') ? (
-                                    <div className="lg:w-[700px] w-[80px]">
-                                        <video src={post.multimedia} alt="post video" className=" object-cover w-[100%] h-[100%]" controls />
-                                    </div>
-                                ) : (
-                                    <div className="lg:w-[700px] w-[80px]">
-                                        <img src={post.multimedia} alt="post image" className="object-cover w-[100%] h-[100%]" />
-                                    </div>
-                                )}
-                            </>
-                        )}
+                            <div className="flex items-center justify-between">
+                                <div className="flex items-center space-x-4">
+                                    <img
+                                        src={post.author.avatar}
+                                        alt="user avatar"
+                                        className="w-14 h-14 rounded-full"
+                                    />
+                                    <div>
+                                        <div className="flex justify-between">
+                                            <h5 className="text-[12px] text-gray-600 mb-1">{`posted by @${post.author?.userName} - ${timeAgo(new Date(post.createdAt))}`}</h5>
+                                            {isAuthenticated && user.userDetails._id === post.author?._id && (
+                                                <div className="absolute  right-20 top-14">
+                                                    <button className="text-gray-500 text-xs sm:text-sm focus:outline-none" onClick={handleMenuClick}>
+                                                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
+                                                            <path stroke-linecap="round" stroke-linejoin="round" d="M12 6.75a.75.75 0 110-1.5.75.75 0 010 1.5zM12 12.75a.75.75 0 110-1.5.75.75 0 010 1.5zM12 18.75a.75.75 0 110-1.5.75.75 0 010 1.5z" />
+                                                        </svg>
+                                                    </button>
+                                                    {showMenu && (
+                                                        <div className="absolute right-0 top-full mt-2 w-48 bg-white dark:bg-gray-800 shadow-lg rounded-lg z-10">
+                                                            <button
+                                                                className="block w-full text-left px-4 py-2 text-sm text-gray-700 dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 focus:outline-none"
+                                                                onClick={() => {
+                                                                    handlePostClick(post)
+                                                                    handleOpenModal('post')
+                                                                    setShowMenu(false);
+                                                                }}
+                                                            >
+                                                                Edit
+                                                            </button>
+                                                            <button
+                                                                className="block w-full text-left px-4 py-2 text-sm text-red-500 hover:bg-gray-100 dark:hover:bg-gray-700 focus:outline-none"
+                                                                onClick={() => {
+                                                                    handlePostClick(post)
+                                                                    setShowMenu(false);
+                                                                }}
+                                                            >
+                                                                Delete
+                                                            </button>
+                                                        </div>
+                                                    )}
+                                                </div>
+                                            )}
+                                        </div>
+                                        <div onClick={() => handlePostNavigate(post.title, posts, navigate)} className="flex space-x-3">
+                                            <h3 className="text-lg font-bold text-gray-700">{post.title}</h3>
+                                            {post.label && (
+                                                <div class={`pl-3 pr-3 ${post.label.color} text-white rounded-full flex justify-center items-center `}>
+                                                    <h3 className="text-sm text-white">{post.label.name}</h3>
+                                                </div>
+                                            )}
 
-                    </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div className="flex justify-between flex-row lg:flex-col mt-2 lg:mt-1" onClick={() => handlePostNavigate(post.title, posts, navigate)}>
+                                <p className="relative text-gray-700 mb-4">{post.content}</p>
+                                {post.multimedia && (
+                                    <>
+                                        {post.multimedia && post.multimedia.includes('.mp4', '.mpeg', '.quicktime') ? (
+                                            <div className="lg:w-[700px] w-[80px]">
+                                                <video src={post.multimedia} alt="post video" className=" object-cover w-[100%] h-[100%]" controls />
+                                            </div>
+                                        ) : (
+                                            <div className="lg:w-[700px] w-[80px]">
+                                                <img src={post.multimedia} alt="post image" className="object-cover w-[100%] h-[100%]" />
+                                            </div>
+                                        )}
+                                    </>
+                                )}
+                            </div>
+                        </div>
                     <div className="flex flex-wrap justify-between">
                         <div className="space-x-2">
                             <button aria-label="Share this post" type="button" className="p-2 text-center">

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Navbar from "../../components/Navbar";
 import SignUpModal from "../../components/Modals/SignUpModal";
 import SignInModal from "../../components/Modals/SignInModal";
@@ -14,13 +14,16 @@ import { useNavigate } from "react-router-dom";
 import BookmarkTooltip from "../../components/Tooltip/BookmarkTooltip";
 import Hero from "../../components/Hero";
 import VoteValidation from "../../components/Modals/ValidationModal/VoteValidationModal";
-import { useRecoilValue } from "recoil";
+import { useRecoilState, useRecoilValue } from "recoil";
 import { isAuthenticatedAtom } from "../../recoil/atoms/authAtom";
 import KnowAgora from "../../components/Cards/KnowAgora";
 import DidYouKnow from "../../components/Cards/DidYouKnow";
 import Toast from "../../components/Toast";
 import Footer from "../../components/Cards/Footer";
 import VideoModal from "../../components/Modals/VideoModal";
+import { userAtom } from "../../recoil/atoms/userAtoms";
+import { API_REFRESH_ACCESS_TOKEN } from "../../lib/api";
+import { refreshAccessToken } from "../../utils/userUtils";
 
 const LandingPage = () => {
   const [activeModal, setActiveModal] = useState(null);
@@ -31,6 +34,16 @@ const LandingPage = () => {
   const isAuthenticated = useRecoilValue(isAuthenticatedAtom);
   const [showToast, setShowToast] = useState(false);
   const [toastProps, setToastProps] = useState({ success: false, message: '' });
+  const [user, setUser] = useRecoilState(userAtom);
+
+  useEffect(() => {
+    const handleRefreshToken = async () => {
+      await refreshAccessToken(user.refreshToken, setUser);
+    };
+
+    handleRefreshToken();
+  }, [user.refreshToken, setUser]);
+
 
 
   const handleOpenModal = (modal) => {

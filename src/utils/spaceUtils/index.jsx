@@ -91,24 +91,3 @@ export const handleLeaveSpace = async (spaceId, setShowToast, setToastProps, lea
     }
 
 };
-
-/******************* Function to Filter spaces based on Category *******************************/
-export const handleCategorySelect = (selectedCategory, spaces, setFilteredSpaces, setSelectedCategory, setShowCreateSpaceMessage) => {
-    if (selectedCategory === 'All') {
-      setFilteredSpaces(spaces);
-    } else {
-      const newFilteredSpaces = spaces.filter(space =>
-        space.category.some(category => category === selectedCategory)
-      );
-      if (newFilteredSpaces.length === 0) {
-        setFilteredSpaces([]);
-        setSelectedCategory(selectedCategory);
-        setShowCreateSpaceMessage(true);
-      } else {
-        setFilteredSpaces(newFilteredSpaces);
-        setShowCreateSpaceMessage(false);
-      }
-    }
-  };
-
-  

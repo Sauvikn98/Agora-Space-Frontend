@@ -8,7 +8,7 @@ import Toast from '../../Toast';
 import CategoryCard from '../../Cards/CategoryCard';
 import { socket } from '../../../utils';
 import RecentPost from '../../Cards/PostDetailCards/RecentPost';
-import { handleCategorySelect, handleJoinSpace, handleLeaveSpace, handleNavigate } from '../../../utils/spaceUtils';
+import { handleJoinSpace, handleLeaveSpace, handleNavigate } from '../../../utils/spaceUtils';
 
 function SpaceList({ handleOpenModal }) {
     const { isLoading } = useGetAllSpaces();
@@ -34,6 +34,14 @@ function SpaceList({ handleOpenModal }) {
         const hotFiltered = spaces.filter(space => space.posts.length >= 5);
         setFilteredSpaces(hotFiltered);
     }
+    const handleBest = () => {
+        const bestFiltered = spaces.filter(space => space.posts.map(post => post.upvotes.length >= 5 ));
+        setFilteredSpaces(bestFiltered);
+    }
+    const handleTrending = () => {
+        const trendingFiltered = spaces.filter(space => space.posts.map(post => post.comments.length >= 5 ));
+        setFilteredSpaces(trendingFiltered);
+    }
 
     useEffect(() => {
         setFilteredSpaces(spaces);
@@ -43,6 +51,25 @@ function SpaceList({ handleOpenModal }) {
         const space = spaces.find((space) => space._id === spaceId);
         return space.members.includes(user.userDetails._id);
     }
+
+    const handleCategorySelect = (selectedCategory) => {
+        if (selectedCategory === 'All') {
+            setFilteredSpaces(spaces);
+        } else {
+            const newFilteredSpaces = spaces.filter(space =>
+                space.category.some(category => category === selectedCategory)
+            );
+            if (newFilteredSpaces.length === 0) {
+                setFilteredSpaces([]);
+                setSelectedCategory(selectedCategory);
+                setShowCreateSpaceMessage(true);
+            } else {
+                setFilteredSpaces(newFilteredSpaces);
+                setShowCreateSpaceMessage(false);
+            }
+        }
+    };
+
 
     return (
         <div>
@@ -63,7 +90,7 @@ function SpaceList({ handleOpenModal }) {
 
                         <button
                             className="ml-5 rounded-lg font-bold bg-white text-gray-900 flex items-center px-4 py-1  transition ease-in duration-200  hover:bg-gray-800 hover:text-white shadow-lg focus:outline-none"
-                            onClick={handleClick}
+                            onClick={handleTrending}
                         >
                             <div className='flex'>
 
@@ -76,7 +103,7 @@ function SpaceList({ handleOpenModal }) {
 
                         <button
                             className="ml-5 rounded-lg font-bold bg-white text-gray-900 flex items-center px-4 py-1  transition ease-in duration-200  hover:bg-gray-800 hover:text-white shadow-lg focus:outline-none"
-                            onClick={handleClick}
+                            onClick={handleBest}
                         >
                             <div className='flex'>
 
@@ -101,9 +128,7 @@ function SpaceList({ handleOpenModal }) {
                     </div>
                     {isOpen && (
                         <CategoryCard
-                            handleCategorySelect={() =>
-                                handleCategorySelect(selectedCategory, spaces, setFilteredSpaces, setSelectedCategory, setShowCreateSpaceMessage)
-                            }
+                            handleCategorySelect={handleCategorySelect}
                         />
                     )}
                     <div>

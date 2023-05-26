@@ -1,5 +1,7 @@
-import { API_USERS_DELETE } from "../../lib/api";
+import { useRecoilState } from "recoil";
+import { API_REFRESH_ACCESS_TOKEN, API_USERS_DELETE } from "../../lib/api";
 import axios from "axios";
+import { userAtom } from "../../recoil/atoms/userAtoms";
 
 export const handleDeleteAccount = async (userId, accessToken, setUserData, navigate) => {
     try {
@@ -38,3 +40,23 @@ export const handleLogoutAllSessions = async (accessToken, setUserData, navigate
         console.error(error);
     }
 };
+
+export const refreshAccessToken = async (refreshToken, setUser) => {
+    try {
+      const response = await axios.post(API_REFRESH_ACCESS_TOKEN, {
+        refreshToken,
+      });
+  
+      if (response.status === 200) {
+        const newAccessToken = response.data.accessToken;
+  
+        // Update the access token in Recoil state
+        setUser((prevUser) => ({
+          ...prevUser,
+          accessToken: newAccessToken,
+        }));
+      }
+    } catch (error) {
+      console.log(error)
+    }
+  };

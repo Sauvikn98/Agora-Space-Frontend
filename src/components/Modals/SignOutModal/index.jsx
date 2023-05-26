@@ -12,12 +12,13 @@ function SignOutModal({ onRequestClose }) {
     const navigate = useNavigate();
 
     const handleLogout = () => {
-        // Perform the logout logic here
         setisAuthenticated(false);
         setUser({ token: null, userDetails: null })
         navigate('/');
         onRequestClose();
-        socket.disconnect()
+        socket.disconnect();
+        localStorage.removeItem('notificationsState');
+        localStorage.removeItem('user')
     };
 
     const handleOutsideClick = (event) => {

@@ -58,7 +58,7 @@ function RecentPost({ spaceId, handleOpenModal }) {
                             <div className="flex items-center justify-between">
                                 <div className="flex items-center space-x-4">
                                     <img
-                                        src={`https://avatars.dicebear.com/api/adventurer/${post.author?._id}.svg`}
+                                        src={post.author.avatar}
                                         alt="user avatar"
                                         className="w-14 h-14 rounded-full"
                                     />

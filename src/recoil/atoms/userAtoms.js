@@ -14,7 +14,8 @@ const { persistAtom } = recoilPersist(persistConfig)
 export const userAtom = atom({
   key: 'user',
   default: {
-    token: null,
+    aceessToken: null,
+    refreshToken: null,
     userDetails: null,
   },
   effects_UNSTABLE: [persistAtom]
