@@ -4,17 +4,15 @@ import classNames from 'classnames';
 import { isAuthenticatedAtom, signIn } from '../../../recoil/atoms/authAtom';
 import { userAtom } from '../../../recoil/atoms/userAtoms';
 import Toast from '../../Toast';
-import {socket} from '../../../utils';
+import { socket } from '../../../utils';
 
-function SignInModal({ onRequestClose, handleOpenModal }) {
+function SignInModal({ onRequestClose, handleOpenModal, setToastProps, setShowToast }) {
     const [userName, setUserName] = useState('');
     const [password, setPassword] = useState('');
     const [isLoading, setIsLoading] = useState(false);
     const [errors, setErrors] = useState({})
     const setIsAuthenticated = useSetRecoilState(isAuthenticatedAtom);
     const setUser = useSetRecoilState(userAtom)
-    const [showToast, setShowToast] = useState(false);
-    const [toastProps, setToastProps] = useState({ success: false, message: '' });
 
     const handleSignIn = async (event) => {
         event.preventDefault();
@@ -33,26 +31,26 @@ function SignInModal({ onRequestClose, handleOpenModal }) {
             setIsLoading(true);
             const success = await signIn(userName, password);
             if (success) {
-                setUser({ token: success.token, userDetails: success.user });
+                setUser({ accessToken: success.accessToken, refreshToken: success.refreshToken, userDetails: success.user });
                 setIsAuthenticated(true);
                 setShowToast(true);
                 setToastProps({ success: true, message: 'Sign In Successfull !' });
-                setTimeout(() => setShowToast(false), 5000);
+                
                 setIsLoading(false);
-                setTimeout(() => onRequestClose(), 2000);
-                socket.auth = { token: success.token }
+               
+                socket.auth = { token: success.accessToken }
                 socket.connect();
+                socket.emit('checkMembership', { spaceId: 'your-space-id', userId: success.user._id });
+                onRequestClose();
             }
             else {
-                setUser({ token: null, userDetails: null });
+                setUser({ accessToken: null, refreshToken: null, userDetails: null });
                 setIsAuthenticated(false);
                 setShowToast(true);
                 setToastProps({ success: false, message: 'Sign In Failed, Try Again !' });
                 setIsLoading(false);
-                setTimeout(() => setShowToast(false), 5000);
+                onRequestClose();
             }
-
-            console.log(showToast)
         }
     };
 
@@ -91,11 +89,11 @@ function SignInModal({ onRequestClose, handleOpenModal }) {
                             />
                             {errors.userName && (
                                 <>
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" fill="currentColor" className="absolute text-red-500 right-2 bottom-4" viewBox="0 0 1792 1792">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" fill="currentColor" className="absolute text-red-500 right-2 bottom-10" viewBox="0 0 1792 1792">
                                         <path d="M1024 1375v-190q0-14-9.5-23.5t-22.5-9.5h-192q-13 0-22.5 9.5t-9.5 23.5v190q0 14 9.5 23.5t22.5 9.5h192q13 0 22.5-9.5t9.5-23.5zm-2-374l18-459q0-12-10-19-13-11-24-11h-220q-11 0-24 11-10 7-10 21l17 457q0 10 10 16.5t24 6.5h185q14 0 23.5-6.5t10.5-16.5zm-14-934l768 1408q35 63-2 126-17 29-46.5 46t-63.5 17h-1536q-34 0-63.5-17t-46.5-46q-37-63-2-126l768-1408q17-31 47-49t65-18 65 18 47 49z">
                                         </path>
                                     </svg>
-                                    <span className="absolute text-sm text-red-500 -top-6">
+                                    <span className=" text-sm text-red-500">
                                         {errors.userName}
                                     </span>
                                 </>
@@ -115,11 +113,11 @@ function SignInModal({ onRequestClose, handleOpenModal }) {
                             />
                             {errors.password && (
                                 <>
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" fill="currentColor" className="absolute text-red-500 right-2 bottom-4" viewBox="0 0 1792 1792">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" fill="currentColor" className="absolute text-red-500 right-2 bottom-10" viewBox="0 0 1792 1792">
                                         <path d="M1024 1375v-190q0-14-9.5-23.5t-22.5-9.5h-192q-13 0-22.5 9.5t-9.5 23.5v190q0 14 9.5 23.5t22.5 9.5h192q13 0 22.5-9.5t9.5-23.5zm-2-374l18-459q0-12-10-19-13-11-24-11h-220q-11 0-24 11-10 7-10 21l17 457q0 10 10 16.5t24 6.5h185q14 0 23.5-6.5t10.5-16.5zm-14-934l768 1408q35 63-2 126-17 29-46.5 46t-63.5 17h-1536q-34 0-63.5-17t-46.5-46q-37-63-2-126l768-1408q17-31 47-49t65-18 65 18 47 49z">
                                         </path>
                                     </svg>
-                                    <span className="absolute text-sm text-red-500 -top-6">
+                                    <span className="text-sm text-red-500">
                                         {errors.password}
                                     </span>
                                 </>
@@ -144,18 +142,12 @@ function SignInModal({ onRequestClose, handleOpenModal }) {
                         </button>
                         <p className="mt-4 text-sm text-gray-900">
                             Don't Have An Account?{' '}
-                            <button onClick={()=>handleOpenModal('signup')} className="underline cursor-pointer">Sign Up</button>
+                            <button onClick={() => handleOpenModal('signup')} className="underline cursor-pointer">Sign Up</button>
                         </p>
                     </div>
 
                 </div>
-                {showToast && (
-                    <div className="fixed inset-0 z-50 flex items-end justify-center px-4 py-6 pointer-events-none sm:p-6 sm:items-start sm:justify-end">
-                        <div className="max-w-sm w-full bg-white shadow-lg rounded-lg pointer-events-auto">
-                            <Toast success={toastProps.success} message={toastProps.message} showToast={showToast} setShowToast={setShowToast} />
-                        </div>
-                    </div>
-                )}
+                
             </div>
         </div>
     )

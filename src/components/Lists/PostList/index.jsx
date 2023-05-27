@@ -1,66 +1,25 @@
-import React, { useEffect, useState } from "react";
-import axios from "axios";
-import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
+import React, { useState } from "react";
+import { useRecoilValue, useSetRecoilState } from "recoil";
 import { currentPostIdState, postAtom, useAddBookmark, useGetPosts } from "../../../recoil/atoms/postAtoms";
-import { API_POSTS_DOWNVOTE, API_POSTS_GET_ALL, API_POSTS_UPVOTE } from "../../../lib/api";
 import { useNavigate } from "react-router-dom";
 import { userAtom } from "../../../recoil/atoms/userAtoms";
 import { isAuthenticatedAtom } from "../../../recoil/atoms/authAtom";
 import { timeAgo } from "../../../utils";
+import { handleDownvote, handleUpvote, handlePostNavigate} from "../../../utils/postUtils";
 
 function PostList({ spaceId, handleOpenModal, selectedLabel }) {
     const [showMenu, setShowMenu] = useState(false);
     const { isLoading } = useGetPosts(spaceId)
     const posts = useRecoilValue(postAtom);
-    const navigate = useNavigate();
-    const [votes, setVotes] = useState(0);
     const user = useRecoilValue(userAtom)
     const isAuthenticated = useRecoilValue(isAuthenticatedAtom)
     const setCurrentPostId = useSetRecoilState(currentPostIdState);
     const addBookmark = useAddBookmark();
-
+    const [isUpvoted, setIsUpvoted] = useState(false);
+    const [isDownvoted, setIsDownvoted] = useState(false);
+    const navigate = useNavigate();
     const postsOfSpace = posts.filter((post) => post.space === spaceId);
-    const postsOfSpaceWithLabel = selectedLabel ? postsOfSpace.filter((post) =>post.label && post.label.name === selectedLabel) : postsOfSpace
-
-    function handleUpvote(postId) {
-        axios.patch(API_POSTS_UPVOTE(postId), null, {
-            headers: {
-                Authorization: `Bearer ${user.token}`,
-            },
-        })
-            .then(response => {
-                setVotes(prevVotes => ({
-                    ...prevVotes,
-                    [postId]: response.data.votes,
-                }));
-            })
-            .catch(error => {
-                console.error(error);
-            });
-    }
-
-    function handleDownvote(postId) {
-        axios.patch(API_POSTS_DOWNVOTE(postId), null, {
-            headers: {
-                Authorization: `Bearer ${user.token}`,
-            },
-        })
-            .then(response => {
-                setVotes(prevVotes => ({
-                    ...prevVotes,
-                    [postId]: response.data.votes,
-                }));
-            })
-            .catch(error => {
-                console.error(error);
-            });
-    }
-    const handleCommentNavigate = (postTitle, event) => {
-        const modifiedTitle = postTitle.replace(/\s+/g, '_');
-        navigate(`/post/${modifiedTitle}`, {
-            state: postsOfSpace.find((post) => post.title === postTitle),
-        });
-    };
+    const postsOfSpaceWithLabel = selectedLabel ? postsOfSpace.filter((post) =>post.label && post.label.name === selectedLabel) : postsOfSpace;
 
     const handleMenuClick = () => {
         setShowMenu(!showMenu);
@@ -116,7 +75,7 @@ function PostList({ spaceId, handleOpenModal, selectedLabel }) {
                                             <div className="flex items-center justify-between">
                                                 <div className="flex items-center space-x-4">
                                                     <img
-                                                        src={`https://avatars.dicebear.com/api/adventurer/${post.author._id}.svg`}
+                                                        src={post.author.avatar}
                                                         alt="user avatar"
                                                         className="w-14 h-14 rounded-full"
                                                     />
@@ -155,7 +114,7 @@ function PostList({ spaceId, handleOpenModal, selectedLabel }) {
                                                                 </div>
                                                             )}
                                                         </div>
-                                                        <div onClick={() => handleCommentNavigate(post.title)} className="flex space-x-3">
+                                                        <div onClick={() => handlePostNavigate(post.title, postsOfSpace, navigate)} className="flex space-x-3">
                                                             <h3 className="text-lg font-bold text-gray-700">{post.title}</h3>
                                                             {post.label && (
                                                                 <>
@@ -168,7 +127,7 @@ function PostList({ spaceId, handleOpenModal, selectedLabel }) {
                                                     </div>
                                                 </div>
                                             </div>
-                                            <div className="flex justify-between flex-row lg:flex-col mt-2 lg:mt-1" onClick={() => handleCommentNavigate(post.title)}>
+                                            <div className="flex justify-between flex-row lg:flex-col mt-2 lg:mt-1" onClick={() => handlePostNavigate(post.title, postsOfSpace, navigate)}>
                                                 <p className="relative text-gray-700 mb-4">{post.content}</p>
                                                 {post.multimedia && (
                                                     <>
@@ -218,13 +177,13 @@ function PostList({ spaceId, handleOpenModal, selectedLabel }) {
 
                                 <div className='flex'>
                                     <div className="absolute inset-y-0 w-10 right-5 flex flex-col justify-start items-center bg-gray-100 border-l-2 rounded-r-lg">
-                                        <button className="text-gray-900 mt-2" onClick={() => handleUpvote(post._id)}>
+                                        <button className="text-gray-900 mt-2" onClick={() => handleUpvote(post._id, user, setIsUpvoted, setIsDownvoted)}>
                                             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-6 h-6">
                                                 <path fill-rule="evenodd" d="M11.47 7.72a.75.75 0 011.06 0l7.5 7.5a.75.75 0 11-1.06 1.06L12 9.31l-6.97 6.97a.75.75 0 01-1.06-1.06l7.5-7.5z" />
                                             </svg>
                                         </button>
                                         <p className="text-center text-gray-900">{post.upvotes.length - post.downvotes.length}</p>
-                                        <button className="text-gray-900" onClick={() => handleDownvote(post._id)}>
+                                        <button className="text-gray-900" onClick={() => handleDownvote(post._id, user, setIsUpvoted, setIsDownvoted)}>
                                             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-6 h-6">
                                                 <path fill-rule="evenodd" d="M12.53 16.28a.75.75 0 01-1.06 0l-7.5-7.5a.75.75 0 011.06-1.06L12 14.69l6.97-6.97a.75.75 0 111.06 1.06l-7.5 7.5z" clip-rule="evenodd" />
                                             </svg>

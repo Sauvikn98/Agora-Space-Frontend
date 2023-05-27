@@ -262,12 +262,14 @@ function PostModal({ onRequestClose }) {
 
                                                 {isLabelOpen && (
                                                     <ul class="absolute bg-white rounded-lg shadow p-2 mr-2 bottom-10">
-                                                        {selectedSpace.labels.map(label => (
+                                                        {selectedSpace.labels.map((label) => (
                                                             <li onClick={() => {
                                                                 setSelectedLabel(label);
                                                                 setIsLabelOpen(false);
                                                             }} class={`cursor-pointer rounded-full inline-flex items-center py-1 px-3 mr-2 mb-2 text-sm text-white font-medium ${label.color} `}>{label.name}</li>
                                                         ))}
+                                                            
+                                                       
                                                     </ul>
                                                 )}
                                             </div>

@@ -25,26 +25,26 @@ export const signIn = async (userName, password) => {
     });
 
     if (response.ok) {
-        const { token, user } = await response.json();
-        return { token, user };
+        const { accessToken, refreshToken, user } = await response.json();
+        return { accessToken, refreshToken, user };
     }
 
     return false;
 };
 
 
-export const signUp = async (userName, email, password) => {
+export const signUp = async (userName, email, password, avatar) => {
     const response = await fetch(API_USERS_REGISTER, {
         method: 'POST',
-        body: JSON.stringify({ userName, email, password }),
+        body: JSON.stringify({ userName, email, password, avatar }),
         headers: {
             'Content-Type': 'application/json',
         },
     });
 
     if (response.ok) {
-        const { token, user } = await response.json();
-        return { token, user };
+        const { accessToken, refreshToken, user } = await response.json();
+        return { accessToken, refreshToken, user };
     }
     return false;
 };

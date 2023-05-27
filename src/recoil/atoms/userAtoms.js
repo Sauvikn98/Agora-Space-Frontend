@@ -1,6 +1,8 @@
 import { atom } from 'recoil';
 import { recoilPersist } from 'recoil-persist';
-import { API_USERS_UPDATE } from '../../lib/api';
+import { API_USERS_ADD_BOOKMARK, API_USERS_GET_ALL_BOOKMARKS, API_USERS_UPDATE } from '../../lib/api';
+import axios from 'axios';
+import { useState } from 'react';
 
 const persistConfig = {
   key: 'recoil-persist', // the key for the persisted data
@@ -12,7 +14,8 @@ const { persistAtom } = recoilPersist(persistConfig)
 export const userAtom = atom({
   key: 'user',
   default: {
-    token: null,
+    aceessToken: null,
+    refreshToken: null,
     userDetails: null,
   },
   effects_UNSTABLE: [persistAtom]
@@ -36,4 +39,18 @@ export const updateUser = async (user) => {
   }
 
   return false;
+};
+
+export const addBookmark = async (user, postId) => {
+  try {
+    const response = await axios.post(API_USERS_ADD_BOOKMARK(postId), null, {
+      headers: {
+        'Authorization': `Bearer ${user.accessToken}`
+      }
+    });
+    console.log(response.data.message); // Post bookmarked successfully
+  } catch (error) {
+    console.error(error);
+    console.log(user.accessToken)
+  }
 };

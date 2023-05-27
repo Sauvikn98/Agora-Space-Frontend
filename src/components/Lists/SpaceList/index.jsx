@@ -6,8 +6,9 @@ import { userAtom } from '../../../recoil/atoms/userAtoms';
 import { isAuthenticatedAtom } from '../../../recoil/atoms/authAtom';
 import Toast from '../../Toast';
 import CategoryCard from '../../Cards/CategoryCard';
-import {socket} from '../../../utils';
+import { socket } from '../../../utils';
 import RecentPost from '../../Cards/PostDetailCards/RecentPost';
+import { handleJoinSpace, handleLeaveSpace, handleNavigate } from '../../../utils/spaceUtils';
 
 function SpaceList({ handleOpenModal }) {
     const { isLoading } = useGetAllSpaces();
@@ -30,57 +31,26 @@ function SpaceList({ handleOpenModal }) {
     };
 
     const handleHot = () => {
-        const hotFiltered  = spaces.filter(space => space.posts.length >= 5);
+        const hotFiltered = spaces.filter(space => space.posts.length >= 5);
         setFilteredSpaces(hotFiltered);
     }
-
-    const handleNavigate = (spaceName) => {
-        const modifiedSpaceName = spaceName.replace(/\s/g, '');
-        navigate(`/agora/${modifiedSpaceName}`, { state: spaces.find(space => space.name === spaceName) });
-    };
+    const handleBest = () => {
+        const bestFiltered = spaces.filter(space => space.posts.map(post => post.upvotes.length >= 5 ));
+        setFilteredSpaces(bestFiltered);
+    }
+    const handleTrending = () => {
+        const trendingFiltered = spaces.filter(space => space.posts.map(post => post.comments.length >= 5 ));
+        setFilteredSpaces(trendingFiltered);
+    }
 
     useEffect(() => {
         setFilteredSpaces(spaces);
     }, [spaces]);
 
-    const handleJoinSpace = async (spaceId) => {
-        const success = await joinSpace(spaceId);
-        if (success) {
-            setShowToast(true);
-            setToastProps({ success: true, message: 'Successfully joined Space!' });
-            setTimeout(() => setShowToast(false), 5000);
-        } else {
-            setShowToast(true);
-            setToastProps({ success: false, message: 'Failed to Join Space, Try Again !' });
-            setTimeout(() => setShowToast(false), 5000);
-        }
-    };
-
-    const handleLeaveSpace = async (spaceId) => {
-        const success = leaveSpace(spaceId)
-        if (success) {
-            setShowToast(true);
-            setToastProps({ success: true, message: 'Successfully Left the Space !' });
-            setTimeout(() => setShowToast(false), 5000);
-        } else {
-            console.error(`Failed to leave space: ${response.data.error}`);
-            setShowToast(true);
-            setToastProps({ success: false, message: 'Failed to Leave Space, Try Again !' });
-            setTimeout(() => setShowToast(false), 5000);
-        }
-
-    };
-
-
     const isMember = (spaceId) => {
         const space = spaces.find((space) => space._id === spaceId);
         return space.members.includes(user.userDetails._id);
     }
-
-    const members = (spaceId) => {
-        const space = spaces.find((space) => space._id === spaceId);
-        return space.members.map((memberId) => memberId);
-    };
 
     const handleCategorySelect = (selectedCategory) => {
         if (selectedCategory === 'All') {
@@ -99,6 +69,7 @@ function SpaceList({ handleOpenModal }) {
             }
         }
     };
+
 
     return (
         <div>
@@ -119,7 +90,7 @@ function SpaceList({ handleOpenModal }) {
 
                         <button
                             className="ml-5 rounded-lg font-bold bg-white text-gray-900 flex items-center px-4 py-1  transition ease-in duration-200  hover:bg-gray-800 hover:text-white shadow-lg focus:outline-none"
-                            onClick={handleClick}
+                            onClick={handleTrending}
                         >
                             <div className='flex'>
 
@@ -132,7 +103,7 @@ function SpaceList({ handleOpenModal }) {
 
                         <button
                             className="ml-5 rounded-lg font-bold bg-white text-gray-900 flex items-center px-4 py-1  transition ease-in duration-200  hover:bg-gray-800 hover:text-white shadow-lg focus:outline-none"
-                            onClick={handleClick}
+                            onClick={handleBest}
                         >
                             <div className='flex'>
 
@@ -155,7 +126,11 @@ function SpaceList({ handleOpenModal }) {
                             </div>
                         </button>
                     </div>
-                    {isOpen && <CategoryCard handleCategorySelect={handleCategorySelect} />}
+                    {isOpen && (
+                        <CategoryCard
+                            handleCategorySelect={handleCategorySelect}
+                        />
+                    )}
                     <div>
                     </div>
                 </div>
@@ -180,7 +155,13 @@ function SpaceList({ handleOpenModal }) {
                                             <a href="#" class="relative block">
                                                 <img alt="Space" src={`https://api.dicebear.com/6.x/initials/svg?seed=${space.name}`} class="mx-auto object-cover rounded-full h-6 w-6 " />
                                             </a>
-                                            <h3 onClick={() => handleNavigate(space.name)} className="hover:underline cursor-pointer text-sm font-bold text-gray-700 ml-2"><span className='text-indigo-700'>agora/</span>{space.name}</h3>
+                                            <h3 onClick={() => handleNavigate(space.name, navigate, spaces)} className="hover:underline cursor-pointer text-sm font-bold text-gray-700 ml-2"><span className='text-indigo-700'>agora/</span>{space.name}</h3>
+                                            <div className='w-64 ml-4'>
+                                                {space.category.map(cat => (
+                                                    <span class="bg-red-500 text-white text-xs font-medium mr-2 px-2.5 py-0.5 rounded-full dark:bg-blue-900 dark:text-blue-300">#{cat}</span>
+                                                ))}
+                                            </div>
+
                                         </div>
                                         {space.creator === user.userDetails?._id ? (
                                             <></>
@@ -190,13 +171,13 @@ function SpaceList({ handleOpenModal }) {
                                                     <button
                                                         onMouseEnter={() => setIsHovering({ ...isHovering, [space._id]: true })}
                                                         onMouseLeave={() => setIsHovering({ ...isHovering, [space._id]: false })}
-                                                        onClick={() => handleLeaveSpace(space._id)}
+                                                        onClick={() => handleLeaveSpace(space._id, setShowToast, setToastProps, leaveSpace)}
                                                         className='inline-flex text-sm bg-gray-700 text-white items-center px-3 py-1 rounded-md hover:bg-red-700 hover:text-white shadow-lg focus:outline-none mr-4 lg:mr-10'
                                                     >
                                                         {isHovering[space._id] ? "Leave" : "Joined"}
                                                     </button>
                                                 ) : (
-                                                    <button onClick={() => handleJoinSpace(space._id)} className='inline-flex text-sm bg-indigo-700 text-white items-center px-3 py-1 transition ease-in duration-200 rounded-md hover:bg-gray-700 hover:text-white shadow-lg focus:outline-none mr-4 lg:mr-10'>
+                                                    <button onClick={() => handleJoinSpace(space._id, setShowToast, setToastProps, joinSpace)} className='inline-flex text-sm bg-gradient-to-b from-blue-600 to-blue-700 text-white items-center px-3 py-1 transition ease-in duration-200 rounded-md hover:bg-gray-700 hover:text-white shadow-lg focus:outline-none mr-4 lg:mr-10'>
                                                         Join Space
                                                     </button>
                                                 )}
@@ -204,7 +185,7 @@ function SpaceList({ handleOpenModal }) {
                                         )}
                                     </div>
                                     <div className='pl-5 pr-16 lg:pr-0'>
-                                        <RecentPost spaceId={space._id} spaceName={space.name} handleOpenModal={handleOpenModal} handleNavigate={handleNavigate} />
+                                        <RecentPost spaceId={space._id} handleOpenModal={handleOpenModal} />
                                     </div>
                                 </div>
                             </div>

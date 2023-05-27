@@ -12,7 +12,7 @@ function ProfileTooltip() {
             <div class="flex flex-col items-center justify-center p-4 -mt-16">
                 <a href="#" class="relative block">
                     <img
-                        src={`https://avatars.dicebear.com/api/adventurer/${user.userDetails._id}.svg`}
+                        src={user.userDetails.avatar}
                         alt="user avatar"
                         className="w-16 h-16 rounded-full"
                     />

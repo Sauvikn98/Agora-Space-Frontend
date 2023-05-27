@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Navbar from "../../components/Navbar";
 import SignUpModal from "../../components/Modals/SignUpModal";
 import SignInModal from "../../components/Modals/SignInModal";
@@ -14,6 +14,16 @@ import { useNavigate } from "react-router-dom";
 import BookmarkTooltip from "../../components/Tooltip/BookmarkTooltip";
 import Hero from "../../components/Hero";
 import VoteValidation from "../../components/Modals/ValidationModal/VoteValidationModal";
+import { useRecoilState, useRecoilValue } from "recoil";
+import { isAuthenticatedAtom } from "../../recoil/atoms/authAtom";
+import KnowAgora from "../../components/Cards/KnowAgora";
+import DidYouKnow from "../../components/Cards/DidYouKnow";
+import Toast from "../../components/Toast";
+import Footer from "../../components/Cards/Footer";
+import VideoModal from "../../components/Modals/VideoModal";
+import { userAtom } from "../../recoil/atoms/userAtoms";
+import { API_REFRESH_ACCESS_TOKEN } from "../../lib/api";
+import { refreshAccessToken } from "../../utils/userUtils";
 
 const LandingPage = () => {
   const [activeModal, setActiveModal] = useState(null);
@@ -21,6 +31,20 @@ const LandingPage = () => {
   const [activeTooltip, setActiveTooltip] = useState(null);
   const [isTooltipOpen, setIsTooltipOpen] = useState(false);
   const navigate = useNavigate();
+  const isAuthenticated = useRecoilValue(isAuthenticatedAtom);
+  const [showToast, setShowToast] = useState(false);
+  const [toastProps, setToastProps] = useState({ success: false, message: '' });
+  const [user, setUser] = useRecoilState(userAtom);
+
+  useEffect(() => {
+    const handleRefreshToken = async () => {
+      await refreshAccessToken(user.refreshToken, setUser);
+    };
+
+    handleRefreshToken();
+  }, [user.refreshToken, setUser]);
+
+
 
   const handleOpenModal = (modal) => {
     setActiveModal(modal);
@@ -46,15 +70,15 @@ const LandingPage = () => {
   return (
     <>
       <Navbar handleOpenModal={handleOpenModal} />
-
       {isModalOpen && (
         <div className="backdrop-blur-lg backdrop-brightness-50 fixed top-0 left-0 w-full h-full z-50 flex justify-center items-center">
-          {activeModal === 'signin' && <SignInModal onRequestClose={handleCloseModal} handleOpenModal={handleOpenModal}/>}
-          {activeModal === 'signup' && <SignUpModal onRequestClose={handleCloseModal} handleOpenModal={handleOpenModal}/>}
+          {activeModal === 'signin' && <SignInModal onRequestClose={handleCloseModal} handleOpenModal={handleOpenModal} setToastProps={setToastProps} setShowToast={setShowToast}/>}
+          {activeModal === 'signup' && <SignUpModal onRequestClose={handleCloseModal} handleOpenModal={handleOpenModal} setToastProps={setToastProps} setShowToast={setShowToast}/>}
           {activeModal === 'signout' && <SignOutModal onRequestClose={handleCloseModal} />}
           {activeModal === 'post' && <PostModal onRequestClose={handleCloseModal} />}
           {activeModal === 'comment' && <Comment onRequestClose={handleCloseModal} />}
           {activeModal === 'votes validation' && <VoteValidation onRequestClose={handleCloseModal} />}
+          {activeModal === 'video' && <VideoModal onRequestClose={handleCloseModal} />}
         </div>
       )}
 
@@ -80,8 +104,24 @@ const LandingPage = () => {
           </div>
         </div>
         <SpaceList handleOpenModal={handleOpenModal} />
-        <RecommendedSpaces />
+        {isAuthenticated ? (
+          <RecommendedSpaces />
+        ) : (
+          <div className="space-y-8">
+            <KnowAgora />
+            <Footer/>
+          </div>
+
+        )}
+
       </div>
+      {showToast && (
+        <div className="fixed inset-0 z-50 flex items-end justify-center px-4 py-6 pointer-events-none sm:p-6 sm:items-start sm:justify-end">
+          <div className="max-w-sm w-full bg-white shadow-lg rounded-lg pointer-events-auto">
+            <Toast success={toastProps.success} message={toastProps.message} showToast={showToast} setShowToast={setShowToast} />
+          </div>
+        </div>
+      )}
     </>
   );
 };

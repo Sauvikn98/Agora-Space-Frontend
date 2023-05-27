@@ -1,8 +1,7 @@
 import React, { useState } from 'react'
-import { API_SPACES_CREATE_LABEL } from '../../lib/api';
-import axios from 'axios';
+import { createLabel } from '../../utils/spaceUtils';
 
-const COLORS = [
+export const COLORS = [
     "bg-red-500",
     "bg-blue-500",
     "bg-green-500",
@@ -20,13 +19,7 @@ function LabelInput({ spaceId }) {
             name,
             color,
         };
-        try {
-            await axios.post(API_SPACES_CREATE_LABEL(spaceId), newLabel);
-            setName("");
-            setColor(COLORS[0]);
-        } catch (err) {
-            console.error(err);
-        }
+        createLabel(spaceId, newLabel, setName, setColor);
     };
     return (
         <form>

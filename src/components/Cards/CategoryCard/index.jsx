@@ -26,7 +26,7 @@ function CategoryCard({ handleCategorySelect }) {
             {categories.map(category => (
                 <div key={category.id}>
                     <div className="flex items-center py-1 " role="none">
-                        <div class={`font-medium text-gray-900 block w-full px-4 py-2 text-sm hover:bg-indigo-600 hover:text-white hover:cursor-pointer ${selectedCategory.includes(category.name) ? 'bg-indigo-600 text-white' : ''}`} role="menuitem" tabindex="-1" id={`menu-item-${category.id}`} onClick={() => handleCategoryClick(category.name)}>
+                        <div className={`font-medium text-gray-900 block w-full px-4 py-2 text-sm hover:bg-indigo-600 hover:text-white hover:cursor-pointer ${selectedCategory.includes(category.name) ? 'bg-indigo-600 text-white' : ''}`} role="menuitem" tabindex="-1" id={`menu-item-${category.id}`} onClick={() => handleCategoryClick(category.name)}>
                             {category.name}
                         </div>
                     </div>

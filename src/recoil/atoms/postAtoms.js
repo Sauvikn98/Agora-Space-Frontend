@@ -4,6 +4,7 @@ import axios from "axios";
 import { API_POSTS_CREATE, API_POSTS_GET_ALL, API_POSTS_UPDATE } from "../../lib/api";
 import { userAtom } from "./userAtoms";
 import { useNavigate } from "react-router-dom";
+import { socket } from "../../utils";
 
 export const postAtom = atom({
   key: "posts",
@@ -108,6 +109,7 @@ export function useAddPost() {
       navigate(`/post/${modifiedTitle}`, {
         state: response.data,
     });
+     socket.emit('newPost', response.data);
     } catch (error) {
       setIsLoading(true)
       console.error(error);

@@ -9,6 +9,7 @@ import {
   API_SPACES_BY_ID,
 } from "../../lib/api";
 import { userAtom } from "./userAtoms";
+import { socket } from "../../utils";
 
 export const spaceAtom = atom({
   key: "spaces",
@@ -16,7 +17,7 @@ export const spaceAtom = atom({
 });
 
 export const singSpaceAtom = atom({
-  key: "spaces",
+  key: "single-space",
   default: [],
 });
 
@@ -27,7 +28,8 @@ export function useCreateSpace() {
   async function createSpace(newSpace) {
     try {
       const response = await axios.post(API_SPACES_CREATE, newSpace);
-      setSpaces([...spaces, response.data]);
+      setSpaces((spaces) => [...spaces, response.data]);
+      socket.emit('joinSpaceChannel', response.data._id)
     } catch (error) {
       console.error(error);
     }
@@ -47,6 +49,7 @@ export function useGetAllSpaces() {
       .then((response) => {
         setSpaces(response.data);
         setIsLoading(false);
+        console.log(response)
       })
       .catch((error) => {
         console.error(error);
@@ -67,7 +70,7 @@ export function useJoinSpace() {
         { spaceId },
         {
           headers: {
-            Authorization: `Bearer ${user.token}`,
+            Authorization: `Bearer ${user.accessToken}`,
           },
         }
       );
@@ -107,7 +110,7 @@ export function useLeaveSpace() {
     try {
       const response = await axios.delete(API_SPACES_LEAVE_SPACE(spaceId), {
         headers: {
-          Authorization: `Bearer ${user.token}`,
+          Authorization: `Bearer ${user.accessToken}`,
         },
       });
 
