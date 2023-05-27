@@ -70,7 +70,6 @@ function SpaceList({ handleOpenModal }) {
         }
     };
 
-
     return (
         <div>
             <div className="lg:mr-2">
