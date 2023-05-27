@@ -108,7 +108,7 @@ function Navbar({ handleOpenModal }) {
           <img class="w-auto mr-6 h-12 lg:ml-2" src={logo} alt="" />
         </a>
         <div className='w-full flex justify-end items-center'>
-          {isAuthenticated && (
+         {/* {isAuthenticated && (
             <div>
               <button onClick={() => setShowNotifications(!showNotifications)} class="mx-4 relative inline-flex items-center p-1 text-sm font-medium text-center text-white bg-blue-700 rounded-lg hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
                 <svg className="w-6 h-6" aria-hidden="true" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
@@ -182,7 +182,7 @@ function Navbar({ handleOpenModal }) {
               )}
             </div>
 
-          )}
+              )} */}
           <div className='lg:w-2/6'>
             <label htmlFor="default-search" className="text-sm font-medium text-gray-900 sr-only dark:text-white">Search</label>
             <div className="relative">
