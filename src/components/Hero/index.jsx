@@ -5,7 +5,7 @@ import { fadeInDownShorter, fadeInLeft } from '../../utils';
 import { useRecoilValue } from 'recoil';
 import { userAtom } from '../../recoil/atoms/userAtoms';
 import { isAuthenticatedAtom } from '../../recoil/atoms/authAtom';
-import { categories } from '../Cards/CategoryCard';
+import { categories } from '../Category';
 import Toast from '../Toast';
 import { useCreateSpace } from '../../recoil/atoms/spaceAtoms';
 import HeroTabs from '../Tabs/HeroTabs';
@@ -45,9 +45,9 @@ function Hero({ handleOpenModal }) {
     };
 
     return (
-        <div className='h-[92.4vh] sticky flex top-[3.52rem] bottom-[3.1rem] w-full'>
+        <div className='hidden lg:block border-r flex w-full'>
             {isAuthenticated ? (
-                <div className="w-full bg-gradient-to-r bg-[radial-gradient(ellipse_at_bottom_left,_var(--tw-gradient-stops))] from-indigo-900 via-indigo-400 to-indigo-900 dark:bg-gray-900 dark:border-gray-700">
+                <div className="w-full dark:border-gray-700">
                     <div className="">
                         <HeroTabs
                             tabs={['Create a Post', 'Create a Space']}
@@ -58,14 +58,14 @@ function Hero({ handleOpenModal }) {
                     {currentTab === 'Create a Post' && (
                         <div className="mt-20 px-5">
                             <Reveal keyframes={fadeInLeft} duration={800} delay={200}>
-                                <h2 className="mb-5 text-4xl font-bold text-white text-left">
+                                <h2 className="mb-5 text-4xl font-bold text-black text-left">
                                     Create a Post
                                 </h2>
                             </Reveal>
                             <Reveal keyframes={fadeInDownShorter} duration={1000} delay={400}>
                                 <input
                                     onClick={() => handleOpenModal('post')}
-                                    className="outline-none bg-white rounded-lg text-gray-800 w-full h-12 px-4 py-2 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:border-transparent"
+                                    className="outline-none bg-white rounded-lg text-gray-800 w-full h-12 px-4 py-2 placeholder-gray-800 outline-none ring-2 ring-gray-500 focus:border-transparent"
                                     placeholder="What's on your mind.."
                                 ></input>
                             </Reveal>
@@ -74,20 +74,20 @@ function Hero({ handleOpenModal }) {
                     {currentTab === 'Create a Space' && (
                         <div className="mt-20 px-5">
                             <Reveal keyframes={fadeInLeft} duration={800} delay={200}>
-                                <h2 className="mb-5 text-4xl font-bold text-white text-left">
+                                <h2 className="mb-5 text-4xl font-bold text-black text-left">
                                     Create a Space
                                 </h2>
                             </Reveal>
                             <Reveal keyframes={fadeInDownShorter} duration={1000} delay={400}>
                                 <input
-                                    className="outline-none bg-white rounded-lg text-gray-800 w-full px-4 py-2 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:border-transparent"
+                                    className="outline-none bg-white rounded-lg text-gray-800 w-full px-4 py-2 placeholder-gray-800 outline-none ring-2 ring-gray-500 focus:border-transparent"
                                     placeholder="Name"
                                     value={name}
                                     onChange={(e) => setName(e.target.value)}
                                 ></input>
                                 <textarea
                                     maxlength="50"
-                                    className="resize-none outline-none bg-white rounded-lg text-gray-800 w-full mt-4 px-4 py-2 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:border-transparent"
+                                    className="resize-none outline-none bg-white rounded-lg text-gray-800 w-full mt-4 px-4 py-2 placeholder-gray-800 outline-none ring-2 ring-gray-500 focus:border-transparent"
                                     placeholder="Description"
                                     rows={3}
                                     value={description}
@@ -95,7 +95,7 @@ function Hero({ handleOpenModal }) {
                                 ></textarea>
                                 <select
                                     id="categories"
-                                    className="mt-3 outline-none bg-white rounded-lg text-gray-800 w-full px-4 py-2 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:border-transparent"
+                                    className="mt-3 outline-none bg-white rounded-lg text-gray-800 w-full px-4 py-2 placeholder-gray-800 outline-none ring-2 ring-gray-500 focus:border-transparent"
                                     value={category}
                                     onChange={(e) => setCategory(e.target.value)}
                                 >
@@ -115,20 +115,22 @@ function Hero({ handleOpenModal }) {
                     )}
                 </div>
             ) : (
-                <div className=" bg-gradient-to-r bg-[radial-gradient(ellipse_at_bottom_left,_var(--tw-gradient-stops))] from-indigo-900 via-indigo-400 to-indigo-900 dark:bg-gray-900 dark:border-gray-700">
+                <div className="flex flex-col items-center">
+                    <div>
                     <img
                         src={landingImage}
                         className=" mt-8 md:mr-6 object-contain h-60 w-72"
                         alt="landing"
                     />
-                    <div className="p-6 ">
+                    </div>
+                    <div className="pl-6 pt-8 ">
                         <Reveal keyframes={fadeInLeft} duration={800} delay={200}>
-                            <h2 className="text-4xl font-bold text-white text-left">
+                            <h2 className="text-4xl font-bold text-black text-left">
                                 Discover, Learn & Discuss
                             </h2>
                         </Reveal>
                         <Reveal keyframes={fadeInLeft} duration={800} delay={200}>
-                            <h3 className="mt-4 text-2xl text-gray-200 text-left">
+                            <h3 className="mt-4 text-2xl text-black text-left">
                                 Empower your mind, ignite your passion through discussion.
                             </h3>
                         </Reveal>

@@ -26,7 +26,7 @@ function PostDetails() {
     }
 
     return (
-        <div className="mt-5 w-full mx-auto">
+        <div className="rounded-md shadow-lg mt-5 w-full mx-auto">
             <div
                 key={post._id}
                 className="rounded-t-lg bg-white space-y-10 p-6"

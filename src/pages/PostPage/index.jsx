@@ -20,7 +20,7 @@ function PostPage() {
   };
 
   return (
-    <div className="bg-gray-200 min-h-screen">
+    <div className=" min-h-screen">
       <Navbar handleOpenModal={handleOpenModal} />
       {isModalOpen && (
         <div className="backdrop-blur-lg fixed top-0 left-0 w-full h-full z-50 flex justify-center items-center">

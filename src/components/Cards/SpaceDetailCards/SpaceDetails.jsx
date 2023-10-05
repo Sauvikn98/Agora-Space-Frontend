@@ -31,7 +31,7 @@ function SpaceDetails({ handleOpenModal }) {
 
 
     return (
-        <div className="bg-gray-300 w-full min-h-screen grid lg:grid-cols-custom2">
+        <div className=" w-full min-h-screen grid lg:grid-cols-custom2">
             <SpaceInfo space={space} handleOpenModal={handleOpenModal} selectedLabel={selectedLabel} />
             <div>
                 <Labels

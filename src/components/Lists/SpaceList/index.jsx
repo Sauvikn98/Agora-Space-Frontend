@@ -1,15 +1,14 @@
 import React, { useState, useEffect } from 'react'
 import { useNavigate } from "react-router-dom"
-import { useRecoilValue, useSetRecoilState } from 'recoil';
+import { useRecoilValue } from 'recoil';
 import { spaceAtom, useGetAllSpaces, useJoinSpace, useLeaveSpace } from '../../../recoil/atoms/spaceAtoms';
 import { userAtom } from '../../../recoil/atoms/userAtoms';
 import { isAuthenticatedAtom } from '../../../recoil/atoms/authAtom';
 import Toast from '../../Toast';
-import CategoryCard from '../../Cards/CategoryCard';
-import {socket} from '../../../utils';
+import { socket } from '../../../utils';
 import RecentPost from '../../Cards/PostDetailCards/RecentPost';
 
-function SpaceList({ handleOpenModal }) {
+function SpaceList({ handleOpenModal, filteredSpaces, setFilteredSpaces, showCreateSpaceMessage, selectedCategory}) {
     const { isLoading } = useGetAllSpaces();
     const spaces = useRecoilValue(spaceAtom);
     const navigate = useNavigate();
@@ -19,9 +18,8 @@ function SpaceList({ handleOpenModal }) {
     const [isHovering, setIsHovering] = useState([])
     const [showToast, setShowToast] = useState(false);
     const [toastProps, setToastProps] = useState({ success: false, message: '' });
-    const [filteredSpaces, setFilteredSpaces] = useState(spaces);
-    const [selectedCategory, setSelectedCategory] = useState(null);
-    const [showCreateSpaceMessage, setShowCreateSpaceMessage] = useState(false);
+    
+
     const joinSpace = useJoinSpace()
     const leaveSpace = useLeaveSpace()
 
@@ -80,23 +78,7 @@ function SpaceList({ handleOpenModal }) {
         return space.members;
     };
 
-    const handleCategorySelect = (selectedCategory) => {
-        if (selectedCategory === 'All') {
-            setFilteredSpaces(spaces);
-        } else {
-            const newFilteredSpaces = spaces.filter(space =>
-                space.category.some(category => category === selectedCategory)
-            );
-            if (newFilteredSpaces.length === 0) {
-                setFilteredSpaces([]);
-                setSelectedCategory(selectedCategory);
-                setShowCreateSpaceMessage(true);
-            } else {
-                setFilteredSpaces(newFilteredSpaces);
-                setShowCreateSpaceMessage(false);
-            }
-        }
-    };
+   
 
     return (
         <div>
@@ -141,24 +123,14 @@ function SpaceList({ handleOpenModal }) {
                                 </svg>
                             </div>
                         </button>
-                        <button
-                            className="ml-auto mr-5 rounded-lg font-bold bg-white text-gray-900 flex items-center px-4 py-1  transition ease-in duration-200  hover:bg-gray-800 hover:text-white shadow-lg focus:outline-none"
-                            onClick={handleClick}
-                        >
-                            <div className='flex justify-center items-center'>
 
-                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
-                                    <path stroke-linecap="round" stroke-linejoin="round" d="M6 13.5V3.75m0 9.75a1.5 1.5 0 010 3m0-3a1.5 1.5 0 000 3m0 3.75V16.5m12-3V3.75m0 9.75a1.5 1.5 0 010 3m0-3a1.5 1.5 0 000 3m0 3.75V16.5m-6-9V3.75m0 3.75a1.5 1.5 0 010 3m0-3a1.5 1.5 0 000 3m0 9.75V10.5" />
-                                </svg>
-                            </div>
-                        </button>
                     </div>
-                    {isOpen && <CategoryCard handleCategorySelect={handleCategorySelect} />}
+
                     <div>
                     </div>
                 </div>
                 {isLoading ? (
-                    <div class="fixed inset-0 flex items-center justify-center">
+                    <div class=" flex items-center justify-center">
                         <div
                             class="inline-block h-8 w-8 animate-spin rounded-full border-4 border-solid border-current border-r-transparent align-[-0.125em] motion-reduce:animate-[spin_1.5s_linear_infinite]"
                             role="status">
@@ -171,9 +143,9 @@ function SpaceList({ handleOpenModal }) {
                 ) : (
                     <div>
                         {filteredSpaces.map(space => (
-                            <div key={space._id} className="transition duration-500 ease-in-out transform hover:-translate-y-1 relative">
-                                <div className="shadow-xl hover:outline outline-offset-2 pb-4 outline-blue-500 bg-white rounded-lg lg:ml-7 mr-5 mb-6 mt-6 lg:mt-6 ml-6 space-y-2">
-                                    <div className='bg-gray-100 border-b-2 p-2 border-gray-200 flex justify-between items-center lg:mr-0'>
+                            <div key={space._id} className=" transition duration-500 ease-in-out transform hover:-translate-y-1 relative">
+                                <div className="shadow-xl pb-4 bg-white rounded-lg lg:ml-7 mr-5 mb-6 mt-6 lg:mt-8 ml-6 space-y-2">
+                                    <div className='p-4 border-gray-200 flex space-x-4 items-center lg:mr-0'>
                                         <div className='flex justify-center'>
                                             <a href="#" class="relative block">
                                                 <img alt="Space" src={`https://api.dicebear.com/6.x/initials/svg?seed=${space.name}`} class="mx-auto object-cover rounded-full h-6 w-6 " />
@@ -189,12 +161,12 @@ function SpaceList({ handleOpenModal }) {
                                                         onMouseEnter={() => setIsHovering({ ...isHovering, [space._id]: true })}
                                                         onMouseLeave={() => setIsHovering({ ...isHovering, [space._id]: false })}
                                                         onClick={() => handleLeaveSpace(space._id)}
-                                                        className='inline-flex text-sm bg-gray-700 text-white items-center px-3 py-1 rounded-md hover:bg-red-700 hover:text-white shadow-lg focus:outline-none mr-4 lg:mr-10'
+                                                        className='inline-flex text-sm bg-gray-700 text-white items-center px-3 py-1 rounded-full hover:bg-red-700 hover:text-white shadow-lg focus:outline-none mr-4 lg:mr-10'
                                                     >
                                                         {isHovering[space._id] ? "Leave" : "Joined"}
                                                     </button>
                                                 ) : (
-                                                    <button onClick={() => handleJoinSpace(space._id, space)} className='inline-flex text-sm bg-indigo-700 text-white items-center px-3 py-1 transition ease-in duration-200 rounded-md hover:bg-gray-700 hover:text-white shadow-lg focus:outline-none mr-4 lg:mr-10'>
+                                                    <button onClick={() => handleJoinSpace(space._id, space)} className='inline-flex text-sm bg-indigo-700 text-white items-center px-3 py-1 transition ease-in duration-200 rounded-full hover:bg-gray-700 hover:text-white shadow-lg focus:outline-none mr-4 lg:mr-10'>
                                                         Join Space
                                                     </button>
                                                 )}

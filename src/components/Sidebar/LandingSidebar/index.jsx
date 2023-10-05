@@ -23,7 +23,7 @@ function LandingSidebar({ handleOpenModal, handleOpenTooltip, onRequestClose }) 
 
     return (
         <div className='hidden lg:block '>
-            <aside className='h-[92.4vh] sticky flex top-[3.52rem] bottom-[3.1rem]'>
+            <aside className=''>
                 <div className={`bg-white flex flex-col items-center py-10 w-16`}>
                     <nav className=" flex flex-col items-center flex-1 space-y-8 ">
                         <button onClick={() => handleNavigateHome()} className="p-1.5 inline-block text-gray-500 focus:outline-nones transition-colors duration-200 rounded-lg dark:text-gray-400 dark:hover:bg-gray-800 hover:bg-gray-100">
